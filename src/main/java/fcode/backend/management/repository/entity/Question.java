@@ -26,7 +26,7 @@ public class Question {
     private String authorEmail;
     @Column(name = "created_time", updatable = false)
     private Date createdTime;
-    @Column(name = "updated_time", updatable = false)
+    @Column(name = "updated_time")
     private Date updatedTime;
     @Column
     private String status;
