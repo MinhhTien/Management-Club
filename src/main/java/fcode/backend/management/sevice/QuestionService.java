@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 @Service
@@ -39,6 +40,7 @@ public class QuestionService {
         }
         Question question = modelMapper.map(questionDTO, Question.class);
         question.setStatus("Processing");
+        question.setCreatedTime(new Date());
         questionRepository.save(question);
         logger.info("Create question successfully");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -127,8 +129,10 @@ public class QuestionService {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (content != null)
+        if (content != null) {
             questionEntity .setContent(content);
+            questionEntity.setUpdatedTime(new Date());
+        }
         questionRepository.save(questionEntity);
         logger.info("Update content of question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -145,8 +149,10 @@ public class QuestionService {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (title != null)
+        if (title != null) {
             questionEntity.setTitle(title);
+            questionEntity.setUpdatedTime(new Date());
+        }
         questionRepository.save(questionEntity);
         logger.info("Update title of question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -167,6 +173,8 @@ public class QuestionService {
             questionEntity.setTitle(title);
         if (content != null)
             questionEntity.setContent(content);
+        if (title != null || content != null)
+            questionEntity.setUpdatedTime(new Date());
         questionRepository.save(questionEntity);
         logger.info("Update question of question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
