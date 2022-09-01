@@ -1,7 +1,6 @@
 
 package fcode.backend.management.sevice;
 
-import fcode.backend.management.model.dto.CommentDTO;
 import fcode.backend.management.model.dto.QuestionDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.QuestionRepository;
@@ -28,7 +27,6 @@ public class QuestionService {
     private static final String CREATE_QUESTION_MESSAGE = "Create question: ";
     private static final String GET_QUESTION_BY_ID_MESSAGE = "Get question by id: ";
     private static final String GET_QUESTION_BY_AUTHOR_MESSAGE = "Get question by author: ";
-    private static final String GET_COMMENT_OF_QUESTION = "Get comment of the question: ";
     private static final String APPROVE_QUESTION = "Approve question: ";
     private static final String UPDATE_QUESTION = "Update question: ";
     private static final String DELETE_QUESTION = "Delete question: ";
@@ -39,6 +37,7 @@ public class QuestionService {
             return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         Question question = modelMapper.map(questionDTO, Question.class);
+        question.setId(null);
         question.setStatus("Processing");
         question.setCreatedTime(new Date());
         questionRepository.save(question);
@@ -84,22 +83,7 @@ public class QuestionService {
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
 
-    public Response<Set<CommentDTO>> getAllCommentsOfAQuestion(QuestionDTO questionDTO) {
-        logger.info("{}{}", GET_COMMENT_OF_QUESTION, questionDTO);
-        if (questionDTO == null) {
-            logger.warn("{}{}", GET_COMMENT_OF_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Question questionEntity = questionRepository.findQuestionById(questionDTO.getId());
-        if (questionEntity == null) {
-            logger.warn("{}{}", GET_COMMENT_OF_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
-            return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-        }
-        var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equalsIgnoreCase("Active")).collect(Collectors.toSet());
-        var commentDTOSet = commentSet.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
-        logger.info("Get all comment successfully.");
-        return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
-    }
+
     public Response<Void> approveQuestion(QuestionDTO questionDTO) {
         logger.info("{}{}", APPROVE_QUESTION, questionDTO);
         if (questionDTO == null) {
@@ -192,6 +176,7 @@ public class QuestionService {
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         questionEntity.setStatus("Inactive");
+        questionRepository.save(questionEntity);
         logger.info("Delete Question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
@@ -202,7 +187,11 @@ public class QuestionService {
             return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         var questions = questionRepository.findQuestionByAuthorEmail(authorEmail);
-        questions.forEach(question -> question.setStatus("Inactive"));
+        questions.forEach(question -> {
+            question.setStatus("Inactive");
+            questionRepository.save(question);
+        });
+
         logger.info("Delete all question of a author successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
