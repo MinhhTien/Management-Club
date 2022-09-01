@@ -17,7 +17,6 @@ public class Question {
     @Id
     @GeneratedValue
     @Column
-    @Access(AccessType.PROPERTY)
     private Integer id;
     @Column
     private String title;

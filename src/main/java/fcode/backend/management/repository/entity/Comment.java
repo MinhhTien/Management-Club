@@ -16,7 +16,6 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    @Access(AccessType.PROPERTY)
     private Integer id;
     @Column
     private String content;
