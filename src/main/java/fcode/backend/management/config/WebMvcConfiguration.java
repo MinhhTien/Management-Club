@@ -1,6 +1,7 @@
 package fcode.backend.management.config;
 
 
+import fcode.backend.management.model.request.GoogleAuthRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
+    @Bean
+    public GoogleAuthRequest googleAuthRequest() {return new GoogleAuthRequest();}
+    @Bean
+    public static WebClient.Builder getWebClientBuilder() {
+        return WebClient.builder();
+    }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("GET","PUT","POST","DELETE");
