@@ -3,6 +3,7 @@ package fcode.backend.management.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,6 +27,8 @@ public class Subject {
     private Integer semester;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject")
+    @Cascade(value = {org.hibernate.annotations.CascadeType.SAVE_UPDATE,
+            org.hibernate.annotations.CascadeType.DELETE})
     private List<Resource> resourceList;
 
     public Subject(Integer id) {

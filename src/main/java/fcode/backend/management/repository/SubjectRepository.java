@@ -12,10 +12,10 @@ public interface SubjectRepository extends JpaRepository<Subject, Integer> {
 
     Subject findOneById(Integer id);
 
-    boolean existsByName(String name);
+    boolean existsById(Integer id);
 
     @Query(nativeQuery = true, value = "SELECT * FROM subject")
-    Set<Subject> getAllSubject();
+    Set<Subject> getAllSubjects();
 
     @Query(nativeQuery = true, value = "SELECT * FROM subject WHERE name = ?1")
     Subject findByName(String subjectName);

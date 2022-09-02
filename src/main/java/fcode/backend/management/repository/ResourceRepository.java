@@ -1,6 +1,7 @@
 package fcode.backend.management.repository;
 
 import fcode.backend.management.repository.entity.Resource;
+import fcode.backend.management.repository.entity.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,14 +9,18 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Integer> {
     Resource findOneById(Integer resourceId);
     Resource findResourceByUrl(String url);
-    List<Resource> findResourcesBySubjectOrderBySubjectAsc(String subjectId);
+    List<Resource> findResourcesBySubject(Integer subjectId);
     @Query(nativeQuery = true, value = "SELECT subject_id FROM resource WHERE id = ?1")
     Integer findSubjectId(Integer resourceId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM resource")//ORDER BY subject_id.semester???
+    Set<Resource> getAllResources();
 
     boolean existsByUrl(String resourceUrl);
     boolean existsById(Integer id);
