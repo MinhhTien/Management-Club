@@ -9,6 +9,7 @@ import fcode.backend.management.repository.entity.Comment;
 import fcode.backend.management.repository.entity.Question;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.ServiceStatusCode;
+import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 @Service
-public class    CommentService {
+public class CommentService {
 
 
     @Autowired
@@ -46,7 +47,7 @@ public class    CommentService {
         }
         Comment comment = modelMapper.map(commentDTO, Comment.class);
         comment.setId(null);
-        comment.setStatus("Active");
+        comment.setStatus(Status.ACTIVE_STATUS);
         commentRepository.save(comment);
         logger.info("Create question successfully");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -115,7 +116,7 @@ public class    CommentService {
             logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        commentEntity.setStatus("Inactive");
+        commentEntity.setStatus(Status.INACTIVE_STATUS);
         commentRepository.save(commentEntity);
         logger.info("Delete Question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -129,7 +130,7 @@ public class    CommentService {
         }
         var comments = commentRepository.findCommentToDeleteByAuthorEmail(authorEmail);
         comments.forEach(comment -> {
-            comment.setStatus("Inactive");
+            comment.setStatus(Status.INACTIVE_STATUS);
             commentRepository.save(comment);
         });
 

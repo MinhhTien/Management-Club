@@ -7,6 +7,7 @@ import fcode.backend.management.repository.QuestionRepository;
 import fcode.backend.management.repository.entity.Question;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.ServiceStatusCode;
+import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,6 @@ public class QuestionService {
     private static final String UPDATE_QUESTION = "Update question: ";
     private static final String DELETE_QUESTION = "Delete question: ";
 
-    private static final String INACTIVE_STATUS = "Inactive";
     public Response<Void> createQuestion(QuestionDTO questionDTO) {
         logger.info("{}{}", CREATE_QUESTION_MESSAGE, questionDTO);
         if (questionDTO == null) {
@@ -39,7 +39,7 @@ public class QuestionService {
         }
         Question question = modelMapper.map(questionDTO, Question.class);
         question.setId(null);
-        question.setStatus("Processing");
+        question.setStatus(Status.PROCESSING_STATUS);
         logger.info("{}{}", CREATE_QUESTION_MESSAGE, question);
         questionRepository.save(question);
         logger.info("Create question successfully");
@@ -97,7 +97,7 @@ public class QuestionService {
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        questionEntity.setStatus("Active");
+        questionEntity.setStatus(Status.ACTIVE_STATUS);
         questionRepository.save(questionEntity);
         logger.info("Approve question successfully");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -115,7 +115,7 @@ public class QuestionService {
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        questionEntity.setStatus(INACTIVE_STATUS);
+        questionEntity.setStatus(Status.INACTIVE_STATUS);
         questionRepository.save(questionEntity);
         logger.info("Disapprove question successfully");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -191,7 +191,7 @@ public class QuestionService {
             logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        questionEntity.setStatus(INACTIVE_STATUS);
+        questionEntity.setStatus(Status.INACTIVE_STATUS);
         questionRepository.save(questionEntity);
         logger.info("Delete Question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -204,7 +204,7 @@ public class QuestionService {
         }
         var questions = questionRepository.findQuestionToDeleteByAuthorEmail(authorEmail);
         questions.forEach(question -> {
-            question.setStatus(INACTIVE_STATUS);
+            question.setStatus(Status.INACTIVE_STATUS);
             questionRepository.save(question);
         });
 
@@ -220,7 +220,7 @@ public class QuestionService {
         }
         var questions = questionRepository.findQuestionToRestoreByAuthorEmail(authorEmail);
         questions.forEach(question -> {
-            question.setStatus("Processing");
+            question.setStatus(Status.PROCESSING_STATUS);
             questionRepository.save(question);
         });
 
