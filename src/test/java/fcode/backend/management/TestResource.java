@@ -37,6 +37,11 @@ public class TestResource {
     }
 
     @Test
+    public void searchResource() {
+        System.out.println(resourceService.searchResourcesByContributor("Nt").getData());
+    }
+
+    @Test
     public void getResource3() {
         System.out.println(resourceService.getResourcesBySemester(2).getData());
     }
@@ -48,6 +53,6 @@ public class TestResource {
 
     @Test
     public void deleteResource1() {
-        resourceService.deleteResource(10);
+        resourceService.deleteResource(2);
     }
 }

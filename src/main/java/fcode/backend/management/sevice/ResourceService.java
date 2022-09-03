@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,40 +33,53 @@ public class ResourceService {
     private static final String UPDATE_RESOURCE = "Update resource: ";
     private static final String DELETE_RESOURCE = "Delete resource: ";
 
-    public Response<Set<ResourceDTO>> getAllResources() {
+    public Response<List<ResourceDTO>> getAllResources() {
         logger.info("getResources()");
 
-        Set<ResourceDTO> resourceDTOSet = resourceRepository.getAllResources().stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toSet());
+        List<ResourceDTO> resourceDTOList = resourceRepository.getAllResources().stream()
+                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
 
         logger.info("Get all resources success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOSet);
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
-    public Response<Set<ResourceDTO>> getResourcesBySubjectId(Integer subjectId) {
+    public Response<List<ResourceDTO>> getResourcesBySubjectId(Integer subjectId) {
         logger.info("getResourcesBySubjectId(subjectId: {})", subjectId);
 
-        Set<ResourceDTO> resourceDTOSet = resourceRepository.getResourcesBySubjectId(subjectId).stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toSet());
-        if(resourceDTOSet.size() == 0) {
+        List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectId(subjectId).stream()
+                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+        if(resourceDTOList.size() == 0) {
             logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Get resources by subjectId success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOSet);
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
-    public Response<Set<ResourceDTO>> getResourcesBySemester(Integer semester) {
+    public Response<List<ResourceDTO>> getResourcesBySemester(Integer semester) {
         logger.info("getResourcesBySemester(semester: {})", semester);
 
-        Set<ResourceDTO> resourceDTOSet = resourceRepository.getResourcesBySubjectSemester(semester).stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toSet());
-        if(resourceDTOSet.size() == 0) {
+        List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectSemester(semester).stream()
+                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+        if(resourceDTOList.size() == 0) {
             logger.warn("{}{}", "Get resources by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Get resources by semester success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOSet);
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
+    }
+
+    public Response<List<ResourceDTO>> searchResourcesByContributor(String contributor) {
+        logger.info("searchResourcesByContributor(contributor: {})", contributor);
+
+        List<ResourceDTO> resourceDTOList = resourceRepository.searchResourcesByContributor("% %".replace(" ", contributor)).stream()
+                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+        if(resourceDTOList.size() == 0) {
+            logger.warn("{}{}", "Search resources by contributor:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        logger.info("Search resources by contributor success");
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
     public Response<ResourceDTO> getResourceById(Integer id) {

@@ -10,10 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,6 @@ public class SubjectService {
     SubjectRepository subjectRepository;
     @Autowired
     ResourceRepository resourceRepository;
-
     @Autowired
     ModelMapper modelMapper;
 
@@ -32,27 +31,27 @@ public class SubjectService {
     private static final String UPDATE_SUBJECT = "Update subject: ";
     private static final String DELETE_SUBJECT = "Delete subject: ";
 
-    public Response<Set<SubjectDTO>> getAllSubjects() {
+    public Response<List<SubjectDTO>> getAllSubjects() {
         logger.info("getSubjects()");
 
-        Set<SubjectDTO> subjectDTOSet = subjectRepository.getAllSubjects().stream()
-                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toSet());
+        List<SubjectDTO> subjectDTOList = subjectRepository.getAllSubjects().stream()
+                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toList());
 
         logger.info("Get all subjects success");
-        return new Response<Set<SubjectDTO>>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOSet);
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOList);
     }
 
-    public Response<Set<SubjectDTO>> getSubjectsBySemester(Integer semester) {
+    public Response<List<SubjectDTO>> getSubjectsBySemester(Integer semester) {
         logger.info("getSubjectsBySemester(semester : {})", semester);
 
-        Set<SubjectDTO> subjectDTOSet = subjectRepository.findBySemester(semester).stream()
-                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toSet());
-        if(subjectDTOSet.size() == 0) {
+        List<SubjectDTO> subjectDTOList = subjectRepository.findBySemester(semester).stream()
+                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toList());
+        if(subjectDTOList.size() == 0) {
             logger.warn("{}{}", "Get subject by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Get subjects by semester success");
-        return new Response<Set<SubjectDTO>>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOSet);
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOList);
     }
 
     public Response<SubjectDTO> getSubjectById(Integer id) {
@@ -79,6 +78,19 @@ public class SubjectService {
 
         logger.info("{}{}", "Get subject by name: ", ServiceMessage.SUCCESS_MESSAGE.getMessage());
         return  new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTO);
+    }
+
+    public Response<List<SubjectDTO>> searchSubjects(String value) {
+        logger.info("searchSubjects(value : {})", value);
+
+        List<SubjectDTO> subjectDTOList = subjectRepository.searchAllByName("% %".replace(" ", value)).stream()
+                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toList());
+        if(subjectDTOList.size() == 0) {
+            logger.warn("{}{}", "Search subject by name:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        logger.info("Search subject by name success");
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOList);
     }
 
     @Transactional
