@@ -35,9 +35,10 @@ public class Resource {
         this.id = id;
     }
 
-    public Resource (String url, String contributor, String description) {
+    public Resource (String url, String contributor, String description, Subject subject) {
         this.url = url;
         this.contributor = contributor;
         this.description = description;
+        this.subject = subject;
     }
 }

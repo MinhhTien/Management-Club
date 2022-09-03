@@ -1,4 +1,4 @@
-package sevice.exception;
+package fcode.backend.management.sevice.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

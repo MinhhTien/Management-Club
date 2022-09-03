@@ -11,4 +11,9 @@ public class SubjectDTO {
     private Integer id;
     private String name;
     private Integer semester;
+
+    public SubjectDTO(String name, Integer semester) {
+        this.name = name;
+        this.semester = semester;
+    }
 }

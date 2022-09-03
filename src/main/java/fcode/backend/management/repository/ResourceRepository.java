@@ -2,39 +2,38 @@ package fcode.backend.management.repository;
 
 import fcode.backend.management.repository.entity.Resource;
 import fcode.backend.management.repository.entity.Subject;
+import io.swagger.models.auth.In;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Integer> {
     Resource findOneById(Integer resourceId);
+
     Resource findResourceByUrl(String url);
-    List<Resource> findResourcesBySubject(Integer subjectId);
+
+    @Query("select (count(r) > 0) from Resource r where r.subject.id = ?1")
+    Boolean existsResourceBySubject(Integer subjectId);
+
     @Query(nativeQuery = true, value = "SELECT subject_id FROM resource WHERE id = ?1")
     Integer findSubjectId(Integer resourceId);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM resource")//ORDER BY subject_id.semester???
+    @Query(nativeQuery = true, value = "SELECT resource.id, resource.url, resource.contributor, resource.description, resource.subject_id FROM resource INNER JOIN subject ON resource.subject_id = subject.id ORDER BY subject.semester ASC, subject.name ASC ")
     Set<Resource> getAllResources();
+
+    @Query("select r from Resource r where r.subject.id = ?1")
+    Set<Resource> getResourcesBySubjectId(Integer subjectId);
+
+    @Query(nativeQuery = true, value = "SELECT resource.id, resource.url, resource.contributor, resource.description, resource.subject_id FROM resource INNER JOIN subject ON resource.subject_id = subject.id WHERE subject.semester = ?1 ORDER BY subject.name ASC ")
+    Set<Resource> getResourcesBySubjectSemester(Integer semester);
 
     boolean existsByUrl(String resourceUrl);
     boolean existsById(Integer id);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true, value = "INSERT INTO resource(url, contributor, description, subject_id) VALUES (?1, ?2, ?3, ?4)")
-    void insertResource(String url, String contributor, String description, Integer subjectId);
-
-    @Modifying
-    @Transactional
-    @Query(nativeQuery = true, value = "UPDATE resource SET url = ?2 WHERE id = ?1")
-    void updateResource(Integer id, String newUrl);
-
 
     @Modifying
     @Transactional

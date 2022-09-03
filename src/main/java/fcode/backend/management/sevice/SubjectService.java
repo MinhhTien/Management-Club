@@ -1,17 +1,19 @@
-package sevice;
+package fcode.backend.management.sevice;
 
 import fcode.backend.management.model.dto.SubjectDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ResourceRepository;
 import fcode.backend.management.repository.SubjectRepository;
 import fcode.backend.management.repository.entity.Subject;
-import sevice.constant.ServiceMessage;
+import fcode.backend.management.sevice.constant.ServiceMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,7 +21,6 @@ import java.util.stream.Collectors;
 public class SubjectService {
     @Autowired
     SubjectRepository subjectRepository;
-
     @Autowired
     ResourceRepository resourceRepository;
 
@@ -41,24 +42,51 @@ public class SubjectService {
         return new Response<Set<SubjectDTO>>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOSet);
     }
 
+    public Response<Set<SubjectDTO>> getSubjectsBySemester(Integer semester) {
+        logger.info("getSubjectsBySemester(semester : {})", semester);
+
+        Set<SubjectDTO> subjectDTOSet = subjectRepository.findBySemester(semester).stream()
+                .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toSet());
+        if(subjectDTOSet.size() == 0) {
+            logger.warn("{}{}", "Get subject by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        logger.info("Get subjects by semester success");
+        return new Response<Set<SubjectDTO>>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOSet);
+    }
+
     public Response<SubjectDTO> getSubjectById(Integer id) {
         logger.info("getSubjectById(subjectId: {})", id);
 
-        SubjectDTO subjectDTO = modelMapper.map(subjectRepository.findOneById(id), SubjectDTO.class);
+        SubjectDTO subjectDTO = modelMapper.map(subjectRepository.findSubjectById(id), SubjectDTO.class);
         if(subjectDTO == null) {
-            logger.warn("{}{}", "Get subject by id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", "Get subject by id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        logger.info("{}{}", "Get subject by id: ", ServiceMessage.SUCCESS_MESSAGE);
+        logger.info("{}{}", "Get subject by id: ", ServiceMessage.SUCCESS_MESSAGE.getMessage());
         return  new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTO);
     }
 
+    public Response<SubjectDTO> getSubjectByName(String subjectName) {
+        logger.info("getSubjectByName(subjectName: {})", subjectName);
+
+        SubjectDTO subjectDTO = modelMapper.map(subjectRepository.findByName(subjectName), SubjectDTO.class);
+        if(subjectDTO == null) {
+            logger.warn("{}{}", "Get subject by name:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+
+        logger.info("{}{}", "Get subject by name: ", ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return  new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTO);
+    }
+
+    @Transactional
     public Response<Void> createSubject(SubjectDTO subjectDto) {
         logger.info("createSubject(subjectDto: {})", subjectDto);
 
         if(subjectDto == null) {
-            logger.warn("{}{}",CREATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}",CREATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<Void>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(subjectRepository.findByName(subjectDto.getName()) != null) {
@@ -70,44 +98,47 @@ public class SubjectService {
         logger.info("Create subject success");
         return new Response<Void>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-
-    public Response<Void> updateSubject(SubjectDTO subjectDto) {
-        logger.info("updateSubject(subjectDto:{})", subjectDto);
+    @Transactional
+    public Response<Void> updateSubject(Integer subjectId,SubjectDTO subjectDto) {
+        logger.info("updateSubject(subjectId:{})", subjectId);
 
         if(subjectDto == null) {
-            logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(!subjectRepository.existsById(subjectDto.getId())){
-            logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+        if(!subjectRepository.existsById(subjectId)){
+            logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(subjectRepository.findByName(subjectDto.getName()) != null) {
-            logger.warn("{}{}", UPDATE_SUBJECT, "Subject name already exist");
-            return new Response<>(400, "Subject name already exist");
+        Subject oldSubject = subjectRepository.findByName(subjectDto.getName());
+        if(oldSubject != null) {
+            if(oldSubject.getSemester() == subjectDto.getSemester()) {
+                logger.warn("{}{}", UPDATE_SUBJECT, "Subject name already exist");
+                return new Response<>(400, "Subject name already exist");
+            }
         }
-
         Subject subject = modelMapper.map(subjectDto, Subject.class);
+        subject.setId(subjectId);
         subjectRepository.save(subject);
         logger.info("Update subject success");
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-
+    @Transactional
     public Response<Void> deleteSubject(Integer id) {
-        logger.info("deleteSubject(id: {})", id);
+        logger.info("deleteSubject(subjectId: {})", id);
 
         if(!subjectRepository.existsById(id)) {
-            logger.warn("{}{}", DELETE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", DELETE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(resourceRepository.findResourcesBySubject(id) != null) {
+        if(resourceRepository.existsResourceBySubject(id)) {
             logger.warn("{}{}", DELETE_SUBJECT, "Some resources use this subject");
             return new Response<>(400, "Some resources use this subject");
         }
-        Subject subject = subjectRepository.findOneById(id);
+        Subject subject = subjectRepository.findSubjectById(id);
         subjectRepository.delete(subject);
         logger.info("Delete subject success");
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
