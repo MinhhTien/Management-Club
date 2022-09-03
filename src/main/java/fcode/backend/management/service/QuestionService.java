@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 @Service
@@ -135,7 +134,6 @@ public class QuestionService {
         }
         if (content != null) {
             questionEntity .setContent(content);
-            questionEntity.setUpdatedTime(new Date());
         }
         questionRepository.save(questionEntity);
         logger.info("Update content of question successfully.");
@@ -155,7 +153,6 @@ public class QuestionService {
         }
         if (title != null) {
             questionEntity.setTitle(title);
-            questionEntity.setUpdatedTime(new Date());
         }
         questionRepository.save(questionEntity);
         logger.info("Update title of question successfully.");
@@ -177,8 +174,7 @@ public class QuestionService {
             questionEntity.setTitle(title);
         if (content != null)
             questionEntity.setContent(content);
-        if (title != null || content != null)
-            questionEntity.setUpdatedTime(new Date());
+
         questionRepository.save(questionEntity);
         logger.info("Update question of question successfully.");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());

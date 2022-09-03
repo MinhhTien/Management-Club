@@ -15,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 @Service
@@ -48,7 +47,6 @@ public class    CommentService {
         Comment comment = modelMapper.map(commentDTO, Comment.class);
         comment.setId(null);
         comment.setStatus("Active");
-        comment.setCreatedTime(new Date());
         commentRepository.save(comment);
         logger.info("Create question successfully");
         return new Response<>(ServiceStatusCode.OK_STATUS, ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -100,7 +98,6 @@ public class    CommentService {
         }
         if (content != null) {
             commentEntity.setContent(content);
-            commentEntity.setUpdatedTime(new Date());
         }
         commentRepository.save(commentEntity);
         logger.info("Update content of question successfully.");
