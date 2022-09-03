@@ -1,6 +1,8 @@
 package fcode.backend.management.repository.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,9 +36,5 @@ public class Challenge {
 
     @Column(name = "status")
     private String status;
-
-    public Challenge(String title) {
-        this.title = title;
-    }
 
 }

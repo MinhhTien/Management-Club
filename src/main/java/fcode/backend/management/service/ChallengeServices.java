@@ -41,7 +41,7 @@ public class ChallengeServices {
     @Transactional
     public Response<Void> createChallenge(ChallengeDTO challengeDTO) {
         logger.info("{}{}", CREATE_CHALLENGE, challengeDTO);
-        if(challengeDTO == null) {
+        if (challengeDTO == null) {
             logger.warn("{}{}", CREATE_CHALLENGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -112,10 +112,10 @@ public class ChallengeServices {
     public Response<Void> restoreChallenge(Integer id) {
         logger.info("Restore challenge");
         if (id == null) {
-        logger.warn("{}{}", RESTORE_CHALLENGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-        return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            logger.warn("{}{}", RESTORE_CHALLENGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Challenge challengeEntity =challengeRepository.restoreChallengeById(id);
+        Challenge challengeEntity = challengeRepository.restoreChallengeById(id);
         if (challengeEntity == null) {
             logger.warn("{}{}", DELETE_CHALLENGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());

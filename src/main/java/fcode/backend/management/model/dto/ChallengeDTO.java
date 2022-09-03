@@ -1,6 +1,9 @@
 package fcode.backend.management.model.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -17,16 +20,5 @@ public class ChallengeDTO {
         this.title = title;
         this.description = description;
         this.register_url = register_url;
-    }
-
-    public ChallengeDTO(String title, String description, String register_url, String status) {
-        this.title = title;
-        this.description = description;
-        this.register_url = register_url;
-        this.status = status;
-    }
-
-    public ChallengeDTO(Integer id) {
-        this.id = id;
     }
 }
