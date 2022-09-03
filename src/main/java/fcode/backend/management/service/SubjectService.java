@@ -46,7 +46,7 @@ public class SubjectService {
 
         List<SubjectDTO> subjectDTOList = subjectRepository.findBySemester(semester).stream()
                 .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toList());
-        if(subjectDTOList.size() == 0) {
+        if(subjectDTOList.isEmpty()) {
             logger.warn("{}{}", "Get subject by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -85,7 +85,7 @@ public class SubjectService {
 
         List<SubjectDTO> subjectDTOList = subjectRepository.searchAllByName("% %".replace(" ", value)).stream()
                 .map(subjectEntity -> modelMapper.map(subjectEntity, SubjectDTO.class)).collect(Collectors.toList());
-        if(subjectDTOList.size() == 0) {
+        if(subjectDTOList.isEmpty()) {
             logger.warn("{}{}", "Search subject by name:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -99,7 +99,7 @@ public class SubjectService {
 
         if(subjectDto == null) {
             logger.warn("{}{}",CREATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<Void>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(subjectRepository.findByName(subjectDto.getName()) != null) {
             logger.warn("{}{}", CREATE_SUBJECT, "Subject already exist.");
@@ -108,7 +108,7 @@ public class SubjectService {
         Subject subject = modelMapper.map(subjectDto, Subject.class);
         subjectRepository.save(subject);
         logger.info("Create subject success");
-        return new Response<Void>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
     @Transactional
     public Response<Void> updateSubject(Integer subjectId,SubjectDTO subjectDto) {
@@ -125,11 +125,9 @@ public class SubjectService {
         }
 
         Subject oldSubject = subjectRepository.findByName(subjectDto.getName());
-        if(oldSubject != null) {
-            if(oldSubject.getSemester() == subjectDto.getSemester()) {
-                logger.warn("{}{}", UPDATE_SUBJECT, "Subject name already exist");
-                return new Response<>(400, "Subject name already exist");
-            }
+        if(oldSubject != null && oldSubject.getSemester().equals(subjectDto.getSemester())) {
+            logger.warn("{}{}", UPDATE_SUBJECT, "Subject name already exist");
+            return new Response<>(400, "Subject name already exist");
         }
         Subject subject = modelMapper.map(subjectDto, Subject.class);
         subject.setId(subjectId);
@@ -146,7 +144,7 @@ public class SubjectService {
             return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(resourceRepository.existsResourceBySubject(id)) {
+        if(resourceRepository.existsResourceBySubject(id).booleanValue()) {
             logger.warn("{}{}", DELETE_SUBJECT, "Some resources use this subject");
             return new Response<>(400, "Some resources use this subject");
         }

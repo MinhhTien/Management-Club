@@ -47,7 +47,7 @@ public class ResourceService {
 
         List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectId(subjectId).stream()
                 .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
-        if(resourceDTOList.size() == 0) {
+        if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -60,7 +60,7 @@ public class ResourceService {
 
         List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectSemester(semester).stream()
                 .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
-        if(resourceDTOList.size() == 0) {
+        if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Get resources by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -73,7 +73,7 @@ public class ResourceService {
 
         List<ResourceDTO> resourceDTOList = resourceRepository.searchResourcesByContributor("% %".replace(" ", contributor)).stream()
                 .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
-        if(resourceDTOList.size() == 0) {
+        if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Search resources by contributor:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -100,7 +100,7 @@ public class ResourceService {
 
         if(resourceDto == null) {
             logger.warn("{}{}",CREATE_RESOURCE, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<Void>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(resourceRepository.findResourceByUrl(resourceDto.getUrl()) != null) {
             logger.warn("{}{}", CREATE_RESOURCE, "Resource URL already exist.");
@@ -109,7 +109,7 @@ public class ResourceService {
         Resource resource = modelMapper.map(resourceDto, Resource.class);
         resourceRepository.save(resource);
         logger.info("Create resource success");
-        return new Response<Void>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
     @Transactional
