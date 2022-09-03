@@ -1,8 +1,8 @@
 package fcode.backend.management;
 
 import fcode.backend.management.model.dto.ResourceDTO;
-import fcode.backend.management.sevice.ResourceService;
-import fcode.backend.management.sevice.SubjectService;
+import fcode.backend.management.service.ResourceService;
+import fcode.backend.management.service.SubjectService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

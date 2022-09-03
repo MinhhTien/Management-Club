@@ -1,11 +1,11 @@
-package fcode.backend.management.sevice;
+package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.ResourceDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ResourceRepository;
 import fcode.backend.management.repository.SubjectRepository;
 import fcode.backend.management.repository.entity.Resource;
-import fcode.backend.management.sevice.constant.ServiceMessage;
+import fcode.backend.management.service.constant.ServiceMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
