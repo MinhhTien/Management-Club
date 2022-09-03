@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Question {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer id;
     @Column
@@ -24,12 +24,12 @@ public class Question {
     private String content;
     @Column(name = "author_email")
     private String authorEmail;
-    @Column(name = "created_time", updatable = false)
+    @Column(name = "created_time", updatable = false, insertable = false)
     private Date createdTime;
-    @Column(name = "updated_time")
+    @Column(name = "updated_time", updatable = false, insertable = false)
     private Date updatedTime;
     @Column
     private String status;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
     private Set<Comment> comments;
 }

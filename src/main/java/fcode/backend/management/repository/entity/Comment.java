@@ -21,13 +21,13 @@ public class Comment {
     private String content;
     @Column(name = "author_email")
     private String authorEmail;
-    @Column(name = "created_time", updatable = false)
+    @Column(name = "created_time", insertable = false,updatable = false)
     private Date createdTime;
-    @Column(name = "updated_time")
+    @Column(name = "updated_time", insertable = false, updatable = false)
     private Date updatedTime;
     @Column
     private String status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")
     private Question question;
 }

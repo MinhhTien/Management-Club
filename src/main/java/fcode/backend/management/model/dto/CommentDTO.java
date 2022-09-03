@@ -26,4 +26,14 @@ public class CommentDTO {
         this.authorEmail = authorEmail;
         this.status = status;
     }
+
+    public CommentDTO(String content, String authorEmail, Integer questionId) {
+        this.content = content;
+        this.authorEmail = authorEmail;
+        this.questionId = questionId;
+    }
+
+    public CommentDTO(Integer id) {
+        this.id = id;
+    }
 }

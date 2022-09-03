@@ -26,4 +26,8 @@ public class QuestionDTO {
         this.content = content;
         this.authorEmail = authorEmail;
     }
+
+    public QuestionDTO(Integer id) {
+        this.id = id;
+    }
 }
