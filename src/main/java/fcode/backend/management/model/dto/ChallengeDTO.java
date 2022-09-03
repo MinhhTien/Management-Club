@@ -5,7 +5,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class ChallengeDTO {
     private Integer id;
@@ -25,5 +24,9 @@ public class ChallengeDTO {
         this.description = description;
         this.register_url = register_url;
         this.status = status;
+    }
+
+    public ChallengeDTO(Integer id) {
+        this.id = id;
     }
 }
