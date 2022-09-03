@@ -1,14 +1,11 @@
 package fcode.backend.management;
 
 import fcode.backend.management.model.dto.QuestionDTO;
-import fcode.backend.management.sevice.QuestionService;
-import org.junit.jupiter.api.Assertions;
+import fcode.backend.management.service.QuestionService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.persistence.SecondaryTable;
 import java.util.Set;
 
 @SpringBootTest

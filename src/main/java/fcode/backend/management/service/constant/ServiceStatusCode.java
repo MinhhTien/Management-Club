@@ -1,4 +1,4 @@
-package fcode.backend.management.sevice.constant;
+package fcode.backend.management.service.constant;
 
 public class ServiceStatusCode {
     public static final int OK_STATUS = 200;

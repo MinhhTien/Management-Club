@@ -1,12 +1,12 @@
 
-package fcode.backend.management.sevice;
+package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.QuestionDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.QuestionRepository;
 import fcode.backend.management.repository.entity.Question;
-import fcode.backend.management.sevice.constant.ServiceMessage;
-import fcode.backend.management.sevice.constant.ServiceStatusCode;
+import fcode.backend.management.service.constant.ServiceMessage;
+import fcode.backend.management.service.constant.ServiceStatusCode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
