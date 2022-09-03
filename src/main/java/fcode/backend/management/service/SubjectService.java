@@ -111,15 +111,15 @@ public class SubjectService {
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
     @Transactional
-    public Response<Void> updateSubject(Integer subjectId,SubjectDTO subjectDto) {
-        logger.info("updateSubject(subjectId:{})", subjectId);
+    public Response<Void> updateSubject(SubjectDTO subjectDto) {
+        logger.info("updateSubject(subjectDto:{})", subjectDto);
 
         if(subjectDto == null) {
             logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(!subjectRepository.existsById(subjectId)){
+        if(!subjectRepository.existsById(subjectDto.getId())){
             logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -130,7 +130,6 @@ public class SubjectService {
             return new Response<>(400, "Subject name already exist");
         }
         Subject subject = modelMapper.map(subjectDto, Subject.class);
-        subject.setId(subjectId);
         subjectRepository.save(subject);
         logger.info("Update subject success");
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());

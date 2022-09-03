@@ -56,12 +56,12 @@ public class TestDemo {
 
     @Test
     public void updateSubject1() {
-        subjectService.updateSubject(1,new SubjectDTO("JPD103",3));
+        subjectService.updateSubject(new SubjectDTO(1,"JPD103",3));
     }
 
     @Test
     public void updateSubject2() {
-        subjectService.updateSubject(3,new SubjectDTO("CSI101",3));
+        subjectService.updateSubject(new SubjectDTO(3,"CSI101",3));
     }
 
     @Test

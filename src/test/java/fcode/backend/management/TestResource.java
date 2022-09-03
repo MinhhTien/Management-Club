@@ -48,7 +48,7 @@ public class TestResource {
 
     @Test
     public void updateResource1() {
-        resourceService.updateResource(1, new ResourceDTO("http://dbfgsdf","HaiUH","resourceCEA101",1));
+        resourceService.updateResource( new ResourceDTO(1,"http://dbfgsdf","HaiUH","resourceCEA101",1));
     }
 
     @Test

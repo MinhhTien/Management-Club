@@ -113,15 +113,15 @@ public class ResourceService {
     }
 
     @Transactional
-    public Response<Void> updateResource(Integer resourceId,ResourceDTO resourceDto) {
-        logger.info("updateResource(resourceId:{})", resourceId);
+    public Response<Void> updateResource(ResourceDTO resourceDto) {
+        logger.info("updateResource(resourceDto:{})", resourceDto);
 
         if(resourceDto == null) {
             logger.warn("{}{}", UPDATE_RESOURCE, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(!resourceRepository.existsById(resourceId)){
+        if(!resourceRepository.existsById(resourceDto.getId())){
             logger.warn("{}{}", UPDATE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -132,7 +132,6 @@ public class ResourceService {
         }
 
         Resource resource = modelMapper.map(resourceDto, Resource.class);
-        resource.setId(resourceId);
         resourceRepository.save(resource);
         logger.info("Update resource success");
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
