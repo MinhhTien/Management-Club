@@ -1,4 +1,4 @@
-package fcode.backend.management.sevice.constant;
+package fcode.backend.management.service.constant;
 
 import lombok.Getter;
 
