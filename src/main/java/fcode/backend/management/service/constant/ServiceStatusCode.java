@@ -1,9 +1,16 @@
 package fcode.backend.management.service.constant;
 
-public class ServiceStatusCode {
-    public static final int OK_STATUS = 200;
-    public static final int NOT_FOUND_STATUS = 404;
-    public static final int BAD_REQUEST_STATUS = 400;
-    public static final int UNAUTHENTICATED_STATUS = 401;
-    public static final int FORBIDDEN_STATUS = 403;
+import lombok.Getter;
+
+@Getter
+public enum ServiceStatusCode {
+
+    OK_STATUS(200),
+    NOT_FOUND_STATUS(404),
+    BAD_REQUEST_STATUS(400);
+
+    private final int code;
+    ServiceStatusCode(int code) {
+        this.code = code;
+    }
 }

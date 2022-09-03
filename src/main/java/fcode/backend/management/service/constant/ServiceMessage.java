@@ -8,7 +8,7 @@ public enum ServiceMessage {
     ID_NOT_EXIST_MESSAGE("Id is not exist"),
     INVALID_ARGUMENT_MESSAGE("Invalid argument"),
     FORBIDDEN_MESSAGE("User do not have role to use this service");
-    private String message;
+    private final String message;
     ServiceMessage(String message) {
         this.message = message;
     }
