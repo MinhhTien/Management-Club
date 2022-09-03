@@ -22,7 +22,7 @@ class CommentServiceTests {
     @Test
     void getComment() {
         System.out.println(commentService.getCommentById(1).getData());
-        commentService.getAllCommentsOfAQuestion(new QuestionDTO(1)).getData().forEach(System.out::println);
+        commentService.getAllCommentsOfAQuestion(1).getData().forEach(System.out::println);
     }
 
     @Test
@@ -34,7 +34,7 @@ class CommentServiceTests {
     }
     @Test
     void deleteComment() {
-        commentService.deleteComment(new CommentDTO(1));
+        commentService.deleteComment(1);
         commentService.deleteAllCommentByAuthorEmail("authorcomment1@gmail.com");
     }
 }

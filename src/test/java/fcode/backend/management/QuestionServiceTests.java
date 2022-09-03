@@ -23,10 +23,10 @@ class QuestionServiceTests {
 
     @Test
     void approveQuestion() {
-        questionService.approveQuestion(new QuestionDTO(1));
-        questionService.approveQuestion(new QuestionDTO(5));
-        questionService.disapproveQuestion(new QuestionDTO(4));
-        questionService.approveQuestion(new QuestionDTO(3));
+        questionService.approveQuestion(1);
+        questionService.approveQuestion(5);
+        questionService.disapproveQuestion(4);
+        questionService.approveQuestion(3);
     }
 
 
@@ -72,7 +72,7 @@ class QuestionServiceTests {
 
     @Test
     void deleteQuestion() {
-        questionService.deleteQuestion(new QuestionDTO(2));
+        questionService.deleteQuestion(2);
         questionService.deleteQuestionByAuthorEmail("author1@gmail.com");
     }
     @Test

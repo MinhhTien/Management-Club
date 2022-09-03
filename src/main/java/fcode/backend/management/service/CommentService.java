@@ -1,7 +1,6 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.CommentDTO;
-import fcode.backend.management.model.dto.QuestionDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.CommentRepository;
 import fcode.backend.management.repository.QuestionRepository;
@@ -53,13 +52,10 @@ public class CommentService {
         return new Response<>(ServiceStatusCode.OK_STATUS.getCode(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Set<CommentDTO>> getAllCommentsOfAQuestion(QuestionDTO questionDTO) {
-        logger.info("{}{}", GET_COMMENT_MESSAGE, questionDTO);
-        if (questionDTO == null) {
-            logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS.getCode(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Question questionEntity = questionRepository.findQuestionById(questionDTO.getId());
+    public Response<Set<CommentDTO>> getAllCommentsOfAQuestion(Integer questionId) {
+        logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
+
+        Question questionEntity = questionRepository.findQuestionById(questionId);
         if (questionEntity == null) {
             logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -97,6 +93,7 @@ public class CommentService {
             logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
+
         if (content != null) {
             commentEntity.setContent(content);
         }
@@ -105,13 +102,10 @@ public class CommentService {
         return new Response<>(ServiceStatusCode.OK_STATUS.getCode(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteComment(CommentDTO commentDTO) {
-        logger.info("{}{}", DELETE_COMMENT_MESSAGE, commentDTO);
-        if (commentDTO == null) {
-            logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS.getCode(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Comment commentEntity = commentRepository.findCommentToModifyById(commentDTO.getId());
+    public Response<Void> deleteComment(Integer id) {
+        logger.info("{}{}", DELETE_COMMENT_MESSAGE, id);
+
+        Comment commentEntity = commentRepository.findCommentToModifyById(id);
         if (commentEntity == null) {
             logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());

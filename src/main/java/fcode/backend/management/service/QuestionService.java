@@ -85,13 +85,10 @@ public class QuestionService {
     }
 
 
-    public Response<Void> approveQuestion(QuestionDTO questionDTO) {
-        logger.info("{}{}", APPROVE_QUESTION, questionDTO);
-        if (questionDTO == null) {
-            logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS.getCode(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Question questionEntity = questionRepository.findQuestionToApproveById(questionDTO.getId());
+    public Response<Void> approveQuestion(Integer id) {
+        logger.info("{}{}", APPROVE_QUESTION, id);
+
+        Question questionEntity = questionRepository.findQuestionToApproveById(id);
         if (questionEntity == null) {
             logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -103,13 +100,10 @@ public class QuestionService {
         return new Response<>(ServiceStatusCode.OK_STATUS.getCode(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> disapproveQuestion(QuestionDTO questionDTO) {
-        logger.info("{}{}", APPROVE_QUESTION, questionDTO);
-        if (questionDTO == null) {
-            logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS.getCode(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Question questionEntity = questionRepository.findQuestionToApproveById(questionDTO.getId());
+    public Response<Void> disapproveQuestion(Integer id) {
+        logger.info("{}{}", APPROVE_QUESTION, id);
+
+        Question questionEntity = questionRepository.findQuestionToApproveById(id);
         if (questionEntity == null) {
             logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -180,13 +174,10 @@ public class QuestionService {
         return new Response<>(ServiceStatusCode.OK_STATUS.getCode(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteQuestion(QuestionDTO questionDTO) {
-        logger.info("{}{}", DELETE_QUESTION, questionDTO);
-        if (questionDTO == null) {
-            logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(ServiceStatusCode.BAD_REQUEST_STATUS.getCode(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        Question questionEntity = questionRepository.findQuestionToModifyById(questionDTO.getId());
+    public Response<Void> deleteQuestion(Integer id) {
+        logger.info("{}{}", DELETE_QUESTION, id);
+
+        Question questionEntity = questionRepository.findQuestionToModifyById(id);
         if (questionEntity == null) {
             logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(ServiceStatusCode.NOT_FOUND_STATUS.getCode(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
