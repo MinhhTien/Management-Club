@@ -2,7 +2,7 @@ package fcode.backend.management.config;
 
 
 import fcode.backend.management.model.response.Response;
-import fcode.backend.management.sevice.exception.ServiceException;
+import fcode.backend.management.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
