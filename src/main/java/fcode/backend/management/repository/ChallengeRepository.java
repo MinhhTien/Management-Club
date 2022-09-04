@@ -17,4 +17,10 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Integer> {
     @Query(nativeQuery = true, value = "SELECT * from challenge WHERE status = 'unavailable' AND id = ?1")
     Challenge restoreChallengeById(Integer id);
 
+    @Query(nativeQuery = true, value = "SELECT * from challenge WHERE title = ?1")
+    Challenge findChallengeByTitle(String title);
+
+    @Query(nativeQuery = true, value = "SELECT * from challenge WHERE register_url = ?1")
+    Challenge findChallengeByRegister_url(String register_url);
+
 }

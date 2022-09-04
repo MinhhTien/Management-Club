@@ -21,4 +21,8 @@ public class ChallengeDTO {
         this.description = description;
         this.register_url = register_url;
     }
+
+    public ChallengeDTO(Integer id) {
+        this.id = id;
+    }
 }

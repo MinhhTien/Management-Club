@@ -22,24 +22,23 @@ public class ChallengeServiceTest {
 
 //    @Test
 //    void createChallenge() {
-//        challengeServices.createChallenge(new ChallengeDTO("Thử thách 1", "Test 1", "https://"));
+//        challengeServices.createChallenge(new ChallengeDTO("Thử thách 1", "Test 1", "http://"));
 //        challengeServices.createChallenge(new ChallengeDTO("Thử thách 2", "Test 2", "https://"));
-//        challengeServices.createChallenge(new ChallengeDTO("Thử thách 3", "Test 3", "https://"));
+//        challengeServices.createChallenge(new ChallengeDTO("Thử thách 3", "Test 3", "httpss://"));
 //    }
 
 //    @Test
 //    void updateChallenge() {
-//        challengeServices.updateChallenge(12, "Thử thách hai", null, null);
+//        challengeServices.updateChallenge(new ChallengeDTO(3), "Thử thách ba", "Test2", null);
 //    }
 
 //    @Test
 //    void deleteChallenge() {
-//        challengeServices.deleteChallenge(12);
+//        challengeServices.deleteChallenge(1);
 //    }
 
 //    @Test
 //    void restoreChallenge() {
-//        challengeServices.restoreChallenge(11);
-//        challengeServices.restoreChallenge(12);
+//        challengeServices.restoreChallenge(1);
 //    }
 }
