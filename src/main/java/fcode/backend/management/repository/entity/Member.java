@@ -1,6 +1,7 @@
 package fcode.backend.management.repository.entity;
 
 import fcode.backend.management.config.Role;
+import fcode.backend.management.config.interceptor.Status;
 import fcode.backend.management.model.response.GoogleInfoResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,8 @@ public class Member {
     private String ip;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
