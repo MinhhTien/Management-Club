@@ -16,8 +16,6 @@ public class GatewayConstant {
     }
 
     public static void addApiEntities() {
-        apiEntities.add(new ApiEntity("Login by student","/auth",GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Login by member", "/auth", PUT_METHOD, null));
-        apiEntities.add(new ApiEntity("Register", "/auth", POST_METHOD, null));
+        apiEntities.add(new ApiEntity("Auth api","/auth/**",GET_METHOD, null));
     }
 }
