@@ -13,13 +13,13 @@ public class ChallengeDTO {
     private Integer id;
     private String title;
     private String description;
-    private String register_url;
+    private String registerUrl;
     private String status;
 
-    public ChallengeDTO(String title, String description, String register_url) {
+    public ChallengeDTO(String title, String description, String registerUrl) {
         this.title = title;
         this.description = description;
-        this.register_url = register_url;
+        this.registerUrl = registerUrl;
     }
 
     public ChallengeDTO(Integer id) {

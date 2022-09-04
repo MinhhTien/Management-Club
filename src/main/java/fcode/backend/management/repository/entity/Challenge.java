@@ -1,5 +1,7 @@
 package fcode.backend.management.repository.entity;
 
+
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,13 +28,13 @@ public class Challenge {
     private String description;
 
     @Column(name = "register_url")
-    private String register_url;
+    private String registerUrl;
 
     @Column(name = "created_time", updatable = false, insertable = false)
-    private Date created_time;
+    private Date createdTime;
 
     @Column(name = "updated_time", updatable = false, insertable = false)
-    private Date updated_time;
+    private Date updatedTime;
 
     @Column(name = "status")
     private String status;

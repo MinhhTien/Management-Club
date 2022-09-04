@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    AVAILABLE_STATUS("available"),
-    UNAVAILABLE_STATUS("unavailable");
+    ACTIVE_STATUS("active"),
+    INACTIVE_STATUS("inactive");
     private final String message;
     Status(String message) {
         this.message = message;
