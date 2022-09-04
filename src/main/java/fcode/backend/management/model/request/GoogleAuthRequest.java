@@ -15,10 +15,10 @@ public class GoogleAuthRequest {
         this.code = code;
     }
 
-    public GoogleAuthRequest(GoogleAuthRequest googleAuthRequest, String code) {
+    public GoogleAuthRequest(GoogleAuthRequest googleAuthRequest, String code,String redirectUri) {
         this.clientId = googleAuthRequest.clientId;
         this.clientSecret = googleAuthRequest.clientSecret;
-        this.redirectUri = googleAuthRequest.redirectUri;
+        this.redirectUri = redirectUri;
         this.grantType = googleAuthRequest.grantType;
         this.code = code;
     }
@@ -30,7 +30,6 @@ public class GoogleAuthRequest {
     @Value("${auth.client.secret}")
     private String clientSecret;
     @JsonProperty("redirect_uri")
-    @Value("${auth.redirect.uri}")
     private String redirectUri;
     @JsonProperty("grant_type")
     @Value("${auth.grant.type}")

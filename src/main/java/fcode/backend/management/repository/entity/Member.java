@@ -1,11 +1,14 @@
 package fcode.backend.management.repository.entity;
 
+import fcode.backend.management.config.Role;
+import fcode.backend.management.model.response.GoogleInfoResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "member")
@@ -31,7 +34,8 @@ public class Member {
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
     @Column
-    private String role;
+    @Enumerated(EnumType.ORDINAL)
+    private Role role;
     @Column(name = "club_entry_date")
     private Date clubEntryDate;
     @Column
@@ -43,9 +47,20 @@ public class Member {
     @Column(name = "facebook_url")
     private String facebookUrl;
     @Column(name = "active_point")
-    private String activePoint;	
+    private String activePoint;
     @Column
-    private String token;
+    private String ip;
+
     @Column
     private String status;
+
+    public Member(GoogleInfoResponse response, String studentEmailDomain) {
+        this.firstName = response.getFamilyName();
+        this.lastName = response.getGivenName();
+        if (response.getEmail().endsWith(studentEmailDomain))
+            this.schoolMail = response.getEmail();
+        else
+            this.personalMail = response.getEmail();
+        this.avatarUrl = response.getPicture();
+    }
 }
