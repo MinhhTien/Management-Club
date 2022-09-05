@@ -47,8 +47,6 @@ public class Member {
     private String schoolMail;
     @Column(name = "facebook_url")
     private String facebookUrl;
-    @Column(name = "active_point")
-    private String activePoint;
     @Column
     private String ip;
 
