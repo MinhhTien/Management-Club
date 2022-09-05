@@ -1,7 +1,7 @@
 package fcode.backend.management.controller;
 
 import fcode.backend.management.model.response.Response;
-import fcode.backend.management.sevice.AuthService;
+import fcode.backend.management.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
