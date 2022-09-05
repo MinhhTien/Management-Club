@@ -1,4 +1,4 @@
-package fcode.backend.management.sevice;
+package fcode.backend.management.service;
 
 import fcode.backend.management.config.JwtTokenUtil;
 import fcode.backend.management.config.WebMvcConfiguration;
@@ -9,8 +9,8 @@ import fcode.backend.management.model.response.GoogleTokenResponse;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Member;
-import fcode.backend.management.sevice.constant.ServiceMessage;
-import fcode.backend.management.sevice.exception.ServiceException;
+import fcode.backend.management.service.constant.ServiceMessage;
+import fcode.backend.management.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
