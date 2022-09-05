@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class GatewayInterceptor implements HandlerInterceptor {
     private static Logger logger = LogManager.getLogger(GatewayInterceptor.class);
     @Autowired
-    AuthService authService;
+    MemberRepository memberRepository;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
@@ -39,8 +39,8 @@ public class GatewayInterceptor implements HandlerInterceptor {
             }
             return true;
         } catch (AuthException e) {
-            response.sendError(e.getHttpStatus().value(), e.getMessage());
-            logger.error("{}{}", e.getHttpStatus().value(), e.getMessage());
+            response.setStatus(e.getHttpStatus().value(),e.getMessage());
+            logger.error("{} {}", e.getHttpStatus().value(), e.getMessage());
             return false;
         }
     }
@@ -60,7 +60,6 @@ public class GatewayInterceptor implements HandlerInterceptor {
         String servletPath = request.getServletPath();
         String accessToken = request.getHeader(GatewayConstant.AUTHORIZATION_HEADER);
         ApiEntity apiEntity = getMatchingAPI(httpMethod, servletPath);
-        if (apiEntity == null) throw new NotFoundApiException();
         if (apiEntity.getRole() == null)
             return null;
         if (accessToken == null) {
@@ -72,7 +71,7 @@ public class GatewayInterceptor implements HandlerInterceptor {
         }
         if (apiEntity.getRole().equals(Role.STUDENT))
             return new LoginUserDTO(userEmail);
-        LoginUserDTO loginUserDTO = authService.getLoginUserByEmail(userEmail);
+        LoginUserDTO loginUserDTO = memberRepository.getLoginUserByEmail(userEmail);
         if (!request.getRemoteAddr().equals(loginUserDTO.getIp()))
             throw new AccountLoggedInException();
         logger.info("Path:{} VerifyDTO:{}", servletPath, loginUserDTO);
@@ -90,7 +89,6 @@ public class GatewayInterceptor implements HandlerInterceptor {
                 return apiEntity;
             }
         }
-        logger.warn("Not found api");
-        return null;
+        throw new NotFoundApiException();
     }
 }

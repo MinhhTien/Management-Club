@@ -1,15 +1,13 @@
 package fcode.backend.management.config.interceptor;
 
 import fcode.backend.management.config.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ApiEntity {
     private String name;
     private String pattern;

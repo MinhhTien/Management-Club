@@ -1,5 +1,7 @@
 package fcode.backend.management.config.interceptor;
 
+import fcode.backend.management.config.Role;
+
 import java.util.ArrayList;
 import java.util.List;
 

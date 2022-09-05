@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 
 @Service
@@ -49,6 +50,7 @@ public class AuthService {
         logger.info("{}{}","Login by student success: ", response.getEmail());
         return new Response<>(HttpStatus.OK.value(),"Login success", jwtTokenUtil.generateToken(response.getEmail()));
     }
+    @Transactional
     public Response<String> loginByMember(String loginCode,String ip,String redirectUri){
         GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode,redirectUri);
         logger.info("Login by member started");
