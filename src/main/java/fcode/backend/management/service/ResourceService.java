@@ -5,11 +5,13 @@ import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ResourceRepository;
 import fcode.backend.management.repository.SubjectRepository;
 import fcode.backend.management.repository.entity.Resource;
+import fcode.backend.management.repository.entity.Subject;
 import fcode.backend.management.service.constant.ServiceMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,22 +33,30 @@ public class ResourceService {
     private static final String CREATE_RESOURCE = "Create resource: ";
     private static final String UPDATE_RESOURCE = "Update resource: ";
     private static final String DELETE_RESOURCE = "Delete resource: ";
+    private static final String SUBJECT_NOT_EXIST = "Subject not exist.";
 
+    @Transactional
     public Response<List<ResourceDTO>> getAllResources() {
         logger.info("getResources()");
 
         List<ResourceDTO> resourceDTOList = resourceRepository.getAllResources().stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+                .map(resourceEntity -> {
+                    ResourceDTO resourceDTO = modelMapper.map(resourceEntity, ResourceDTO.class);
+                    //resourceDTO.setSubjectId(resourceEntity.getSubject().getId());
+                    return resourceDTO;
+                }).collect(Collectors.toList());
 
         logger.info("Get all resources success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
+    @Transactional
     public Response<List<ResourceDTO>> getResourcesBySubjectId(Integer subjectId) {
         logger.info("getResourcesBySubjectId(subjectId: {})", subjectId);
 
-        List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectId(subjectId).stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+        List<ResourceDTO> resourceDTOList = subjectRepository.findSubjectById(subjectId).getResourceList()
+                .stream().map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+
         if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
@@ -55,43 +65,55 @@ public class ResourceService {
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
+    @Transactional
     public Response<List<ResourceDTO>> getResourcesBySemester(Integer semester) {
         logger.info("getResourcesBySemester(semester: {})", semester);
 
         List<ResourceDTO> resourceDTOList = resourceRepository.getResourcesBySubjectSemester(semester).stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+                .map(resourceEntity -> {
+                    ResourceDTO resourceDTO = modelMapper.map(resourceEntity, ResourceDTO.class);
+                    resourceDTO.setSubjectId(resourceEntity.getSubject().getId());
+                    return resourceDTO;
+                }).collect(Collectors.toList());
         if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Get resources by semester:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Get resources by semester success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
+    @Transactional
     public Response<List<ResourceDTO>> searchResourcesByContributor(String contributor) {
         logger.info("searchResourcesByContributor(contributor: {})", contributor);
 
         List<ResourceDTO> resourceDTOList = resourceRepository.searchResourcesByContributor("% %".replace(" ", contributor)).stream()
-                .map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
+                .map(resourceEntity -> {
+                    ResourceDTO resourceDTO = modelMapper.map(resourceEntity, ResourceDTO.class);
+                    resourceDTO.setSubjectId(resourceEntity.getSubject().getId());
+                    return resourceDTO;
+                }).collect(Collectors.toList());
         if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Search resources by contributor:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Search resources by contributor success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
     public Response<ResourceDTO> getResourceById(Integer id) {
         logger.info("getResourceById(resourceId: {})", id);
 
-        ResourceDTO resourceDTO = modelMapper.map(resourceRepository.findOneById(id), ResourceDTO.class);
-        if(resourceDTO == null) {
-            logger.warn("{}{}", "Get resource by id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        if(!resourceRepository.existsById(id)) {
+            logger.warn("{}{}", "Get resource by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
+        Resource resource = resourceRepository.findOneById(id);
+        ResourceDTO resourceDTO = modelMapper.map(resource, ResourceDTO.class);
+        resourceDTO.setSubjectId(resource.getSubject().getId());
 
         logger.info("{}{}", "Get resource by id: ", ServiceMessage.SUCCESS_MESSAGE.getMessage());
-        return  new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTO);
+        return  new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTO);
     }
 
     @Transactional
@@ -100,16 +122,22 @@ public class ResourceService {
 
         if(resourceDto == null) {
             logger.warn("{}{}",CREATE_RESOURCE, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(resourceRepository.findResourceByUrl(resourceDto.getUrl()) != null) {
+        if(resourceRepository.existsByUrl(resourceDto.getUrl())) {
             logger.warn("{}{}", CREATE_RESOURCE, "Resource URL already exist.");
-            return new Response<>(400, "Resource URL already exist.");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Resource URL already exist.");
         }
+        if(!subjectRepository.existsById(resourceDto.getSubjectId())) {
+            logger.warn("{}{}", CREATE_RESOURCE, SUBJECT_NOT_EXIST);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), SUBJECT_NOT_EXIST);
+        }
+        resourceDto.setId(null);
         Resource resource = modelMapper.map(resourceDto, Resource.class);
+        resource.setSubject(new Subject(resourceDto.getSubjectId()));
         resourceRepository.save(resource);
         logger.info("Create resource success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
     @Transactional
@@ -118,23 +146,24 @@ public class ResourceService {
 
         if(resourceDto == null) {
             logger.warn("{}{}", UPDATE_RESOURCE, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
         if(!resourceRepository.existsById(resourceDto.getId())){
             logger.warn("{}{}", UPDATE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(resourceRepository.findResourceByUrl(resourceDto.getUrl()) != null) {
-            logger.warn("{}{}", UPDATE_RESOURCE, "Resource URL already exist");
-            return new Response<>(400, "Resource URL already exist");
+        if(!resourceRepository.existsBySubject(resourceDto.getSubjectId())) {
+            logger.warn("{}{}", UPDATE_RESOURCE, SUBJECT_NOT_EXIST);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), SUBJECT_NOT_EXIST);
         }
 
         Resource resource = modelMapper.map(resourceDto, Resource.class);
+        resource.setSubject(new Subject(resourceDto.getSubjectId()));
         resourceRepository.save(resource);
         logger.info("Update resource success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
     @Transactional
@@ -143,13 +172,13 @@ public class ResourceService {
 
         if(!resourceRepository.existsById(id)) {
             logger.warn("{}{}", DELETE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.ID_NOT_EXIST_MESSAGE.toString());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.toString());
         }
 
         Resource resource = resourceRepository.findOneById(id);
         resourceRepository.delete(resource);
         logger.info("Delete resource success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.toString());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.toString());
     }
 
 }

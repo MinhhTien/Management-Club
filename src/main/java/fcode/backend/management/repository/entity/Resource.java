@@ -15,7 +15,6 @@ public class Resource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    @Access(AccessType.PROPERTY)
     private Integer id;
 
     @Column
@@ -27,7 +26,7 @@ public class Resource {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
     private Subject subject;
 

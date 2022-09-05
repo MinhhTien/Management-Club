@@ -18,15 +18,9 @@ public class TestDemo {
 
     @Test
     public void addSubject1() {
-        subjectService.createSubject(new SubjectDTO("LAB201", 3));
-    }
-    @Test
-    public void addSubject2() {
-        subjectService.createSubject(new SubjectDTO("CEA101", 1));
-    }
-    @Test
-    public void addSubject3() {
         subjectService.createSubject(new SubjectDTO("CSI101", 1));
+        subjectService.createSubject(new SubjectDTO("SSG104", 2));
+        subjectService.createSubject(new SubjectDTO("CSD104", 3));
     }
 
     @Test
@@ -41,7 +35,7 @@ public class TestDemo {
 
     @Test
     public void getOneSubject() {
-        System.out.println(subjectService.getSubjectById(2).getData());
+        System.out.println(subjectService.getSubjectById(8).getData());
     }
 
     @Test

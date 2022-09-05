@@ -22,18 +22,19 @@ public class TestResource {
 
     @Test
     public void addResource1() {
-        resourceService.createResource(new ResourceDTO("https://wqrwteeryrey","QuanTP","resourceSSG",4));
-        resourceService.createResource(new ResourceDTO("https://aqwfsjdsfhhsdghfdfdsf","TienVM","resourceCSI",1));
+        resourceService.createResource(new ResourceDTO("https://rtgsdgfdgwteeryrey","QuanTP","resource",9));
+        resourceService.createResource(new ResourceDTO("https://rnfgfhdfhfdfdfgfdghfdfdsf","TienVM","resource",11));
+        resourceService.createResource(new ResourceDTO("https://aqwgnfmdfgdfhfhhsdghfdfdsf","TienVM","resource",12));
     }
     @Test
     public void getResource1() {
         System.out.println(resourceService.getAllResources().getData());
-        System.out.println(resourceService.getResourceById(2).getData());
+        System.out.println(resourceService.getResourceById(11).getData());
     }
 
     @Test
     public void getResource2() {
-        System.out.println(resourceService.getResourcesBySubjectId(1).getData());
+        System.out.println(resourceService.getResourcesBySubjectId(9).getData());
     }
 
     @Test
@@ -43,16 +44,16 @@ public class TestResource {
 
     @Test
     public void getResource3() {
-        System.out.println(resourceService.getResourcesBySemester(2).getData());
+        System.out.println(resourceService.getResourcesBySemester(1).getData());
     }
 
     @Test
     public void updateResource1() {
-        resourceService.updateResource( new ResourceDTO(1,"http://dbfgsdf","HaiUH","resourceCEA101",1));
+        resourceService.updateResource( new ResourceDTO(9,"http://dbfgsdf","HaiUH","resourceCEA101",12));
     }
 
     @Test
     public void deleteResource1() {
-        resourceService.deleteResource(2);
+        resourceService.deleteResource(8);
     }
 }
