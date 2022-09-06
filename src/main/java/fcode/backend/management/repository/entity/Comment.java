@@ -28,7 +28,7 @@ public class Comment {
     private Date updatedTime;
     @Column
     private String status;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 }

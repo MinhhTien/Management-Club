@@ -57,10 +57,12 @@ public class CommentService {
         logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
 
         Question questionEntity = questionRepository.findQuestionById(questionId, Status.ACTIVE_STATUS.getMessage());
+
         if (questionEntity == null) {
             logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
+
         var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equals(Status.ACTIVE_STATUS.getMessage())).collect(Collectors.toSet());
         var commentDTOSet = commentSet.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
         logger.info("Get all comment successfully.");

@@ -30,6 +30,6 @@ public class Question {
     private Date updatedTime;
     @Column
     private String status;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
     private Set<Comment> comments;
 }

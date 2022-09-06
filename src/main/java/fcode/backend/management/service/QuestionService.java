@@ -5,7 +5,7 @@ import fcode.backend.management.model.dto.QuestionDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.QuestionRepository;
 import fcode.backend.management.repository.entity.Question;
-import fcode.backend.management.service.constant.ServiceMessage; 
+import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
