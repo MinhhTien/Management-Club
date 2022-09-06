@@ -26,9 +26,9 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Question Put api", "/question/**",PUT_METHOD,Role.STUDENT));
         apiEntities.add(new ApiEntity("Question Delete api", "/question/**",DELETE_METHOD,Role.STUDENT));
 
-        apiEntities.add(new ApiEntity("Resource Get api", "/comment/**",GET_METHOD,null));
-        apiEntities.add(new ApiEntity("Resource Post api", "/comment/**",POST_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Resource Put api", "/comment/**",PUT_METHOD,Role.STUDENT));
-        apiEntities.add(new ApiEntity("Resource Delete api", "/comment/**",DELETE_METHOD,Role.STUDENT));
+        apiEntities.add(new ApiEntity("Comment Get api", "/comment/**",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Comment Post api", "/comment/**",POST_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Comment Put api", "/comment/**",PUT_METHOD,Role.STUDENT));
+        apiEntities.add(new ApiEntity("Comment Delete api", "/comment/**",DELETE_METHOD,Role.STUDENT));
     }
 }
