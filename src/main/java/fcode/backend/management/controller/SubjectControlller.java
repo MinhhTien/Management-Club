@@ -19,8 +19,8 @@ public class SubjectControlller {
         return subjectService.getAllSubjects();
     }
 
-    @GetMapping("/hasSemester")
-    public Response<List<SubjectDTO>> getSubjectsBySemester(@RequestParam Integer semester) {
+    @GetMapping("/semester/{semester}")
+    public Response<List<SubjectDTO>> getSubjectsBySemester(@PathVariable Integer semester) {
         return subjectService.getSubjectsBySemester(semester);
     }
 
@@ -29,8 +29,8 @@ public class SubjectControlller {
         return subjectService.getSubjectById(subjectId);
     }
 
-    @GetMapping("/hasName")
-    public Response<SubjectDTO> getSubjectsByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public Response<SubjectDTO> getSubjectsByName(@PathVariable String name) {
         return subjectService.getSubjectByName(name);
     }
 
@@ -40,21 +40,18 @@ public class SubjectControlller {
     }
 
     @PostMapping
-    public Response<Void> createSubject(@RequestBody SubjectDTO subjectDTO,
-                                        @RequestAttribute(required = false) String userId) {
-        return  subjectService.createSubject(subjectDTO);//userId
+    public Response<Void> createSubject(@RequestBody SubjectDTO subjectDTO) {
+        return  subjectService.createSubject(subjectDTO);
     }
 
     @PutMapping
-    public Response<Void> updateSubject(@RequestBody SubjectDTO subjectDTO,
-                                        @RequestAttribute(required = false) String userId) {
-        return subjectService.updateSubject(subjectDTO);//userId
+    public Response<Void> updateSubject(@RequestBody SubjectDTO subjectDTO) {
+        return subjectService.updateSubject(subjectDTO);
     }
 
     @DeleteMapping("/{subjectId}")
-    public Response<Void> deleteSubject(@PathVariable Integer subjectId,
-                                        @RequestAttribute(required = false) String userId) {
-        return subjectService.deleteSubject(subjectId);//userId
+    public Response<Void> deleteSubject(@PathVariable Integer subjectId) {
+        return subjectService.deleteSubject(subjectId);
     }
 
 }

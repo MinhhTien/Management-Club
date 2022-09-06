@@ -21,17 +21,17 @@ public class ResourceController {
         return resourceService.getAllResources();
     }
 
-    @GetMapping("/hasSemester")
-    public Response<List<ResourceDTO>> getResourcesBySemester(@RequestParam Integer semester) {
+    @GetMapping("/semester/{semester}")
+    public Response<List<ResourceDTO>> getResourcesBySemester(@PathVariable Integer semester) {
         return resourceService.getResourcesBySemester(semester);
     }
 
-    @GetMapping("/hasSubject/{subjectId}")
+    @GetMapping("/subject/{subjectId}")
     public Response<List<ResourceDTO>> getResourcesBySubject(@PathVariable Integer subjectId) {
         return resourceService.getResourcesBySubjectId(subjectId);
     }
 
-    @GetMapping("/byContributor")
+    @GetMapping("/contributor")
     public Response<List<ResourceDTO>> searchResourcesByContributor(@RequestParam String contributor) {
         return resourceService.searchResourcesByContributor(contributor);
     }
@@ -42,21 +42,18 @@ public class ResourceController {
     }
 
     @PostMapping
-    public Response<Void> createResource(@RequestBody ResourceDTO resourceDTO,
-                                         @RequestAttribute(required = false) String userEmail) {
-        //return resourceService.createResource(resourceDTO, userEmail);
+    public Response<Void> createResource(@RequestBody ResourceDTO resourceDTO) {
         return resourceService.createResource(resourceDTO);
     }
 
     @PutMapping
-    public Response<Void> updateResource(@RequestBody ResourceDTO resourceDTO, @RequestAttribute(required = false) String userId) {
-        return resourceService.updateResource(resourceDTO);//, userId
+    public Response<Void> updateResource(@RequestBody ResourceDTO resourceDTO) {
+        return resourceService.updateResource(resourceDTO);
     }
 
     @DeleteMapping(value = "/{resourceId}")
-    public Response<Void> deleteResource(@PathVariable int resourceId,
-                                         @RequestAttribute(required = false) String userId) {
-        return resourceService.deleteResource(resourceId);//, userId
+    public Response<Void> deleteResource(@PathVariable int resourceId) {
+        return resourceService.deleteResource(resourceId);
     }
 
 }
