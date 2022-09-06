@@ -1,5 +1,6 @@
 package fcode.backend.management.repository.entity;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

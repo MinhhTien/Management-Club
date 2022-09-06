@@ -75,8 +75,5 @@ class QuestionServiceTests {
         questionService.deleteQuestion(2);
         questionService.deleteQuestionByAuthorEmail("author1@gmail.com");
     }
-    @Test
-    void restoreQuestion() {
-        questionService.restoreQuestionByAuthorEmail("author1@gmail.com");
-    }
+
 }
