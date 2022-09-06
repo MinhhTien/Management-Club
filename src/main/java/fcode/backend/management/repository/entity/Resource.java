@@ -30,9 +30,6 @@ public class Resource {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    public Resource (Integer id) {
-        this.id = id;
-    }
 
     public Resource (String url, String contributor, String description, Subject subject) {
         this.url = url;

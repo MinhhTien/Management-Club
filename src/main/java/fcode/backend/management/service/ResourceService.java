@@ -42,7 +42,7 @@ public class ResourceService {
         List<ResourceDTO> resourceDTOList = resourceRepository.getAllResources().stream()
                 .map(resourceEntity -> {
                     ResourceDTO resourceDTO = modelMapper.map(resourceEntity, ResourceDTO.class);
-                    //resourceDTO.setSubjectId(resourceEntity.getSubject().getId());
+                    resourceDTO.setSubjectId(resourceEntity.getSubject().getId());
                     return resourceDTO;
                 }).collect(Collectors.toList());
 
