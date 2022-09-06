@@ -25,4 +25,5 @@ public class ChallengeDTO {
     public ChallengeDTO(Integer id) {
         this.id = id;
     }
+
 }

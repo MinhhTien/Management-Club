@@ -5,6 +5,7 @@ package fcode.backend.management.repository.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,7 +15,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

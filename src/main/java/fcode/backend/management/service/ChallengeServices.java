@@ -37,6 +37,38 @@ public class ChallengeServices {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), challengeDTOList);
     }
 
+    public Response<ChallengeDTO> getChallengeById(Integer id) {
+        logger.info("Get challenge by ID: {}", id);
+        if (id == null) {
+            logger.warn("{}{}", "Get challenge by ID: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        if (challengeRepository.findChallengeById(id) == null) {
+            logger.warn("{}{}", "Get challenge by ID: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+        Challenge challenge = challengeRepository.findChallengeById(id);
+        ChallengeDTO challengeDTO = modelMapper.map(challenge, ChallengeDTO.class);
+        logger.info("{}{}", "Get challenge by ID: ", ServiceMessage.SUCCESS_MESSAGE);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), challengeDTO);
+    }
+
+    public Response<ChallengeDTO> getChallengeByTitle(String title) {
+        logger.info("Get challenge by title: {}", title);
+        if (title == null) {
+            logger.warn("{}{}", "Get challenge by title: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        if (challengeRepository.findChallengeByTitle(title) == null) {
+            logger.warn("{}{}", "Get challenge by title: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        Challenge challenge = challengeRepository.findChallengeByTitle(title);
+        ChallengeDTO challengeDTO = modelMapper.map(challenge, ChallengeDTO.class);
+        logger.info("{}{}", "Get challenge by title: ", ServiceMessage.SUCCESS_MESSAGE);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), challengeDTO);
+    }
+
     @Transactional
     public Response<Void> createChallenge(ChallengeDTO challengeDTO) {
         logger.info("{}{}", CREATE_CHALLENGE, challengeDTO);
@@ -55,7 +87,7 @@ public class ChallengeServices {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Challenge URL is already exist");
         }
         Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
-        challenge.setStatus(Status.ACTIVE_STATUS.getMessage());
+        challenge.setStatus(Status.ACTIVE.getMessage());
         logger.info("{}{}", CREATE_CHALLENGE, challenge);
         challengeRepository.save(challenge);
         logger.info("Create challenge successfully");
@@ -104,7 +136,7 @@ public class ChallengeServices {
             logger.warn("{}{}", DELETE_CHALLENGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        challengeEntity.setStatus(Status.INACTIVE_STATUS.getMessage());
+        challengeEntity.setStatus(Status.INACTIVE.getMessage());
         challengeRepository.save(challengeEntity);
         logger.info("Delete challenge successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
