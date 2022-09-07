@@ -6,15 +6,10 @@ import fcode.backend.management.config.Role;
 import fcode.backend.management.config.interceptor.exception.*;
 import fcode.backend.management.model.dto.LoginUserDTO;
 import fcode.backend.management.repository.MemberRepository;
-<<<<<<< HEAD
-import fcode.backend.management.service.AuthService;
-=======
 
->>>>>>> e87e3499daa25c214ebb7ec111da45884c8a21a2
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
