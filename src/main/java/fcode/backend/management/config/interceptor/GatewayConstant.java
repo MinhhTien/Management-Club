@@ -18,8 +18,17 @@ public class GatewayConstant {
     }
 
     public static void addApiEntities() {
-
         apiEntities.add(new ApiEntity("Auth api","/auth/**",GET_METHOD, null));
+
+        apiEntities.add(new ApiEntity("Subject Get api", "/subject/**",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Subject Post api", "/subject",POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Subject Put api", "/subject",PUT_METHOD,Role.MANAGER));
+        apiEntities.add(new ApiEntity("Subject Delete api", "/subject/**",DELETE_METHOD,Role.MANAGER));
+
+        apiEntities.add(new ApiEntity("Resource Get api", "/resource/**",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Resource Post api", "/resource",POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Resource Put api", "/resource",PUT_METHOD,Role.MANAGER));
+        apiEntities.add(new ApiEntity("Resource Delete api", "/resource/**",DELETE_METHOD,Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Question Get api", "/question/**",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**",POST_METHOD, Role.STUDENT));
