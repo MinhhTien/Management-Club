@@ -47,7 +47,7 @@ public class QuestionController {
     public Response<Set<QuestionDTO>> getAllQuestions() {
         return questionService.getAllQuestions();
     }
-    @GetMapping(value = "/question/author")
+    @GetMapping(value = "/author")
     public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute String userEmail) {
         return questionService.getQuestionByAuthor(userEmail);
     }
