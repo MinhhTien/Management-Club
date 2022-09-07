@@ -22,7 +22,7 @@ public class CommentController {
     public Response<CommentDTO> getCommentById(@PathVariable Integer commentId) {
         return commentService.getCommentById(commentId);
     }
-    @GetMapping("/getByQuestion/{questionId}")
+    @GetMapping("/question/{questionId}")
     public Response <Set<CommentDTO>> getAllCommentsOfAQuestion(@PathVariable Integer questionId) {
         return commentService.getAllCommentsOfAQuestion(questionId);
     }
@@ -36,8 +36,8 @@ public class CommentController {
         return commentService.deleteComment(commentId);
     }
 
-    @DeleteMapping("/deleteByAuthor")
-    public Response<Void> deleteCommentByAuthor(@RequestAttribute String authorEmail) {
-        return commentService.deleteAllCommentByAuthorEmail(authorEmail);
+    @DeleteMapping("/author")
+    public Response<Void> deleteCommentByAuthor(@RequestAttribute String userEmail) {
+        return commentService.deleteAllCommentByAuthorEmail(userEmail);
     }
 }

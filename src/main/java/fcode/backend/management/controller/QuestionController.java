@@ -15,7 +15,7 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
-    @PostMapping(value = "/postQuestion")
+    @PostMapping()
     public Response<Void> createQuestion(@RequestBody QuestionDTO questionDTO) {
         return questionService.createQuestion(questionDTO);
     }
@@ -35,21 +35,21 @@ public class QuestionController {
     public Response<Void> deleteQuestion(@PathVariable Integer questionId) {
         return questionService.deleteQuestion(questionId);
     }
-    @DeleteMapping(value = "/deleteByAuthor")
-    public Response<Void> deleteQuestionByAuthor(@RequestAttribute String authorEmail) {
-        return questionService.deleteQuestionByAuthorEmail(authorEmail);
+    @DeleteMapping(value = "/author")
+    public Response<Void> deleteQuestionByAuthor(@RequestAttribute String userEmail) {
+        return questionService.deleteQuestionByAuthorEmail(userEmail);
     }
     @GetMapping(value = "/{questionId}")
     public Response<QuestionDTO> getQuestionById(@PathVariable Integer questionId) {
         return questionService.getQuestionById(questionId);
     }
-    @GetMapping(value = "/allQuestions")
+    @GetMapping(value = "/questions")
     public Response<Set<QuestionDTO>> getAllQuestions() {
         return questionService.getAllQuestions();
     }
-    @GetMapping(value = "/getByAuthor")
-    public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute String authorEmail) {
-        return questionService.getQuestionByAuthor(authorEmail);
+    @GetMapping(value = "/question/author")
+    public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute String userEmail) {
+        return questionService.getQuestionByAuthor(userEmail);
     }
 
 
