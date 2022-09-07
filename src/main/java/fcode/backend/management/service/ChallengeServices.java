@@ -1,11 +1,11 @@
 package fcode.backend.management.service;
 
+import fcode.backend.management.config.interceptor.Status;
 import fcode.backend.management.model.dto.ChallengeDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ChallengeRepository;
 import fcode.backend.management.repository.entity.Challenge;
 import fcode.backend.management.service.constant.ServiceMessage;
-import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -87,7 +87,7 @@ public class ChallengeServices {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Challenge URL is already exist");
         }
         Challenge challenge = modelMapper.map(challengeDTO, Challenge.class);
-        challenge.setStatus(Status.ACTIVE.getMessage());
+        challenge.setStatus(Status.ACTIVE);
         logger.info("{}{}", CREATE_CHALLENGE, challenge);
         challengeRepository.save(challenge);
         logger.info("Create challenge successfully");
@@ -136,7 +136,7 @@ public class ChallengeServices {
             logger.warn("{}{}", DELETE_CHALLENGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        challengeEntity.setStatus(Status.INACTIVE.getMessage());
+        challengeEntity.setStatus(Status.INACTIVE);
         challengeRepository.save(challengeEntity);
         logger.info("Delete challenge successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());

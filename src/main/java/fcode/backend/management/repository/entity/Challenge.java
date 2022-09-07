@@ -2,6 +2,7 @@ package fcode.backend.management.repository.entity;
 
 
 
+import fcode.backend.management.config.interceptor.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class Challenge {
     private Date updatedTime;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }
