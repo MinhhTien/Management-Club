@@ -40,7 +40,7 @@ public class QuestionService {
         }
         Question question = modelMapper.map(questionDTO, Question.class);
         question.setId(null);
-        question.setStatus(Status.PROCESSING_STATUS.getMessage());
+        question.setStatus(Status.PROCESSING);
         logger.info("{}{}", CREATE_QUESTION_MESSAGE, question);
         questionRepository.save(question);
         logger.info("Create question successfully");
@@ -50,7 +50,7 @@ public class QuestionService {
     @Transactional
     public Response<Set<QuestionDTO>> getAllQuestions() {
         logger.info("Get All Questions");
-        Set<QuestionDTO> questionDTOSet = questionRepository.findAllQuestion(Status.ACTIVE_STATUS.getMessage()).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
+        Set<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.ACTIVE).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
         logger.info("Get All Questions successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
@@ -60,7 +60,7 @@ public class QuestionService {
             logger.warn("{}{}", GET_QUESTION_BY_ID_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Question question = questionRepository.findQuestionById(id, Status.ACTIVE_STATUS.getMessage());
+        Question question = questionRepository.findQuestionByIdAndStatus(id, Status.ACTIVE);
         if (question == null) {
             logger.warn("{}{}", GET_QUESTION_BY_ID_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -77,7 +77,7 @@ public class QuestionService {
             logger.warn("{}{}", GET_QUESTION_BY_AUTHOR_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Set<Question> questions = questionRepository.findQuestionByAuthorEmail(authorEmail, Status.ACTIVE_STATUS.getMessage());
+        Set<Question> questions = questionRepository.findQuestionByAuthorEmailAndStatus(authorEmail, Status.ACTIVE);
         if (questions.isEmpty()) {
             logger.warn("{}{}", GET_QUESTION_BY_AUTHOR_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -91,13 +91,13 @@ public class QuestionService {
     public Response<Void> approveQuestion(Integer id) {
         logger.info("{}{}", APPROVE_QUESTION, id);
 
-        Question questionEntity = questionRepository.findQuestionToApproveById(id, Status.PROCESSING_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatus(id, Status.PROCESSING);
         if (questionEntity == null) {
             logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        questionEntity.setStatus(Status.ACTIVE_STATUS.getMessage());
+        questionEntity.setStatus(Status.ACTIVE);
         questionRepository.save(questionEntity);
         logger.info("Approve question successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -106,13 +106,13 @@ public class QuestionService {
     public Response<Void> disapproveQuestion(Integer id) {
         logger.info("{}{}", APPROVE_QUESTION, id);
 
-        Question questionEntity = questionRepository.findQuestionToApproveById(id, Status.PROCESSING_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatus(id, Status.PROCESSING);
         if (questionEntity == null) {
             logger.warn("{}{}", APPROVE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        questionEntity.setStatus(Status.INACTIVE_STATUS.getMessage());
+        questionEntity.setStatus(Status.INACTIVE);
         questionRepository.save(questionEntity);
         logger.info("Disapprove question successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -124,7 +124,7 @@ public class QuestionService {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Question questionEntity = questionRepository.findQuestionToModifyById(questionDTO.getId(), Status.INACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatusIsNot(questionDTO.getId(), Status.INACTIVE);
         if (questionEntity == null) {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -143,7 +143,7 @@ public class QuestionService {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Question questionEntity = questionRepository.findQuestionToModifyById(questionDTO.getId(), Status.INACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatusIsNot(questionDTO.getId(), Status.INACTIVE);
         if (questionEntity == null) {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -162,7 +162,7 @@ public class QuestionService {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Question questionEntity = questionRepository.findQuestionToModifyById(questionDTO.getId(), Status.INACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatusIsNot(questionDTO.getId(), Status.INACTIVE);
         if (questionEntity == null) {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -180,26 +180,26 @@ public class QuestionService {
     public Response<Void> deleteQuestion(Integer id) {
         logger.info("{}{}", DELETE_QUESTION, id);
 
-        Question questionEntity = questionRepository.findQuestionToModifyById(id, Status.INACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatusIsNot(id, Status.INACTIVE);
         if (questionEntity == null) {
             logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        questionEntity.setStatus(Status.INACTIVE_STATUS.getMessage());
+        questionEntity.setStatus(Status.INACTIVE);
         questionRepository.save(questionEntity);
         logger.info("Delete Question successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-    @Transactional
+   @Transactional
     public Response<Void> deleteQuestionByAuthorEmail(String authorEmail) {
         logger.info("Delete all question if author is banned.");
         if (authorEmail == null) {
             logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        var questions = questionRepository.findQuestionToDeleteByAuthorEmail(authorEmail, Status.INACTIVE_STATUS.getMessage());
+        var questions = questionRepository.findQuestionByAuthorEmailAndStatusIsNot(authorEmail, Status.INACTIVE);
         questions.forEach(question -> {
-            question.setStatus(Status.INACTIVE_STATUS.getMessage());
+            question.setStatus(Status.INACTIVE);
             questionRepository.save(question);
         });
 

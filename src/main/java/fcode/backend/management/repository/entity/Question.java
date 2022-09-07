@@ -1,5 +1,6 @@
 package fcode.backend.management.repository.entity;
 
+import fcode.backend.management.service.constant.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +30,8 @@ public class Question {
     @Column(name = "updated_time", updatable = false, insertable = false)
     private Date updatedTime;
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
     private Set<Comment> comments;
 }

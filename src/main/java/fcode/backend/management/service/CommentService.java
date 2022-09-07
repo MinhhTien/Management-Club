@@ -40,14 +40,14 @@ public class CommentService {
             logger.warn("{}{}", CREATE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Question questionEntity = questionRepository.findQuestionById(commentDTO.getQuestionId(), Status.ACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatus(commentDTO.getQuestionId(), Status.ACTIVE);
         if (questionEntity == null) {
             logger.warn("{}{}", CREATE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Comment comment = modelMapper.map(commentDTO, Comment.class);
         comment.setId(null);
-        comment.setStatus(Status.ACTIVE_STATUS.getMessage());
+        comment.setStatus(Status.ACTIVE);
         commentRepository.save(comment);
         logger.info("Create question successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -56,14 +56,14 @@ public class CommentService {
     public Response<Set<CommentDTO>> getAllCommentsOfAQuestion(Integer questionId) {
         logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
 
-        Question questionEntity = questionRepository.findQuestionById(questionId, Status.ACTIVE_STATUS.getMessage());
+        Question questionEntity = questionRepository.findQuestionByIdAndStatus(questionId, Status.ACTIVE);
 
         if (questionEntity == null) {
             logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equals(Status.ACTIVE_STATUS.getMessage())).collect(Collectors.toSet());
+        var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equals(Status.ACTIVE)).collect(Collectors.toSet());
         var commentDTOSet = commentSet.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
         logger.info("Get all comment successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
@@ -75,7 +75,7 @@ public class CommentService {
             logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Comment commentEntity = commentRepository.findCommentById(id, Status.ACTIVE_STATUS.getMessage());
+        Comment commentEntity = commentRepository.findCommentByIdAndStatus(id, Status.ACTIVE);
         if (commentEntity == null) {
             logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -91,7 +91,7 @@ public class CommentService {
             logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Comment commentEntity = commentRepository.findCommentToModifyById(commentDTO.getId(), Status.INACTIVE_STATUS.getMessage());
+        Comment commentEntity = commentRepository.findCommentByIdAndStatusIsNot(commentDTO.getId(), Status.INACTIVE);
         if (commentEntity == null) {
             logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -108,12 +108,12 @@ public class CommentService {
     public Response<Void> deleteComment(Integer id) {
         logger.info("{}{}", DELETE_COMMENT_MESSAGE, id);
 
-        Comment commentEntity = commentRepository.findCommentToModifyById(id, Status.INACTIVE_STATUS.getMessage());
+        Comment commentEntity = commentRepository.findCommentByIdAndStatusIsNot(id, Status.INACTIVE);
         if (commentEntity == null) {
             logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        commentEntity.setStatus(Status.INACTIVE_STATUS.getMessage());
+        commentEntity.setStatus(Status.INACTIVE);
         commentRepository.save(commentEntity);
         logger.info("Delete Question successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -126,9 +126,9 @@ public class CommentService {
             logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        var comments = commentRepository.findCommentToDeleteByAuthorEmail(authorEmail, Status.INACTIVE_STATUS.getMessage());
+        var comments = commentRepository.findCommentByAuthorEmailAndStatusIsNot(authorEmail, Status.INACTIVE);
         comments.forEach(comment -> {
-            comment.setStatus(Status.INACTIVE_STATUS.getMessage());
+            comment.setStatus(Status.INACTIVE);
             commentRepository.save(comment);
         });
 
