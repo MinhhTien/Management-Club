@@ -9,7 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -53,6 +53,12 @@ public class Member {
     @Column
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Announcement> announcements;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "memberList")
+    List<Notification> notificationList;
 
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
