@@ -16,12 +16,12 @@ public class AnnouncementDTO {
     private String infoUserId;
     private String location;
     private String image_url;
-    private Integer sendEmailWhenUpdate;
+    private Boolean sendEmailWhenUpdate;
     private String mail;
     private String mailTitle;
     private Integer memberId;
 
-    public AnnouncementDTO(String title, String description, String infoGroup, String infoUserId, String location, String image_url, Integer sendEmailWhenUpdate, String mail, String mailTitle, Integer memberId) {
+    public AnnouncementDTO(String title, String description, String infoGroup, String infoUserId, String location, String image_url, Boolean sendEmailWhenUpdate, String mail, String mailTitle, Integer memberId) {
         this.title = title;
         this.description = description;
         this.infoGroup = infoGroup;

@@ -1,12 +1,16 @@
 package fcode.backend.management.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fcode.backend.management.service.constant.Status;
+import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "notification")
 public class Notification {
     @Id
@@ -31,11 +35,7 @@ public class Notification {
     @JoinColumn(name = "announcement_id")
     private Announcement announcement;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "member_notification",
-            joinColumns = @JoinColumn(name = "notification_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id")
-    )
-    List<Member> memberList;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "notificationList")
+    @JsonIgnore
+    private List<Member> memberList = new ArrayList<>();
 }

@@ -45,7 +45,7 @@ public class Announcement {
     private Date updatedTime;
 
     @Column(name = "send_email_when_update")
-    private Integer sendEmailWhenUpdate;
+    private Boolean sendEmailWhenUpdate;
 
     @Column
     private String mail;
