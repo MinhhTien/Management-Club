@@ -33,9 +33,9 @@ public class Article {
     @Enumerated(EnumType.STRING)
     @Column
     private Status status;
-    @Column(name = "created_time")
+    @Column(name = "created_time", insertable = false, updatable = false)
     private Date createdTime;
-    @Column(name = "updated_time")
+    @Column(name = "updated_time", insertable = false, updatable = false)
     private Date updatedTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
