@@ -31,9 +31,8 @@ public class GatewayInterceptor implements HandlerInterceptor {
         try {
             LoginUserDTO loginUserDTO = verifyRequest(request);
             if (loginUserDTO != null) {
-                if (loginUserDTO.getEmail() == null)
+                if (loginUserDTO.getId() == null)
                     request.setAttribute("userId", loginUserDTO.getId());//get user email if request check success
-                else
                     request.setAttribute("userEmail", loginUserDTO.getEmail());
             }
             return true;
@@ -75,7 +74,10 @@ public class GatewayInterceptor implements HandlerInterceptor {
             throw new AccountLoggedInException();
         logger.info("Path:{} VerifyDTO:{}", servletPath, loginUserDTO);
         if (loginUserDTO.getRole().ordinal() >= apiEntity.getRole().ordinal())
+        {
+            loginUserDTO.setEmail(userEmail);
             return loginUserDTO;
+        }
         else
             throw new NoAccessRoleException();
     }
