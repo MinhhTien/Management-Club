@@ -28,7 +28,13 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     }
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(gatewayInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(gatewayInterceptor).addPathPatterns("/**").
+                excludePathPatterns(
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+                );
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
