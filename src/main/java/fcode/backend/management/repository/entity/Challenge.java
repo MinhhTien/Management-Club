@@ -1,12 +1,9 @@
 package fcode.backend.management.repository.entity;
 
-
-
 import fcode.backend.management.config.interceptor.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
