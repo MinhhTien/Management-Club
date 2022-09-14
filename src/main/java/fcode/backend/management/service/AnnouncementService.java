@@ -37,7 +37,7 @@ public class AnnouncementService {
     public Response<List<AnnouncementDTO>> getAllAnnoucements() {
         logger.info("getAnnoucements()");
 
-               List<AnnouncementDTO> announcementDTOList = announcementRepository.getAllAnnouncements(Status.ACTIVE).stream()
+               List<AnnouncementDTO> announcementDTOList = announcementRepository.getAllAnnouncements(Status.ACTIVE.toString()).stream()
                 .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
 
         logger.info("Get all annoucements success");
@@ -47,7 +47,7 @@ public class AnnouncementService {
     public Response<AnnouncementDTO> getAnnouncementById(Integer id) {
         logger.info("getAnnouncementById(announcementId: {})", id);
 
-        Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE);
+        Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE.toString());
         if(announcement == null) {
             logger.warn("{}{}", "Get announcement by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -61,7 +61,7 @@ public class AnnouncementService {
     public Response<List<AnnouncementDTO>> searchAnnouncements(String value) {
         logger.info("searchAnnouncements(value : {})", value);
 
-        List<AnnouncementDTO> announcementDTOList = announcementRepository.searchAllByTitle("% %".replace(" ", value), Status.ACTIVE).stream()
+        List<AnnouncementDTO> announcementDTOList = announcementRepository.searchAllByTitle("% %".replace(" ", value), Status.ACTIVE.toString()).stream()
                 .map(subjectEntity -> modelMapper.map(subjectEntity, AnnouncementDTO.class)).collect(Collectors.toList());
         if(announcementDTOList.isEmpty()) {
             logger.warn("{}{}", "Search announcements by title:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
@@ -89,6 +89,7 @@ public class AnnouncementService {
         announcement.setId(null);
         announcement.setStatus(Status.ACTIVE);
         announcement.setMember(memberRepository.getReferenceById(userId));
+        announcement.setSendEmailWhenUpdate(false);
         announcementRepository.save(announcement);
         logger.info("Create announcement success");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -103,7 +104,7 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        Announcement announcement = announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE);
+        Announcement announcement = announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE.toString());
         if(announcement == null){
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -118,7 +119,7 @@ public class AnnouncementService {
         if(announcementDto.getMail()!=null) announcement.setMail(announcementDto.getMail());
         if(announcementDto.getMailTitle()!=null) announcement.setMailTitle(announcementDto.getMailTitle());
 
-        if(announcementDto.getSendEmailWhenUpdate()==true) {
+        if(announcementDto.getSendEmailWhenUpdate().booleanValue()) {
             announcement.setSendEmailWhenUpdate(announcementDto.getSendEmailWhenUpdate());
             //Send email with mail, mailTile, infoGroupId, infoUserId
         }
@@ -132,7 +133,7 @@ public class AnnouncementService {
     public Response<Void> deleteAnnouncement(Integer id) {
         logger.info("deleteAnnouncement(announcementId: {})", id);
 
-        Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE);
+        Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE.toString());
         if(announcement == null) {
             logger.warn("{}{}", DELETE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
