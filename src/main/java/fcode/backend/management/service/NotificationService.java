@@ -1,12 +1,12 @@
 package fcode.backend.management.service;
 
-import fcode.backend.management.model.dto.AnnouncementDTO;
 import fcode.backend.management.model.dto.NotificationDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.NotificationRepository;
 import fcode.backend.management.service.constant.ServiceMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,14 @@ public class NotificationService {
     @Autowired
     NotificationRepository notificationRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     private static final Logger logger = LogManager.getLogger(NotificationService.class);
     private static final String CREATE_NOTIFICATION = "Create notification: ";
     private static final String UPDATE_NOTIFICATION = "Update notification: ";
     private static final String DELETE_NOTIFICATION = "Delete notification: ";
 
-    @Transactional
     public Response<List<NotificationDTO>> getAllNotifications() {
         logger.info("getAnnoucements()");
 
@@ -48,7 +50,6 @@ public class NotificationService {
         return  new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    @Transactional
     public Response<List<NotificationDTO>> searchNotifications(String value) {
         logger.info("searchNotifications(value : {})", value);
 

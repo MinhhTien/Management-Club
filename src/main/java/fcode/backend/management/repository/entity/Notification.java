@@ -17,24 +17,18 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer id;
-
     @Column
     private String title;
-
     @Column
     private String description;
-
     @Column(name = "created_time", updatable = false, insertable = false)
     private Date createdTime;
-
     @Column
     @Enumerated(EnumType.STRING)
     private Status status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcement_id")
     private Announcement announcement;
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "notificationList")
     @JsonIgnore
     private List<Member> memberList = new ArrayList<>();

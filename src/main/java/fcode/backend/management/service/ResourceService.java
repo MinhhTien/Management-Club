@@ -35,7 +35,6 @@ public class ResourceService {
     private static final String DELETE_RESOURCE = "Delete resource: ";
     private static final String SUBJECT_NOT_EXIST = "Subject not exist.";
 
-    @Transactional
     public Response<List<ResourceDTO>> getAllResources() {
         logger.info("getResources()");
 
@@ -50,7 +49,6 @@ public class ResourceService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
-    @Transactional
     public Response<List<ResourceDTO>> getResourcesBySubjectId(Integer subjectId) {
         logger.info("getResourcesBySubjectId(subjectId: {})", subjectId);
 
@@ -65,7 +63,6 @@ public class ResourceService {
         return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
-    @Transactional
     public Response<List<ResourceDTO>> getResourcesBySemester(Integer semester) {
         logger.info("getResourcesBySemester(semester: {})", semester);
 
@@ -83,7 +80,6 @@ public class ResourceService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
-    @Transactional
     public Response<List<ResourceDTO>> searchResourcesByContributor(String contributor) {
         logger.info("searchResourcesByContributor(contributor: {})", contributor);
 
