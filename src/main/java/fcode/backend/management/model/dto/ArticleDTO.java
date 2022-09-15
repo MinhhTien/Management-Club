@@ -1,15 +1,13 @@
 package fcode.backend.management.model.dto;
 
 import fcode.backend.management.config.interceptor.Status;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
 public class ArticleDTO{
     private Integer id;
     private String title;
