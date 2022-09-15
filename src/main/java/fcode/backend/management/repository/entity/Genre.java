@@ -20,5 +20,5 @@ public class Genre {
     @Column
     private String name;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre")
-    private Set<Genre> genres;
+    private Set<Article> articles;
 }
