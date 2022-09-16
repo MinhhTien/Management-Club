@@ -34,7 +34,7 @@ public class AnnouncementService {
     private static final String UPDATE_ANNOUNCEMENT = "Update announcement: ";
     private static final String DELETE_ANNOUNCEMENT = "Delete announcement: ";
 
-    public Response<List<AnnouncementDTO>> getAllAnnoucements() {
+    public Response<List<AnnouncementDTO>> getAllAnnouncements() {
         logger.info("getAnnoucements()");
 
                List<AnnouncementDTO> announcementDTOList = announcementRepository.getAllAnnouncements(Status.ACTIVE.toString()).stream()

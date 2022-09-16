@@ -28,7 +28,7 @@ public class TestAnnouncement {
 
     @Test
     public void getAllAnnouncements() {
-        System.out.println(announcementService.getAllAnnoucements().getData());
+        System.out.println(announcementService.getAllAnnouncements().getData());
     }
 
     @Test

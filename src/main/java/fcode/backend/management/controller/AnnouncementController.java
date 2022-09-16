@@ -16,7 +16,7 @@ public class AnnouncementController {
 
     @GetMapping("/all")
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
-        return announcementService.getAllAnnoucements();
+        return announcementService.getAllAnnouncements();
     }
 
     @GetMapping("/{announcementId}")
