@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Table(name = "member")
@@ -48,11 +49,20 @@ public class Member {
     @Column(name = "facebook_url")
     private String facebookUrl;
     @Column
+    private String description;
+    @Column
     private String ip;
-
     @Column
     @Enumerated(EnumType.STRING)
     private Status status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
+    private Position position;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "crew_id")
+    private Crew crew;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private Set<Article> articles;
 
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
