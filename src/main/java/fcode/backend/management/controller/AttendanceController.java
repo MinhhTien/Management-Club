@@ -29,8 +29,8 @@ public class AttendanceController {
         return attendanceService.getAttendancesByMemberId(memberId);
     }
 
-    @GetMapping(value = "/{studentId}")
-    public Response<List<AttendanceDTO>> getAttendancesByStudentID(@PathVariable(required = false) String studentId) {
+    @GetMapping
+    public Response<List<AttendanceDTO>> getAttendancesByStudentID(@RequestAttribute(required = false) String studentId) {
         return attendanceService.getAttendancesByStudentID(studentId);
     }
 
