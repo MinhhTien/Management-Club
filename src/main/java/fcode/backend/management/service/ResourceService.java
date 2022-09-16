@@ -57,10 +57,10 @@ public class ResourceService {
 
         if(resourceDTOList.isEmpty()) {
             logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(400, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Get resources by subjectId success");
-        return new Response<>(200, ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
     }
 
     public Response<List<ResourceDTO>> getResourcesBySemester(Integer semester) {

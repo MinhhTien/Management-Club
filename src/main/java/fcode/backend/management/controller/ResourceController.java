@@ -4,7 +4,9 @@ import fcode.backend.management.model.dto.ResourceDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.validator.UrlValidator;
 
 import java.util.List;
 
@@ -35,18 +37,28 @@ public class ResourceController {
     }
 
     @GetMapping("/{resourceId}")
-    public Response<ResourceDTO> getOneResources(@PathVariable Integer resourceId) {
+    public Response<ResourceDTO> getOneResource(@PathVariable Integer resourceId) {
         return resourceService.getResourceById(resourceId);
     }
 
     @PostMapping
     public Response<Void> createResource(@RequestBody ResourceDTO resourceDTO) {
-        return resourceService.createResource(resourceDTO);
+        UrlValidator URLValidator = new UrlValidator();
+        if (URLValidator.isValid(resourceDTO.getUrl())) {
+            return resourceService.createResource(resourceDTO);
+        } else {
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid Url");
+        }
     }
 
     @PutMapping
     public Response<Void> updateResource(@RequestBody ResourceDTO resourceDTO) {
-        return resourceService.updateResource(resourceDTO);
+        UrlValidator URLValidator = new UrlValidator();
+        if (URLValidator.isValid(resourceDTO.getUrl())) {
+            return resourceService.updateResource(resourceDTO);
+        } else {
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid Url");
+        }
     }
 
     @DeleteMapping(value = "/{resourceId}")

@@ -1,6 +1,5 @@
 package fcode.backend.management.model.dto;
 
-import fcode.backend.management.service.constant.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +21,8 @@ public class AnnouncementDTO {
     private String mail;
     private String mailTitle;
 
-    public AnnouncementDTO(Integer id, String title, String description, String infoGroup, String infoUserId, String location, String imageUrl,
-                           Boolean sendEmailWhenUpdate, String mail, String mailTitle) {
+    public AnnouncementDTO(Integer id, String title, String description, String infoGroup, String infoUserId,
+                           String location, String imageUrl, Boolean sendEmailWhenUpdate, String mail, String mailTitle) {
         this.id = id;
         this.title = title;
         this.description = description;

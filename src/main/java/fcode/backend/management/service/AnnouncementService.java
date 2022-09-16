@@ -96,7 +96,7 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public Response<Void> updateAnnouncement(AnnouncementDTO announcementDto) {
+    public Response<Void> updateAnnouncement(AnnouncementDTO announcementDto, Integer userId) {
         logger.info("updateAnnouncement(announcementDto:{})", announcementDto);
 
         if(announcementDto == null) {
@@ -104,25 +104,22 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        Announcement announcement = announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE.toString());
-        if(announcement == null){
+        if(announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE.toString()) == null){
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(announcementDto.getTitle()!=null) announcement.setTitle(announcementDto.getTitle());
-        if(announcementDto.getDescription()!=null) announcement.setDescription(announcementDto.getDescription());
-        if(announcementDto.getInfoGroup()!=null) announcement.setInfoGroup(announcementDto.getInfoGroup());
-        if(announcementDto.getInfoUserId()!=null) announcement.setInfoUserId(announcementDto.getInfoUserId());
-        if(announcementDto.getLocation()!=null) announcement.setLocation(announcementDto.getLocation());
-        if(announcementDto.getImageUrl()!=null) announcement.setImageUrl(announcementDto.getImageUrl());
-        if(announcementDto.getMail()!=null) announcement.setMail(announcementDto.getMail());
-        if(announcementDto.getMailTitle()!=null) announcement.setMailTitle(announcementDto.getMailTitle());
-
         if(announcementDto.getSendEmailWhenUpdate().booleanValue()) {
-            announcement.setSendEmailWhenUpdate(announcementDto.getSendEmailWhenUpdate());
             //Send email with mail, mailTile, infoGroupId, infoUserId
         }
+
+        if (announcementRepository.getByTitleAndStatus(announcementDto.getTitle(), Status.ACTIVE.toString()) != null) {
+            logger.warn("{}{}", UPDATE_ANNOUNCEMENT, "Announcement title already exist.");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Announcement title already exist.");
+        }
+        Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
+        announcement.setStatus(Status.ACTIVE);
+        announcement.setMember(memberRepository.getReferenceById(userId));
 
         announcementRepository.save(announcement);
         logger.info("Update announcement success");
