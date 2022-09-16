@@ -37,7 +37,8 @@ public class GatewayConstant {
 
         apiEntities.add(new ApiEntity("Question Get api", "/question/**",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**",POST_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Question Put api", "/question/**",PUT_METHOD,Role.STUDENT));
+        apiEntities.add(new ApiEntity("Question Put api", "/question/",PUT_METHOD,Role.STUDENT));
+        apiEntities.add(new ApiEntity("Question Put api", "/question/**",PUT_METHOD,Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Delete api", "/question/**",DELETE_METHOD,Role.STUDENT));
 
         apiEntities.add(new ApiEntity("Comment Get api", "/comment/**",GET_METHOD,null));
@@ -47,7 +48,8 @@ public class GatewayConstant {
 
         apiEntities.add(new ApiEntity("Article Get api", "/article/**",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Article Post api", "/article/**",POST_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Article Put api", "/article/**",PUT_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Article Put api", "/article",PUT_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Article Approve api", "/article/**",PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Delete api", "/article/**",DELETE_METHOD, Role.STUDENT));
     }
 }
