@@ -57,8 +57,8 @@ public class Member {
 
     @OneToMany(
             mappedBy = "member"
-
     )
+
     private List<Attendance> attendanceList = new ArrayList<>();
 
     public Member(Integer id) {

@@ -14,7 +14,7 @@ public class ChallengeController {
     @Autowired
     ChallengeServices challengeServices;
 
-    @GetMapping(value = "/allChallenges")
+    @GetMapping(value = "/all")
     public Response<List<ChallengeDTO>> getAllChallenges() {
         return challengeServices.getAllChallenge();
     }
@@ -29,7 +29,7 @@ public class ChallengeController {
         return challengeServices.getChallengeByTitle(title);
     }
 
-    @PostMapping(value = "/newChallenge")
+    @PostMapping(value = "/new")
     public Response<Void> createChallenge(@RequestBody ChallengeDTO challengeDTO) {
         return challengeServices.createChallenge(challengeDTO);
     }

@@ -31,10 +31,10 @@ class AttendanceServiceTest {
 //
 //    @Test
 //    void getAttendancesByStudentID() {
-//        List<AttendanceDTO> attendanceDTOList = attendanceService.getAttendancesByStudentID("SE160414").getData();
+//        List<AttendanceDTO> attendanceDTOList = attendanceService.getAttendancesByStudentID("SE160411").getData();
 //        attendanceDTOList.forEach(System.out::println);
 //    }
-
+//
 //    @Test
 //    void getAttendancesByEventID() {
 //        List<AttendanceDTO> attendanceDTOList = attendanceService.getAttendancesByEventId(1).getData();
@@ -43,7 +43,7 @@ class AttendanceServiceTest {
 //
 //    @Test
 //    void getAttendancesByMemberID() {
-//        List<AttendanceDTO> attendanceDTOList = attendanceService.getAttendancesByMemberId(1).getData();
+//        List<AttendanceDTO> attendanceDTOList = attendanceService.getAttendancesByMemberId(2).getData();
 //        attendanceDTOList.forEach(System.out::println);
 //    }
 //
@@ -51,17 +51,16 @@ class AttendanceServiceTest {
 //    void createAttendance() {
 //        attendanceService.createAttendance(new AttendanceDTO(1, 2, new Date(), State.ON_TIME));
 //        attendanceService.createAttendance(new AttendanceDTO(2, 2, new Date(), State.LATE));
-//        attendanceService.createAttendance(new AttendanceDTO(2, 1, new Date(), State.ON_TIME));
 //    }
 //
 //    @Test
 //    void updateAttendance() {
-//        attendanceService.updateAttendance(new AttendanceDTO(1, 1, 1, null, State.LATE));
+//        attendanceService.updateAttendance(new AttendanceDTO(6, 2, 2, null, State.ON_TIME));
 //    }
 //
 //    @Test
 //    void deleteAttendance() {
-//        attendanceService.deleteAttendance(4);
+//        attendanceService.deleteAttendance(6);
 //    }
 
 }

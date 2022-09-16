@@ -44,5 +44,10 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Comment Post api", "/comment/**",POST_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Comment Put api", "/comment/**",PUT_METHOD,Role.STUDENT));
         apiEntities.add(new ApiEntity("Comment Delete api", "/comment/**",DELETE_METHOD,Role.STUDENT));
+
+        apiEntities.add(new ApiEntity("Attendance Get api", "/attendance/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Attendance Post api", "/attendance/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Put api", "/attendance/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Delete api", "/attendance/**", DELETE_METHOD, Role.MANAGER));
     }
 }
