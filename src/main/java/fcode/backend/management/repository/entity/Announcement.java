@@ -47,6 +47,6 @@ public class Announcement {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "announcement")
-    private List<Notification> notifications;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "announcement")
+//    private List<Notification> notifications;
 }

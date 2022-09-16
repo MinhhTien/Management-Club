@@ -38,7 +38,7 @@ public class TestAnnouncement {
     }
     @Test
     public void updateAnnouncement2() {
-        announcementService.updateAnnouncement(new AnnouncementDTO(3,"String title 12", "String description", "String infoGroup", "String infoUserId", "String location", "String imageUrl", true, "String mail", "String mailTitle"), 1);
+        announcementService.updateAnnouncement(new AnnouncementDTO(3,"", "", "String infoGroup", "String infoUserId", "String location", "String imageUrl", true, "String mail", "String mailTitle"), 1);
     }
 
     @Test
