@@ -62,7 +62,7 @@ public class AnnouncementService {
         logger.info("searchAnnouncements(value : {})", value);
 
         List<AnnouncementDTO> announcementDTOList = announcementRepository.searchAllByTitle("% %".replace(" ", value), Status.ACTIVE.toString()).stream()
-                .map(subjectEntity -> modelMapper.map(subjectEntity, AnnouncementDTO.class)).collect(Collectors.toList());
+                .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
         if(announcementDTOList.isEmpty()) {
             logger.warn("{}{}", "Search announcements by title:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());

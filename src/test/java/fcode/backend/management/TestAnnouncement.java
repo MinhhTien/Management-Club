@@ -24,7 +24,8 @@ public class TestAnnouncement {
 
     @Test
     public void addAnnouncement1() {
-        announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 3","safafdf","sadsad","asdasd"),1); }
+        //announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 3","safafdf","sadsad","asdasd"),1);
+    }
 
     @Test
     public void getAllAnnouncements() {
