@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +51,20 @@ public class Member {
     @Column(name = "facebook_url")
     private String facebookUrl;
     @Column
+    private String description;
+    @Column
     private String ip;
-
     @Column
     @Enumerated(EnumType.STRING)
     private Status status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
+    private Position position;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "crew_id")
+    private Crew crew;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private Set<Article> articles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Announcement> announcements;
