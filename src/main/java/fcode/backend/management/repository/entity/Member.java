@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -64,6 +66,16 @@ public class Member {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private Set<Article> articles;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Announcement> announcements;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "member_notification",
+//            joinColumns = @JoinColumn(name = "member_id"),
+//            inverseJoinColumns = @JoinColumn(name = "notification_id")
+//    )
+//    private List<Notification> notificationList = new ArrayList<>();
+
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
         this.lastName = response.getGivenName();
@@ -73,4 +85,17 @@ public class Member {
             this.personalMail = response.getEmail();
         this.avatarUrl = response.getPicture();
     }
+
+//    public void addNotification(Notification notification) {
+//        this.notificationList.add(notification);
+//        notification.getMemberList().add(this);
+//    }
+//
+//    public void removeNotification(Integer notificationId) {
+//        Notification notification = this.notificationList.stream().filter(noti -> noti.getId() == notificationId).findFirst().orElse(null);
+//        if(notification != null) {
+//            this.notificationList.remove(notification);
+//            notification.getMemberList().remove(this);
+//        }
+//    }
 }

@@ -31,7 +31,6 @@ public class SubjectService {
     private static final String UPDATE_SUBJECT = "Update subject: ";
     private static final String DELETE_SUBJECT = "Delete subject: ";
 
-    @Transactional
     public Response<List<SubjectDTO>> getAllSubjects() {
         logger.info("getSubjects()");
 
@@ -42,7 +41,6 @@ public class SubjectService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTOList);
     }
 
-    @Transactional
     public Response<List<SubjectDTO>> getSubjectsBySemester(Integer semester) {
         logger.info("getSubjectsBySemester(semester : {})", semester);
 
@@ -82,7 +80,6 @@ public class SubjectService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTO);
     }
 
-    @Transactional
     public Response<List<SubjectDTO>> searchSubjects(String value) {
         logger.info("searchSubjects(value : {})", value);
 
