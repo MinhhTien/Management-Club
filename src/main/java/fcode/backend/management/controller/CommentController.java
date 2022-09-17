@@ -27,13 +27,13 @@ public class CommentController {
         return commentService.getAllCommentsOfAQuestion(questionId);
     }
     @PutMapping
-    public Response<Void> updateComment(@RequestBody CommentDTO commentDTO ,@RequestAttribute String content) {
-        return commentService.updateContent(commentDTO, content);
+    public Response<Void> updateComment(@RequestBody CommentDTO commentDTO ,@RequestAttribute String content, @RequestAttribute(required = false) String userEmail) {
+        return commentService.updateContent(commentDTO, content, userEmail);
     }
 
     @DeleteMapping("/{commentId}")
-    public Response<Void> deleteCommentById(@PathVariable Integer commentId) {
-        return commentService.deleteComment(commentId);
+    public Response<Void> deleteCommentById(@PathVariable Integer commentId, @RequestAttribute(required = false) String userEmail) {
+        return commentService.deleteComment(commentId, userEmail);
     }
 
     @DeleteMapping("/author")

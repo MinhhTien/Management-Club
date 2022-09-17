@@ -1,7 +1,6 @@
 package fcode.backend.management;
 
 import fcode.backend.management.model.dto.CommentDTO;
-import fcode.backend.management.model.dto.QuestionDTO;
 import fcode.backend.management.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,10 @@ class CommentServiceTests {
 
     @Test
     void updateComment() {
-        commentService.updateContent(new CommentDTO(2), "new comment content");
-        commentService.updateContent(new CommentDTO(1), "new comment content 2");
-        commentService.updateContent(new CommentDTO(1), null);
-        commentService.updateContent(new CommentDTO(3), "new content 3");
     }
     @Test
     void deleteComment() {
-        commentService.deleteComment(1);
+
         commentService.deleteAllCommentByAuthorEmail("authorcomment1@gmail.com");
     }
 }
