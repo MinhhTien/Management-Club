@@ -146,7 +146,7 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
 
-    public Response<Void> updateArticle(ArticleDTO articleDTO, String userEmail) {
+    public Response<Void> updateArticle(ArticleDTO articleDTO, String studentId) {
         logger.info("{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
@@ -157,7 +157,7 @@ public class ArticleService {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (!article.getMember().getPersonalMail().equalsIgnoreCase(userEmail)  && !article.getMember().getSchoolMail().equalsIgnoreCase(userEmail)) {
+        if (!studentId.equals(article.getMember().getStudentId())) {
             logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
             return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
@@ -174,15 +174,18 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteArticleById(Integer id, String userEmail) {
+    public Response<Void> deleteArticleById(Integer id, String studentId) {
         logger.info("{}{}", DELETE_ARTICLE_MESSAGE, id);
-
+        if (studentId == null) {
+            logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
         Article articleEntity = articleRepository.findArticleByIdAndStatusIsNot(id, Status.INACTIVE);
         if (articleEntity == null) {
             logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (!articleEntity.getMember().getPersonalMail().equalsIgnoreCase(userEmail)  && !articleEntity.getMember().getSchoolMail().equalsIgnoreCase(userEmail)) {
+        if (!studentId.equals(articleEntity.getMember().getStudentId())) {
             logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
             return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
