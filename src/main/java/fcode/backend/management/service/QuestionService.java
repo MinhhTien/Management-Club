@@ -190,22 +190,6 @@ public class QuestionService {
         logger.info("Delete Question successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-   @Transactional
-    public Response<Void> deleteQuestionByAuthorEmail(String authorEmail) {
-        logger.info("Delete all question if author is banned.");
-        if (authorEmail == null) {
-            logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-        }
-        var questions = questionRepository.findQuestionByAuthorEmailAndStatusIsNot(authorEmail, Status.INACTIVE);
-        questions.forEach(question -> {
-            question.setStatus(Status.INACTIVE);
-            questionRepository.save(question);
-        });
-
-        logger.info("Delete all question of a author successfully.");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
-    }
 
 
 }

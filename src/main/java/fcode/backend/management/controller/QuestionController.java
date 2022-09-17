@@ -20,7 +20,7 @@ public class QuestionController {
         return questionService.createQuestion(questionDTO);
     }
     @PutMapping
-    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, String title, String content) {
+    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestParam String title, @RequestParam String content) {
         return questionService.updateQuestion(questionDTO, title, content);
     }
     @PutMapping("/approve/{questionId}")
@@ -35,10 +35,7 @@ public class QuestionController {
     public Response<Void> deleteQuestion(@PathVariable Integer questionId) {
         return questionService.deleteQuestion(questionId);
     }
-    @DeleteMapping(value = "/author")
-    public Response<Void> deleteQuestionByAuthor(@RequestAttribute String userEmail) {
-        return questionService.deleteQuestionByAuthorEmail(userEmail);
-    }
+
     @GetMapping(value = "/{questionId}")
     public Response<QuestionDTO> getQuestionById(@PathVariable Integer questionId) {
         return questionService.getQuestionById(questionId);
@@ -48,7 +45,7 @@ public class QuestionController {
         return questionService.getAllQuestions();
     }
     @GetMapping(value = "/author")
-    public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute String userEmail) {
+    public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute(required = false) String userEmail) {
         return questionService.getQuestionByAuthor(userEmail);
     }
 
