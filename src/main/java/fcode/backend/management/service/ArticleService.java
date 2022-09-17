@@ -63,18 +63,17 @@ public class ArticleService {
 
     public Response<Void> approveArticle(Integer id) {
         logger.info("{}{}", APPROVE_ARTICLE, id);
-
         Article articleEntity = articleRepository.findArticleByIdAndStatus(id, Status.PROCESSING);
         if (articleEntity == null) {
             logger.warn("{}{}", APPROVE_ARTICLE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-
         articleEntity.setStatus(Status.ACTIVE);
         articleRepository.save(articleEntity);
         logger.info("Approve article successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
+
     @Transactional
     public Response<Void> approveAll() {
         logger.info("Approve all Article");
@@ -101,22 +100,20 @@ public class ArticleService {
 
     public Response<Void> disapproveArticle(Integer id) {
         logger.info("{}{}", DISAPPROVE_ARTICLE, id);
-
         Article articleEntity = articleRepository.findArticleByIdAndStatus(id, Status.PROCESSING);
         if (articleEntity == null) {
             logger.warn("{}{}", APPROVE_ARTICLE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-
         articleEntity.setStatus(Status.INACTIVE);
         articleRepository.save(articleEntity);
         logger.info("Disapprove article successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
+
     @Transactional
     public Response<Set<ArticleDTO>> getAllArticles() {
         logger.info("{}{}", GET_ARTICLE_MESSAGE, "All article");
-
         Set<ArticleDTO> articleDTOSet = articleRepository.findArticleByStatus(Status.ACTIVE).stream().map(map -> modelMapper.map(map, ArticleDTO.class)).collect(Collectors.toSet());
         logger.info("Get all articles successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
@@ -202,10 +199,9 @@ public class ArticleService {
         }
         articleEntity.setStatus(Status.INACTIVE);
         articleRepository.save(articleEntity);
-        if (member.getRole().equals(Role.MANAGER))  logger.info("Delete Article by Manager successfully. Deleter id : {}", userId);
+        if (member.getRole().equals(Role.MANAGER))
+            logger.info("Delete Article by Manager successfully. Deleter id : {}", userId);
         else logger.info("Delete Article by member successfully. Deleter id : {}", userId);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-
-
 }
