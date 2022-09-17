@@ -14,7 +14,6 @@ public class ChallengeDTO {
     private String title;
     private String description;
     private String registerUrl;
-
     private String status;
 
     public ChallengeDTO(String title, String description, String registerUrl) {

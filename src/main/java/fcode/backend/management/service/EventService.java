@@ -32,7 +32,7 @@ public class EventService {
 
     public Response<List<EventDTO>> getAllEvents() {
         logger.info("Get all event");
-        List<EventDTO> eventDTOList = eventRepository.findAllEvent().stream()
+        List<EventDTO> eventDTOList = eventRepository.findAllEvent(Status.ACTIVE.toString()).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
         logger.info("Get all event successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), eventDTOList);
@@ -44,11 +44,11 @@ public class EventService {
             logger.warn("{}{}", GET_EVENT_BY_ID, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(eventRepository.findEventById(id) == null) {
+        if(eventRepository.findEventById(id, Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", GET_EVENT_BY_ID, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        Event event = eventRepository.findEventById(id);
+        Event event = eventRepository.findEventById(id, Status.ACTIVE.toString());
         EventDTO eventDTO = modelMapper.map(event, EventDTO.class);
         logger.info("{}{}", GET_EVENT_BY_ID, ServiceMessage.SUCCESS_MESSAGE);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), eventDTO);
@@ -60,11 +60,11 @@ public class EventService {
             logger.warn("{}{}", "Get events by name: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(eventRepository.findEventsByName("%"+name+"%").isEmpty()) {
+        if(eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).isEmpty()) {
             logger.warn("{}{}", "Get events by name: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        List<EventDTO> eventDTOList = eventRepository.findEventsByName("%"+name+"%").stream()
+        List<EventDTO> eventDTOList = eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
         logger.info("Get events successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), eventDTOList);
@@ -94,7 +94,7 @@ public class EventService {
             logger.warn("{}{}", UPDATE_EVENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Event eventEntity = eventRepository.findEventById(id);
+        Event eventEntity = eventRepository.findEventById(id, Status.ACTIVE.toString());
         if(eventEntity == null) {
             logger.warn("{}{}", UPDATE_EVENT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -129,7 +129,7 @@ public class EventService {
             logger.warn("{}{}", DELETE_EVENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Event eventEntity = eventRepository.findEventById(id);
+        Event eventEntity = eventRepository.findEventById(id, Status.ACTIVE.toString());
         if(eventEntity == null) {
             logger.warn("{}{}", DELETE_EVENT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());

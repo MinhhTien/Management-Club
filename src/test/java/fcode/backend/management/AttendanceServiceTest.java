@@ -49,8 +49,9 @@ class AttendanceServiceTest {
 //
 //    @Test
 //    void createAttendance() {
-//        attendanceService.createAttendance(new AttendanceDTO(1, 2, new Date(), State.ON_TIME));
-//        attendanceService.createAttendance(new AttendanceDTO(2, 2, new Date(), State.LATE));
+//        attendanceService.createAttendance(new AttendanceDTO(2, 2, new Date(), State.ON_TIME));
+//        attendanceService.createAttendance(new AttendanceDTO(2, 1, new Date(), State.LATE));
+//        attendanceService.createAttendance(new AttendanceDTO(2, 3, new Date(), State.LATE));
 //    }
 //
 //    @Test

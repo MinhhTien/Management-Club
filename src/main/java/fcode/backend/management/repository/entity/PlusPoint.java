@@ -1,10 +1,18 @@
 package fcode.backend.management.repository.entity;
 
+import fcode.backend.management.config.interceptor.Status;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "plus_point")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PlusPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +25,15 @@ public class PlusPoint {
     @Column
     private String reason;
 
-    @Column
+    @Column(insertable = false, updatable = false)
     private Date time;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 }

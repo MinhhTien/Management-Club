@@ -38,16 +38,16 @@ public class EventServiceTest {
 //    @Test
 //    void createEvent() {
 //
-//        eventService.createEvent(new EventDTO("Sự kiện 3", 300, "Sự kiện 3", timestamp, timestamp, "Hall G"));
+//        eventService.createEvent(new EventDTO("Sự kiện 4", 350, "Sự kiện 4", timestamp, timestamp, "Hall N"));
 //    }
 //
 //    @Test
 //    void updateEvent(){
-//        eventService.updateEvent(1, "Sự kiện đặc biệt", 500, "Sự kiện special", null, null, null);
+//        eventService.updateEvent(1, "Sự kiện đặc biệt 2", 545, "Sự kiện special", null, null, null);
 //    }
 //
 //    @Test
 //    void deleteEvent(){
-//        eventService.deleteEvent(3);
+//        eventService.deleteEvent(4);
 //    }
 }

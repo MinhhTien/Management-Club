@@ -9,6 +9,7 @@ import fcode.backend.management.repository.entity.Attendance;
 import fcode.backend.management.repository.entity.Event;
 import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.service.constant.ServiceMessage;
+import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -34,6 +35,7 @@ public class AttendanceService {
     ModelMapper modelMapper;
 
     private static final Logger logger = LogManager.getLogger(AttendanceService.class);
+    private static final String GET_ATTENDANCE = "Get attendance: ";
     private static final String CREATE_ATTENDANCE = "Create attendance: ";
     private static final String UPDATE_ATTENDANCE = "Update attendance: ";
     private static final String DELETE_ATTENDANCE = "Delete attendance: ";
@@ -60,7 +62,7 @@ public class AttendanceService {
             logger.warn("{}{}", "Get attendance by event id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(eventRepository.findEventById(eventId) == null) {
+        if(eventRepository.findEventById(eventId, fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", "Get attendance by event id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -71,6 +73,7 @@ public class AttendanceService {
                     attendanceDTO.setLastName(attendance.getMember().getLastName());
                     return attendanceDTO;
                 }).collect(Collectors.toList());
+        logger.info("{}{}", GET_ATTENDANCE, "successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), attendanceDTOList);
     }
     public Response<List<AttendanceDTO>> getAttendancesByMemberId(Integer memberId) {
@@ -90,6 +93,7 @@ public class AttendanceService {
                     attendanceDTO.setLastName(attendance.getMember().getLastName());
                     return attendanceDTO;
                 }).collect(Collectors.toList());
+        logger.info("Get attendances successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), attendanceDTOList);
     }
 
@@ -99,7 +103,7 @@ public class AttendanceService {
             logger.warn("{}{}", "Get attendance by student id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(memberRepository.findMemberByStudentId(studentId) == null) {
+        if(memberRepository.findMemberByStudentId(studentId, Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", "Get attendance by student id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -110,6 +114,7 @@ public class AttendanceService {
                     attendanceDTO.setLastName(attendance.getMember().getLastName());
                     return attendanceDTO;
                 }).collect(Collectors.toList());
+        logger.info("Get attendances successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), attendanceDTOList);
     }
 
@@ -123,7 +128,7 @@ public class AttendanceService {
             logger.warn("{}{}", CREATE_ATTENDANCE, "Attendance is already existed");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Attendance is already existed");
         }
-        if(memberRepository.findMemberById(attendanceDTO.getMemberId()) == null || eventRepository.findEventById(attendanceDTO.getEventId()) == null) {
+        if(memberRepository.findMemberById(attendanceDTO.getMemberId()) == null || eventRepository.findEventById(attendanceDTO.getEventId(), fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", CREATE_ATTENDANCE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -148,7 +153,7 @@ public class AttendanceService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         if(attendanceDTO.getMemberId() != null && memberRepository.findMemberById(attendanceDTO.getMemberId()) != null) {
-            if(attendanceDTO.getEventId() != null && eventRepository.findEventById(attendanceDTO.getEventId()) != null) {
+            if(attendanceDTO.getEventId() != null && eventRepository.findEventById(attendanceDTO.getEventId(), fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) != null) {
             attendanceEntity.setMember(new Member(attendanceDTO.getMemberId()));
             attendanceEntity.setEvent(new Event(attendanceDTO.getEventId()));
                 if(attendanceDTO.getDate() != null) {

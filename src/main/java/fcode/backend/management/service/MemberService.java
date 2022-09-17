@@ -35,7 +35,7 @@ public class MemberService {
 
     public Response<List<MemberDTO>> getAllMembers() {
         logger.info("Get all members");
-        List<MemberDTO> memberDTOList = memberRepository.findALlMember().stream()
+        List<MemberDTO> memberDTOList = memberRepository.findALlMember(fcode.backend.management.service.constant.Status.ACTIVE.toString()).stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
         logger.info("Get all members successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTOList);
@@ -63,11 +63,11 @@ public class MemberService {
             logger.warn("{}{}", "Get member by student id: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(memberRepository.findMemberByStudentId(studentId) == null) {
+        if(memberRepository.findMemberByStudentId(studentId, fcode.backend.management.service.constant.Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", "Get member by student id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        Member member = memberRepository.findMemberByStudentId(studentId);
+        Member member = memberRepository.findMemberByStudentId(studentId, Status.ACTIVE.toString());
         MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTO);
     }
@@ -78,10 +78,10 @@ public class MemberService {
             logger.warn("{}{}", "Get member by student lastname: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(memberRepository.findMemberByLastname(lastname) == null) {
+        if(memberRepository.findMemberByLastname(lastname, Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", "Get member by student lastname: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
         }
-        List<MemberDTO> memberDTOList = memberRepository.findMemberByLastname(lastname).stream()
+        List<MemberDTO> memberDTOList = memberRepository.findMemberByLastname(lastname, Status.ACTIVE.toString()).stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTOList);
     }
@@ -93,7 +93,7 @@ public class MemberService {
             logger.warn("{}{}", CREATE_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(memberRepository.findMemberByStudentId(memberDTO.getStudentId()) != null) {
+        if(memberRepository.findMemberByStudentId(memberDTO.getStudentId(), Status.ACTIVE.toString()) != null) {
             logger.warn("{}{}", CREATE_MEMBER, "Student code is already exist");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Member is already exist");
         }

@@ -19,12 +19,12 @@ public class ChallengeController {
         return challengeServices.getAllChallenge();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id/{id}")
     public Response<ChallengeDTO> getChallgenById(@PathVariable Integer id) {
         return challengeServices.getChallengeById(id);
     }
 
-    @GetMapping(value = "/{title}")
+    @GetMapping(value = "/title/{title}")
     public Response<ChallengeDTO> getChallengeByTitle(@PathVariable String title) {
         return challengeServices.getChallengeByTitle(title);
     }

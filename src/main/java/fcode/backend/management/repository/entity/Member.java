@@ -68,6 +68,12 @@ public class Member {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Announcement> announcements;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Attendance> attendanceList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<PlusPoint> plusPointList;
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(
 //            name = "member_notification",
@@ -84,6 +90,10 @@ public class Member {
         else
             this.personalMail = response.getEmail();
         this.avatarUrl = response.getPicture();
+    }
+
+    public Member(Integer id) {
+        this.id = id;
     }
 
 //    public void addNotification(Notification notification) {

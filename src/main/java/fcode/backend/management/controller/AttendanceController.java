@@ -19,12 +19,12 @@ public class AttendanceController {
         return attendanceService.getAllAttendances();
     }
 
-    @GetMapping(value = "/{eventId}")
+    @GetMapping(value = "/eventId/{eventId}")
     public Response<List<AttendanceDTO>> getAttendanceById(@PathVariable Integer eventId) {
         return attendanceService.getAttendancesByEventId(eventId);
     }
 
-    @GetMapping(value = "/{memberId}")
+    @GetMapping(value = "/memberId/{memberId}")
     public Response<List<AttendanceDTO>> getAttendanceByMemberId(@PathVariable Integer memberId) {
         return attendanceService.getAttendancesByMemberId(memberId);
     }

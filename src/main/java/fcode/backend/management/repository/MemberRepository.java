@@ -12,14 +12,14 @@ import java.util.List;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
-    @Query(nativeQuery = true, value = "SELECT * from  member WHERE status = 'active'")
-    List<Member> findALlMember();
+    @Query(nativeQuery = true, value = "SELECT * from  member WHERE status = ?1")
+    List<Member> findALlMember(String status);
 
-    @Query(nativeQuery = true, value = "SELECT * from member WHERE student_id = ?1 AND status = 'active'")
-    Member findMemberByStudentId(String studentId);
+    @Query(nativeQuery = true, value = "SELECT * from member WHERE student_id = ?1 AND status = ?2")
+    Member findMemberByStudentId(String studentId, String status);
 
-    @Query(nativeQuery = true, value = "SELECT * from member WHERE last_name = ?1 AND status = 'active'")
-    List<Member> findMemberByLastname(String lastname);
+    @Query(nativeQuery = true, value = "SELECT * from member WHERE last_name = ?1 AND status = ?2")
+    List<Member> findMemberByLastname(String lastname, String status);
 
     Member findMemberById(Integer id);
     @Query(nativeQuery = true,value = "SELECT IF(school_mail = ?1,school_mail,personal_mail) FROM member WHERE school_mail = ?1 OR personal_mail = ?1")

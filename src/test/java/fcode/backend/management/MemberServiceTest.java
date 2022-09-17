@@ -20,7 +20,7 @@ public class MemberServiceTest {
 //        List<MemberDTO> memberDTOList = memberService.getAllMembers().getData();
 //        memberDTOList.forEach(System.out::println);
 //    }
-//
+
 //    @Test
 //    void createMember() {
 //        memberService.createMember(new MemberDTO("SE160414", "Huỳnh", "Phước", "h1", "SE", null, "Student", null, "071234122", "h12@gmail.com", "h12@gmail.com", "tes12", "tes1"));
