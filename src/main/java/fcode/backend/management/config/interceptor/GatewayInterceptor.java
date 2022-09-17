@@ -31,7 +31,7 @@ public class GatewayInterceptor implements HandlerInterceptor {
         try {
             LoginUserDTO loginUserDTO = verifyRequest(request);
             if (loginUserDTO != null) {
-                if (loginUserDTO.getId() == null)
+                if (loginUserDTO.getId() != null)
                     request.setAttribute("userId", loginUserDTO.getId());//get user email if request check success
                     request.setAttribute("userEmail", loginUserDTO.getEmail());
             }
