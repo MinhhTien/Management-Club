@@ -146,7 +146,7 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
 
-    public Response<Void> updateArticle(ArticleDTO articleDTO) {
+    public Response<Void> updateArticle(ArticleDTO articleDTO, String userEmail) {
         logger.info("{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
@@ -156,6 +156,10 @@ public class ArticleService {
         if (article == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+        if (!article.getMember().getPersonalMail().equalsIgnoreCase(userEmail)  && !article.getMember().getSchoolMail().equalsIgnoreCase(userEmail)) {
+            logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         if (articleDTO.getAuthor() != null) article.setAuthor(articleDTO.getAuthor());
         if (articleDTO.getDescription() != null) article.setDescription(articleDTO.getDescription());
@@ -170,13 +174,17 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteArticleById(Integer id) {
+    public Response<Void> deleteArticleById(Integer id, String userEmail) {
         logger.info("{}{}", DELETE_ARTICLE_MESSAGE, id);
 
         Article articleEntity = articleRepository.findArticleByIdAndStatusIsNot(id, Status.INACTIVE);
         if (articleEntity == null) {
             logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+        if (!articleEntity.getMember().getPersonalMail().equalsIgnoreCase(userEmail)  && !articleEntity.getMember().getSchoolMail().equalsIgnoreCase(userEmail)) {
+            logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         articleEntity.setStatus(Status.INACTIVE);
         articleRepository.save(articleEntity);
