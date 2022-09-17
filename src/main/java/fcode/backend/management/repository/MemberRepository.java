@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
     Member findMemberById(Integer id);
+    @Query(nativeQuery = true, value = "SELECT * FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
+    Member findMemberByEmail(String email);
     @Query(nativeQuery = true,value = "SELECT IF(school_mail = ?1,school_mail,personal_mail) FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
     String existsByEmail(String email);
     @Query("select new fcode.backend.management.model.dto.LoginUserDTO(m.id,m.role,m.ip) from Member m where m.schoolMail = ?1 or m.personalMail = ?1")

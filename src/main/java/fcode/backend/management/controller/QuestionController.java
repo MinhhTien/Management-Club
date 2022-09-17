@@ -15,25 +15,35 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
-    @PostMapping()
+    @PostMapping
     public Response<Void> createQuestion(@RequestBody QuestionDTO questionDTO) {
         return questionService.createQuestion(questionDTO);
     }
     @PutMapping
-    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestParam String title, @RequestParam String content) {
-        return questionService.updateQuestion(questionDTO, title, content);
+    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestBody String title, @RequestBody String content, @RequestAttribute(required = false) String userEmail) {
+        return questionService.updateQuestion(questionDTO, title, content, userEmail);
     }
     @PutMapping("/approve/{questionId}")
     public Response<Void> approveQuestion(@PathVariable Integer questionId) {
         return questionService.approveQuestion(questionId);
     }
+
+    @PutMapping("/approve/all")
+    public Response<Void> approveAllQuestions() {
+        return questionService.approveAll();
+    }
     @PutMapping("/disapprove/{questionId}")
     public Response<Void> disapproveQuestion(@PathVariable Integer questionId) {
         return questionService.disapproveQuestion(questionId);
     }
+
+    @PutMapping("/disapprove/all")
+    public Response<Void> disapproveAllQuestions() {
+        return questionService.disapproveAll();
+    }
     @DeleteMapping(value = "/{questionId}")
-    public Response<Void> deleteQuestion(@PathVariable Integer questionId) {
-        return questionService.deleteQuestion(questionId);
+    public Response<Void> deleteQuestion(@PathVariable Integer questionId, @RequestAttribute(required = false) String userEmail) {
+        return questionService.deleteQuestion(questionId, userEmail);
     }
 
     @GetMapping(value = "/{questionId}")
@@ -49,5 +59,14 @@ public class QuestionController {
         return questionService.getQuestionByAuthor(userEmail);
     }
 
+    @GetMapping("/processing")
+    public Response<Set<QuestionDTO>> getProcessingQuestions() {
+        return questionService.getProcessingQuestions();
+    }
+
+    @GetMapping("/inactive")
+    public Response<Set<QuestionDTO>> getInactiveQuestions() {
+        return questionService.getInactiveQuestions();
+    }
 
 }

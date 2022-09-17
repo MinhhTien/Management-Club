@@ -54,26 +54,21 @@ class QuestionServiceTests {
 
     @Test
     void updateQuestion1() {
-        questionService.updateQuestion(new QuestionDTO(3), null, "new content 3");
 
-        questionService.updateQuestion(new QuestionDTO(2), null, "new content 2");
-        questionService.updateQuestion(new QuestionDTO(2), "new title 2", null);
-        questionService.updateTitle(new QuestionDTO(1), null);
-        questionService.updateContent(new QuestionDTO(1), null);
+
 
     }
 
     @Test
     void updateQuestion2() {
-        questionService.updateQuestion(new QuestionDTO(3), "new title 3", null);
-        questionService.updateTitle(new QuestionDTO(1), "new title 1");
-        questionService.updateContent(new QuestionDTO(1), "new content 1");
+
+
     }
 
     @Test
     void deleteQuestion() {
-        questionService.deleteQuestion(2);
-        questionService.deleteQuestionByAuthorEmail("author1@gmail.com");
+
+
     }
 
 }

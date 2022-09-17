@@ -1,10 +1,13 @@
 package fcode.backend.management.service;
 
+import fcode.backend.management.config.Role;
 import fcode.backend.management.model.dto.CommentDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.CommentRepository;
+import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.QuestionRepository;
 import fcode.backend.management.repository.entity.Comment;
+import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.repository.entity.Question;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
@@ -26,6 +29,8 @@ public class CommentService {
     CommentRepository commentRepository;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired
     ModelMapper modelMapper;
     private static final Logger logger = LogManager.getLogger(CommentService.class);
@@ -85,18 +90,24 @@ public class CommentService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTO);
     }
 
-    public Response<Void> updateContent(CommentDTO commentDTO, String content) {
+    public Response<Void> updateContent(CommentDTO commentDTO, String content, String userEmail) {
         logger.info("{}{}", UPDATE_COMMENT_MESSAGE, commentDTO);
+
         if (commentDTO == null) {
             logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
+
         Comment commentEntity = commentRepository.findCommentByIdAndStatusIsNot(commentDTO.getId(), Status.INACTIVE);
+
         if (commentEntity == null) {
             logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-
+        if (!userEmail.equalsIgnoreCase(commentEntity.getAuthorEmail())) {
+            logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.FORBIDDEN_MESSAGE);
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
         if (content != null) {
             commentEntity.setContent(content);
         }
@@ -105,7 +116,7 @@ public class CommentService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteComment(Integer id) {
+    public Response<Void> deleteComment(Integer id, String userEmail) {
         logger.info("{}{}", DELETE_COMMENT_MESSAGE, id);
 
         Comment commentEntity = commentRepository.findCommentByIdAndStatusIsNot(id, Status.INACTIVE);
@@ -113,9 +124,18 @@ public class CommentService {
             logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
+
+        Member user = memberRepository.findMemberByEmail(userEmail);
+        if (user == null || !user.getRole().equals(Role.MANAGER)) {
+            if (!userEmail.equals(commentEntity.getAuthorEmail())) {
+                logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.FORBIDDEN_MESSAGE);
+                return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            }
+        }
         commentEntity.setStatus(Status.INACTIVE);
         commentRepository.save(commentEntity);
-        logger.info("Delete Question successfully.");
+        if (user != null && user.getRole().equals(Role.MANAGER)) logger.info("Delete Comment by Manager successfully. Deleter id: {}", user.getId());
+        else logger.info("Delete Comment successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
