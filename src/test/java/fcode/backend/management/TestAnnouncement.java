@@ -19,7 +19,7 @@ public class TestAnnouncement {
     @Test
     public void addAnnouncements() {
         announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 121","safafdf","sadsad","asdasd","sdfsdf","https://github.com/F-Code-BE/fcode-management/tree/dev","sdfdsf","sdfdsf"), 1);
-        announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 2","sasddfdf","safdsfsad","adsfasd","dsfsdsdf","sdfsdg","werwedsf","swerwedsf"), 1);
+        announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 2",null,"safdsfsad","adsfasd","dsfsdsdf","sdfsdg","werwedsf","swerwedsf"), 1);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class TestAnnouncement {
     }
     @Test
     public void updateAnnouncement2() {
-        announcementService.updateAnnouncement(new AnnouncementDTO(3,"", "", "String infoGroup", "String infoUserId", "String location", "String imageUrl", true, "String mail", "String mailTitle"), 1);
+        announcementService.updateAnnouncement(new AnnouncementDTO(3,null, "", null, "String infoUserId", "String location", "String imageUrl", true, "String mail", "String mailTitle"), 1);
     }
 
     @Test

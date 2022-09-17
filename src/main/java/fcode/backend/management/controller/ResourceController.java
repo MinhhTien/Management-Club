@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
+    private static final String INVALID_RESOURCE_URL = "Invalid resource url.";
     @Autowired
     ResourceService resourceService;
 
@@ -47,7 +48,7 @@ public class ResourceController {
         if (URLValidator.isValid(resourceDTO.getUrl())) {
             return resourceService.createResource(resourceDTO);
         } else {
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid Url");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_RESOURCE_URL);
         }
     }
 
@@ -57,7 +58,7 @@ public class ResourceController {
         if (URLValidator.isValid(resourceDTO.getUrl())) {
             return resourceService.updateResource(resourceDTO);
         } else {
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid Url");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_RESOURCE_URL);
         }
     }
 

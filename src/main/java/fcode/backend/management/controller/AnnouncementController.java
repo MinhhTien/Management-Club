@@ -13,6 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/announcement")
 public class AnnouncementController {
+    private static final String INVALID_IMAGE_URL = "Invalid image url.";
+
     @Autowired
     AnnouncementService announcementService;
 
@@ -37,7 +39,7 @@ public class AnnouncementController {
         if (URLValidator.isValid(announcementDTO.getImageUrl())) {
             return  announcementService.createAnnouncement(announcementDTO, userId);
         } else {
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid image url");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
         }
     }
 
@@ -47,7 +49,7 @@ public class AnnouncementController {
         if (URLValidator.isValid(announcementDTO.getImageUrl())) {
             return announcementService.updateAnnouncement(announcementDTO, userId);
         } else {
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid image url");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
         }
     }
 
