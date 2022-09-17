@@ -1,5 +1,6 @@
 package fcode.backend.management.service;
 
+import fcode.backend.management.config.Role;
 import fcode.backend.management.model.dto.ArticleDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ArticleRepository;
@@ -7,6 +8,7 @@ import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Article;
 
 import fcode.backend.management.repository.GenreRepository;
+import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
@@ -43,6 +45,10 @@ public class ArticleService {
     public Response<Void> createArticle(ArticleDTO articleDTO) {
         logger.info("{}{}", CREATE_ARTICLE_MESSAGE, articleDTO);
         if (articleDTO == null) {
+            logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        if (articleDTO.getMemberId() == null || articleDTO.getGenreId() == null || articleDTO.getTitle() == null) {
             logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -127,7 +133,7 @@ public class ArticleService {
             logger.warn("{}{}", GET_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        logger.info("Get question successfully.");
+        logger.info("Get article successfully.");
         ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTO);
     }
@@ -146,13 +152,13 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
 
-    public Response<Void> updateArticle(ArticleDTO articleDTO, String studentId) {
+    public Response<Void> updateArticle(ArticleDTO articleDTO, Integer userId) {
         logger.info("{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if (studentId == null) {
+        if (userId == null) {
             logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -161,7 +167,7 @@ public class ArticleService {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (!studentId.equals(article.getMember().getStudentId())) {
+        if (!userId.equals(article.getMember().getId())) {
             logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
             return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
@@ -178,24 +184,26 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> deleteArticleById(Integer id, String studentId) {
+    public Response<Void> deleteArticleById(Integer id, Integer userId) {
         logger.info("{}{}", DELETE_ARTICLE_MESSAGE, id);
-        if (studentId == null) {
+        if (userId == null) {
             logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         Article articleEntity = articleRepository.findArticleByIdAndStatusIsNot(id, Status.INACTIVE);
+        Member member = memberRepository.findMemberById(userId);
         if (articleEntity == null) {
             logger.warn("{}{}", DELETE_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (!studentId.equals(articleEntity.getMember().getStudentId())) {
+        if (!userId.equals(articleEntity.getMember().getId()) && !member.getRole().equals(Role.MANAGER)) {
             logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
             return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         articleEntity.setStatus(Status.INACTIVE);
         articleRepository.save(articleEntity);
-        logger.info("Delete Question successfully.");
+        if (member.getRole().equals(Role.MANAGER))  logger.info("Delete Article by Manager successfully. Deleter id : {}", userId);
+        else logger.info("Delete Article by member successfully. Deleter id : {}", userId);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 

@@ -50,11 +50,11 @@ public class ArticleController {
         return articleService.disapproveAll();
     }
     @PutMapping
-    Response<Void> updateArticle(@RequestBody ArticleDTO articleDTO, @RequestAttribute(required = false) String studentId) {
-        return articleService.updateArticle(articleDTO, studentId);
+    Response<Void> updateArticle(@RequestBody ArticleDTO articleDTO, @RequestAttribute(required = false) Integer userId) {
+        return articleService.updateArticle(articleDTO, userId);
     }
     @DeleteMapping("/{id}")
-    Response<Void> deleteArticle(@PathVariable Integer id, @RequestAttribute(required = false) String studentId) {
-        return articleService.deleteArticleById(id, studentId);
+    Response<Void> deleteArticle(@PathVariable Integer id, @RequestAttribute(required = false) Integer userId) {
+        return articleService.deleteArticleById(id, userId);
     }
 }
