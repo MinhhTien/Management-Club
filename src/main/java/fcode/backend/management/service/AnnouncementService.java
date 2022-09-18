@@ -81,7 +81,7 @@ public class AnnouncementService {
         }
 
         if(announcementDto.getTitle() == null) {
-            logger.warn("{}{}",CREATE_ANNOUNCEMENT, "Empty title");
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, "Empty title");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Empty title");
         }
 
@@ -99,7 +99,7 @@ public class AnnouncementService {
     public Response<Void> updateAnnouncement(AnnouncementDTO announcementDto, Integer userId) {
         logger.info("updateAnnouncement(announcementDto:{})", announcementDto);
 
-        if(announcementDto == null) {
+        if(announcementDto == null || announcementDto.getTitle() == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -109,15 +109,12 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(announcementDto.getSendEmailWhenUpdate().booleanValue()) {
-            //Send email with mail, mailTile, infoGroupId, infoUserId
-        }
-
-        if (announcementRepository.getByTitleAndStatus(announcementDto.getTitle(), Status.ACTIVE.toString()) != null) {
-            logger.warn("{}{}", UPDATE_ANNOUNCEMENT, "Announcement title already exist.");
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Announcement title already exist.");
-        }
         Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
+        if(announcementDto.getSendEmailWhenUpdate() != null  && announcementDto.getSendEmailWhenUpdate().booleanValue()) {
+            announcement.setSendEmailWhenUpdate(true);
+            //Send email with mail, mailTile, infoGroupId, infoUserId
+        } else announcement.setSendEmailWhenUpdate(false);
+
         announcement.setStatus(Status.ACTIVE);
         announcement.setMember(memberRepository.getReferenceById(userId));
 

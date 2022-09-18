@@ -34,14 +34,14 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update Subject", "/subject", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Subject", "/subject/{subjectId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Get All Resources", "/resource/all", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Get Resources By Semester", "/resource/semester/{semester:\\d+}", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Get Resources By Subject", "/resource/subject/{subjectId:\\d+}", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Search Resources By Contributor", "/resource/contributor", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Get One Resource", "/resource/{resourceId:\\d+}", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Create New Resource", "/subject", POST_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Update Resource", "/resource", PUT_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Delete Resource", "/resource/{resourceId:\\d+}", DELETE_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Get All Resources", "/resource/all",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Get Resources By Semester", "/resource/semester/{semester:\\d+}",GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Get Resources By Subject", "/resource/subject/{subjectId:\\d+}",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Search Resources By Contributor", "/resource/contributor",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Get One Resource", "/resource/{resourceId:\\d+}",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Create New Resource", "/resource",POST_METHOD,Role.MANAGER));
+        apiEntities.add(new ApiEntity("Update Resource", "/resource",PUT_METHOD,Role.MANAGER));
+        apiEntities.add(new ApiEntity("Delete Resource", "/resource/{resourceId:\\d+}",DELETE_METHOD,Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Question Get api", "/question/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**", POST_METHOD, Role.STUDENT));

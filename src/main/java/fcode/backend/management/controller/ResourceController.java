@@ -1,5 +1,6 @@
 package fcode.backend.management.controller;
 
+import org.apache.commons.validator.UrlValidator;
 import fcode.backend.management.model.dto.ResourceDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.ResourceService;
