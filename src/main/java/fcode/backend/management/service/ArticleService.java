@@ -179,7 +179,7 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
     public Response<Void> updateArticle(ArticleDTO articleDTO, Integer userId) {
-        logger.info("{}{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO, userId);
+        logger.info("{}{} by user with id: {}", UPDATE_ARTICLE_MESSAGE, articleDTO, userId);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
