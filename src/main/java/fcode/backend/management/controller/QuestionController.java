@@ -20,8 +20,8 @@ public class QuestionController {
         return questionService.createQuestion(questionDTO);
     }
     @PutMapping
-    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestBody String title, @RequestBody String content, @RequestAttribute(required = false) String userEmail) {
-        return questionService.updateQuestion(questionDTO, title, content, userEmail);
+    public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestAttribute(required = false) String userEmail) {
+        return questionService.updateQuestion(questionDTO, userEmail);
     }
     @PutMapping("/approve/{questionId}")
     public Response<Void> approveQuestion(@PathVariable Integer questionId) {

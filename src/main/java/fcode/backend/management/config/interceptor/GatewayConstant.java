@@ -43,10 +43,14 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update Resource", "/resource", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Resource", "/resource/{resourceId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Question Get api", "/question/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get all questions api", "/question/questions", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get questions by id api", "/question/{questionId:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get questions by author api", "/question/author", GET_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Question Get processing questions", "/question/processing", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question Get inactive questions", "/question/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**", POST_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Question Put api", "/question/", PUT_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Question Put api", "/question/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question approve api", "/question/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Delete api", "/question/**", DELETE_METHOD, Role.STUDENT));
 
         apiEntities.add(new ApiEntity("Comment Get api", "/comment/**", GET_METHOD, null));
