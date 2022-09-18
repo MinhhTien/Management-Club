@@ -8,7 +8,9 @@ import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Article;
 
 import fcode.backend.management.repository.GenreRepository;
+import fcode.backend.management.repository.entity.Genre;
 import fcode.backend.management.repository.entity.Member;
+
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +51,16 @@ public class ArticleService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if (articleDTO.getMemberId() == null || articleDTO.getGenreId() == null || articleDTO.getTitle() == null) {
+            logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        Member member = memberRepository.findMemberById(articleDTO.getMemberId());
+        if (member == null) {
+            logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        Genre genre = genreRepository.findGenreById(articleDTO.getGenreId());
+        if (genre == null) {
             logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
@@ -127,14 +139,15 @@ public class ArticleService {
         }
         Article article = articleRepository.findArticleByIdAndStatus(id, Status.ACTIVE);
         if (article == null) {
-            logger.warn("{}{}", GET_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            logger.warn("{}{}", GET_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         logger.info("Get article successfully.");
         ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTO);
     }
 
+    @Transactional
     public Response<Set<ArticleDTO>> getProcessingArticles() {
         logger.info("{}{}", GET_ARTICLE_MESSAGE, "All processing articles");
         Set<ArticleDTO> articleDTOSet = articleRepository.findArticleByStatus(Status.PROCESSING).stream().map(map -> modelMapper.map(map, ArticleDTO.class)).collect(Collectors.toSet());
@@ -142,15 +155,31 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
 
+    @Transactional
     public Response<Set<ArticleDTO>> getInactiveArticles() {
         logger.info("{}{}", GET_ARTICLE_MESSAGE, "All processing articles");
         Set<ArticleDTO> articleDTOSet = articleRepository.findArticleByStatus(Status.INACTIVE).stream().map(map -> modelMapper.map(map, ArticleDTO.class)).collect(Collectors.toSet());
         logger.info("Get all processing articles successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
-
+    @Transactional
+    public Response<Set<ArticleDTO>> getArticlesByAuthor(Integer userId) {
+        logger.info("{}{}", GET_ARTICLE_MESSAGE, userId);
+        if (userId == null) {
+            logger.warn("{}{}", GET_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        Set<Article> articles = articleRepository.findArticleByMemberIdAndStatus(userId, Status.ACTIVE);
+        if (articles.isEmpty()) {
+            logger.warn("{}{}", GET_ARTICLE_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+        Set<ArticleDTO> articleDTOSet = articles.stream().map(article -> modelMapper.map(article, ArticleDTO.class)).collect(Collectors.toSet());
+        logger.info("Get article by author successfully");
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
+    }
     public Response<Void> updateArticle(ArticleDTO articleDTO, Integer userId) {
-        logger.info("{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO);
+        logger.info("{}{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO, userId);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
@@ -165,7 +194,7 @@ public class ArticleService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         if (!userId.equals(article.getMember().getId())) {
-            logger.warn("{}User have no permission.", DELETE_ARTICLE_MESSAGE);
+            logger.warn("{}User have no permission.", UPDATE_ARTICLE_MESSAGE);
             return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         if (articleDTO.getAuthor() != null) article.setAuthor(articleDTO.getAuthor());

@@ -50,7 +50,8 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Question Get inactive questions", "/question/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**", POST_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Question Put api", "/question/", PUT_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Question approve api", "/question/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question approve api", "/question/approve/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question disapprove api", "/question/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Delete api", "/question/**", DELETE_METHOD, Role.STUDENT));
 
         apiEntities.add(new ApiEntity("Comment Get api", "/comment/**", GET_METHOD, null));
@@ -66,10 +67,15 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update One Announcement", "/announcement", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Article Get api", "/article/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get all article api", "/article/all", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get article by id api", "/article/{id:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get article by author api", "/article/author", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Question Get processing articles", "/article/processing", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question Get inactive articles", "/article/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Post api", "/article/**", POST_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Article Put api", "/article", PUT_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Article Approve api", "/article/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Approve api", "/article/approve/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Disapprove api", "/article/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Delete api", "/article/**", DELETE_METHOD, Role.MEMBER));
     }
 }
