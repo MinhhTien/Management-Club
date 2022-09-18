@@ -6,23 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "challenge")
+@Table(name = "event")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Challenge {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column
     private Integer id;
 
-    @Column(name = "title")
-    private String title;
+    @Column
+    private String name;
 
-    @Column(name = "description")
+    @Column
+    private Integer point;
+
+    @Column
     private String description;
 
     @Column(name = "start_time")
@@ -31,13 +36,17 @@ public class Challenge {
     @Column(name = "end_time")
     private Date endTime;
 
-    @Column(name = "created_time", updatable = false, insertable = false)
-    private Date createdTime;
+    @Column
+    private String location;
 
-    @Column(name = "updated_time", updatable = false, insertable = false)
-    private Date updatedTime;
-
-    @Column(name = "status")
+    @Column
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+    private List<Attendance> attendanceList = new ArrayList<>();
+
+    public Event(Integer id) {
+        this.id = id;
+    }
 }

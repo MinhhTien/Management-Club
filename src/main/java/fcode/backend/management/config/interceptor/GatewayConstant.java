@@ -25,6 +25,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Challenge Put api", "/challenge/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Challenge Delete api", "/challenge/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Event Get api", "/event/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Event Post api", "/event/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Put api", "/event/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Delete api", "/event/**", DELETE_METHOD, Role.MANAGER));
+
         apiEntities.add(new ApiEntity("Get All Subjects", "/subject/all", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Subjects By Semester", "/subject/semester/{semester:\\d+}", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get One Subject", "/subject/{subjectId:\\d+}", GET_METHOD, null));
@@ -60,6 +65,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Comment Delete api", "/comment/{commentId:\\d+}", DELETE_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Comment Delete api", "/comment/author/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Attendance Get by member api", "/attendance/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Attendance Post api", "/attendance/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Put api", "/attendance/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Delete api", "/attendance/**", DELETE_METHOD, Role.MANAGER));
+        
         apiEntities.add(new ApiEntity("Get All Announcements", "/announcement/all", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/{announcementId:\\d+}", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Search Announcements By Title", "/announcement/search", GET_METHOD, Role.MEMBER));
@@ -77,5 +87,10 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Article Approve api", "/article/approve/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Disapprove api", "/article/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Delete api", "/article/**", DELETE_METHOD, Role.MEMBER));
+
+        apiEntities.add(new ApiEntity("Plus point Get api", "/pluspoint/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Plus point Post api", "/pluspoint/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Plus point Put api", "/pluspoint", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Plus point Delete api", "/pluspoint/**", DELETE_METHOD, Role.MANAGER));
     }
 }
