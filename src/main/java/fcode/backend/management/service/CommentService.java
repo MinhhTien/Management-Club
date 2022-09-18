@@ -90,7 +90,7 @@ public class CommentService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTO);
     }
 
-    public Response<Void> updateContent(CommentDTO commentDTO, String content, String userEmail) {
+    public Response<Void> updateContent(CommentDTO commentDTO, String userEmail) {
         logger.info("{}{}", UPDATE_COMMENT_MESSAGE, commentDTO);
 
         if (commentDTO == null) {
@@ -105,11 +105,11 @@ public class CommentService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         if (!userEmail.equalsIgnoreCase(commentEntity.getAuthorEmail())) {
-            logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.FORBIDDEN_MESSAGE);
-            return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            logger.warn("{}{}", UPDATE_COMMENT_MESSAGE, ServiceMessage.FORBIDDEN_MESSAGE);
+            return new Response<>(HttpStatus.FORBIDDEN.value(), ServiceMessage.FORBIDDEN_MESSAGE.getMessage());
         }
-        if (content != null) {
-            commentEntity.setContent(content);
+        if (commentDTO.getContent() != null) {
+            commentEntity.setContent(commentDTO.getContent());
         }
         commentRepository.save(commentEntity);
         logger.info("Update content of question successfully.");
@@ -129,7 +129,7 @@ public class CommentService {
         if (user == null || !user.getRole().equals(Role.MANAGER)) {
             if (!userEmail.equals(commentEntity.getAuthorEmail())) {
                 logger.warn("{}{}", DELETE_COMMENT_MESSAGE, ServiceMessage.FORBIDDEN_MESSAGE);
-                return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+                return new Response<>(HttpStatus.FORBIDDEN.value(), ServiceMessage.FORBIDDEN_MESSAGE.getMessage());
             }
         }
         commentEntity.setStatus(Status.INACTIVE);
