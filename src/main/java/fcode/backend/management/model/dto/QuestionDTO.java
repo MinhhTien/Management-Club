@@ -11,7 +11,6 @@ public class QuestionDTO {
     private String title;
     private String content;
     private String authorEmail;
-    private String status;
 
 
     public QuestionDTO(String title, String content, String authorEmail) {
