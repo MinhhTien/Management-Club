@@ -152,24 +152,12 @@ public class AttendanceService {
             logger.warn("{}{}", UPDATE_ATTENDANCE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if(attendanceDTO.getMemberId() != null && memberRepository.findMemberById(attendanceDTO.getMemberId()) != null) {
-            if(attendanceDTO.getEventId() != null && eventRepository.findEventById(attendanceDTO.getEventId(), fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) != null) {
-            attendanceEntity.setMember(new Member(attendanceDTO.getMemberId()));
-            attendanceEntity.setEvent(new Event(attendanceDTO.getEventId()));
-                if(attendanceDTO.getDate() != null) {
-                    attendanceEntity.setDate(attendanceDTO.getDate());
-                }
-                if(attendanceDTO.getState() != null) {
-                    attendanceEntity.setState(attendanceDTO.getState());
-                }
-            } else {
-                logger.warn("{}{}", UPDATE_ATTENDANCE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
-                return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            }
-        } else {
-            logger.warn("{}{}", UPDATE_ATTENDANCE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
-        return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-        }
+        if(attendanceDTO.getDate() != null) {
+            attendanceEntity.setDate(attendanceDTO.getDate());
+        } else attendanceEntity.setDate(attendanceEntity.getDate());
+        if(attendanceDTO.getState() != null) {
+            attendanceEntity.setState(attendanceDTO.getState());
+        } else attendanceEntity.setState(attendanceEntity.getState());
 
         attendanceRepository.save(attendanceEntity);
         logger.info("Update attendance successfully");

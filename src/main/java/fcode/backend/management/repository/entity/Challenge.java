@@ -25,8 +25,11 @@ public class Challenge {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "register_url")
-    private String registerUrl;
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "end_time")
+    private Date endTime;
 
     @Column(name = "created_time", updatable = false, insertable = false)
     private Date createdTime;
@@ -37,5 +40,4 @@ public class Challenge {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
-
 }

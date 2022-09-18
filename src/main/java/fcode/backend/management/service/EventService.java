@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,34 +87,34 @@ public class EventService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> updateEvent(Integer id, String name, Integer point, String description, Date startTime, Date endTime, String location) {
+    public Response<Void> updateEvent(EventDTO eventDTO) {
         logger.info("{}", UPDATE_EVENT);
-        if(id == null) {
+        if(eventDTO == null) {
             logger.warn("{}{}", UPDATE_EVENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Event eventEntity = eventRepository.findEventById(id, Status.ACTIVE.toString());
+        Event eventEntity = eventRepository.findEventById(eventDTO.getId(), Status.ACTIVE.toString());
         if(eventEntity == null) {
             logger.warn("{}{}", UPDATE_EVENT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if(name != null) {
-            eventEntity.setName(name);
+        if(eventDTO.getName() != null) {
+            eventEntity.setName(eventDTO.getName());
         } else eventEntity.setName(eventEntity.getName());
-        if(point != null) {
-            eventEntity.setPoint(point);
+        if(eventDTO.getPoint() != null) {
+            eventEntity.setPoint(eventDTO.getPoint());
         } else eventEntity.setPoint(eventEntity.getPoint());
-        if(description != null) {
-            eventEntity.setDescription(description);
+        if(eventDTO.getDescription() != null) {
+            eventEntity.setDescription(eventDTO.getDescription());
         } else eventEntity.setDescription(eventEntity.getDescription());
-        if(startTime != null) {
-            eventEntity.setStartTime(startTime);
+        if(eventDTO.getStartTime() != null) {
+            eventEntity.setStartTime(eventDTO.getStartTime());
         } else eventEntity.setStartTime(eventEntity.getStartTime());
-        if(endTime != null) {
-            eventEntity.setEndTime(endTime);
+        if(eventDTO.getEndTime() != null) {
+            eventEntity.setEndTime(eventDTO.getEndTime());
         } else eventEntity.setEndTime(eventEntity.getEndTime());
-        if(location != null) {
-            eventEntity.setLocation(location);
+        if(eventDTO.getLocation() != null) {
+            eventEntity.setLocation(eventDTO.getLocation());
         } else eventEntity.setLocation(eventEntity.getLocation());
 
         eventRepository.save(eventEntity);

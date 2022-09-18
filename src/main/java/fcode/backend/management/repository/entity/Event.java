@@ -43,9 +43,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(
-            mappedBy = "event"
-    )
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
     private List<Attendance> attendanceList = new ArrayList<>();
 
     public Event(Integer id) {

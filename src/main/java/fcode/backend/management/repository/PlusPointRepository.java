@@ -20,7 +20,7 @@ public interface PlusPointRepository extends JpaRepository<PlusPoint, Integer> {
     List<PlusPoint> getByMemberIdAndStatus(Integer memberId, String status);
 
     @Query(nativeQuery = true, value = "SELECT * FROM fcode_management.plus_point WHERE plus_point.member_id = ?1 AND plus_point.time BETWEEN ?2 AND ?3 AND plus_point.status = ?4")
-    List<PlusPoint> getByMemberIdAndStatusBetweenTime(Integer memberId, Date date1, Date date2, String status);
+    List<PlusPoint> getByMemberIdAndStatusBetweenTime(Integer memberId, Date startDate, Date endDate, String status);
 
     @Query(nativeQuery = true, value = "SELECT * FROM plus_point WHERE member_id = ?1 AND reason = ?2")
     PlusPoint existsByMemberIdAndReason(Integer memberId, String reason);

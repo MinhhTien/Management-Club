@@ -25,6 +25,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Challenge Put api", "/challenge/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Challenge Delete api", "/challenge/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Event Get api", "/event/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Event Post api", "/event/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Put api", "/event/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Delete api", "/event/**", DELETE_METHOD, Role.MANAGER));
+
         apiEntities.add(new ApiEntity("Get All Subjects", "/subject/all", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Subjects By Semester", "/subject/semester/{semester:\\d+}", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get One Subject", "/subject/{subjectId:\\d+}", GET_METHOD, null));

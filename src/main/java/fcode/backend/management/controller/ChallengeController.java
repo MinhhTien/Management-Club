@@ -20,7 +20,7 @@ public class ChallengeController {
     }
 
     @GetMapping(value = "/id/{id}")
-    public Response<ChallengeDTO> getChallgenById(@PathVariable Integer id) {
+    public Response<ChallengeDTO> getChallengeById(@PathVariable Integer id) {
         return challengeServices.getChallengeById(id);
     }
 
@@ -35,8 +35,8 @@ public class ChallengeController {
     }
 
     @PutMapping
-    public Response<Void> updateChallenge(@RequestBody ChallengeDTO challengeDTO, String title, String description, String registerUrl) {
-        return challengeServices.updateChallenge(challengeDTO, title, description, registerUrl);
+    public Response<Void> updateChallenge(@RequestBody ChallengeDTO challengeDTO) {
+        return challengeServices.updateChallenge(challengeDTO);
     }
 
     @DeleteMapping(value = "/{id}")

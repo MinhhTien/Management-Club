@@ -24,14 +24,14 @@ public class AttendanceController {
         return attendanceService.getAttendancesByEventId(eventId);
     }
 
-    @GetMapping(value = "/memberId/{memberId}")
-    public Response<List<AttendanceDTO>> getAttendanceByMemberId(@PathVariable Integer memberId) {
-        return attendanceService.getAttendancesByMemberId(memberId);
+    @GetMapping(value = "/studentId/{studentId}")
+    public Response<List<AttendanceDTO>> getAttendanceByStudentId(@PathVariable String studentId) {
+        return attendanceService.getAttendancesByStudentID(studentId);
     }
 
     @GetMapping
-    public Response<List<AttendanceDTO>> getAttendancesByStudentID(@RequestAttribute(required = false) String studentId) {
-        return attendanceService.getAttendancesByStudentID(studentId);
+    public Response<List<AttendanceDTO>> getAttendancesByUserId(@RequestAttribute(required = false) Integer userId) {
+        return attendanceService.getAttendancesByMemberId(userId);
     }
 
     @PostMapping(value = "/new")

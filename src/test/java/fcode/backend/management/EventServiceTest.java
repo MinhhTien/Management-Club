@@ -43,7 +43,7 @@ public class EventServiceTest {
 //
 //    @Test
 //    void updateEvent(){
-//        eventService.updateEvent(1, "Sự kiện đặc biệt 2", 545, "Sự kiện special", null, null, null);
+//        eventService.updateEvent(1, "Sự kiện đặc biệt 2", 545, "Sự kiện special", null, null, "HALPP");
 //    }
 //
 //    @Test
