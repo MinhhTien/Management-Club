@@ -38,7 +38,10 @@ public class ArticleController {
     Response<Set<ArticleDTO>> getInactiveArticle() {
         return articleService.getInactiveArticles();
     }
-
+    @GetMapping("/author")
+    Response<Set<ArticleDTO>> getArticlesByAuthor(@RequestAttribute(required = false) Integer userId) {
+        return articleService.getArticlesByAuthor(userId);
+    }
     @PutMapping("/approve/{id}")
     Response<Void> approveArticle(@PathVariable Integer id) {
         return articleService.approveArticle(id);

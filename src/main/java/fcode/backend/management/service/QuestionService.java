@@ -167,7 +167,7 @@ public class QuestionService {
     }
 
 
-    public Response<Void> updateQuestion(QuestionDTO questionDTO, String title, String content, String userEmail) {
+    public Response<Void> updateQuestion(QuestionDTO questionDTO, String userEmail) {
         logger.info("{}{}", UPDATE_QUESTION, questionDTO);
         if (questionDTO == null) {
             logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
@@ -179,13 +179,13 @@ public class QuestionService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         if (!userEmail.equals(questionEntity.getAuthorEmail())) {
-            logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.FORBIDDEN_MESSAGE);
-            return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            logger.warn("{}{}", UPDATE_QUESTION, ServiceMessage.FORBIDDEN_MESSAGE);
+            return new Response<>(HttpStatus.FORBIDDEN.value(), ServiceMessage.FORBIDDEN_MESSAGE.getMessage());
         }
-        if (title != null)
-            questionEntity.setTitle(title);
-        if (content != null)
-            questionEntity.setContent(content);
+        if (questionDTO.getTitle() != null)
+            questionEntity.setTitle(questionDTO.getTitle());
+        if (questionDTO.getContent() != null)
+            questionEntity.setContent(questionDTO.getContent());
 
         questionRepository.save(questionEntity);
         logger.info("Update question of question successfully.");
@@ -204,7 +204,7 @@ public class QuestionService {
         if (user == null || !user.getRole().equals(Role.MANAGER)) {
             if (!userEmail.equals(questionEntity.getAuthorEmail())) {
                 logger.warn("{}{}", DELETE_QUESTION, ServiceMessage.FORBIDDEN_MESSAGE);
-                return new Response<>(HttpStatus.UNAUTHORIZED.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+                return new Response<>(HttpStatus.FORBIDDEN.value(), ServiceMessage.FORBIDDEN_MESSAGE.getMessage());
             }
         }
         questionEntity.setStatus(Status.INACTIVE);

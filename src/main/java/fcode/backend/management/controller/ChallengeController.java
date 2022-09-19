@@ -14,29 +14,29 @@ public class ChallengeController {
     @Autowired
     ChallengeServices challengeServices;
 
-    @GetMapping(value = "/allChallenges")
+    @GetMapping(value = "/all")
     public Response<List<ChallengeDTO>> getAllChallenges() {
         return challengeServices.getAllChallenge();
     }
 
-    @GetMapping(value = "/{id}")
-    public Response<ChallengeDTO> getChallgenById(@PathVariable Integer id) {
+    @GetMapping(value = "/id/{id}")
+    public Response<ChallengeDTO> getChallengeById(@PathVariable Integer id) {
         return challengeServices.getChallengeById(id);
     }
 
-    @GetMapping(value = "/{title}")
+    @GetMapping(value = "/title/{title}")
     public Response<ChallengeDTO> getChallengeByTitle(@PathVariable String title) {
         return challengeServices.getChallengeByTitle(title);
     }
 
-    @PostMapping(value = "/newChallenge")
+    @PostMapping(value = "/new")
     public Response<Void> createChallenge(@RequestBody ChallengeDTO challengeDTO) {
         return challengeServices.createChallenge(challengeDTO);
     }
 
     @PutMapping
-    public Response<Void> updateChallenge(@RequestBody ChallengeDTO challengeDTO, String title, String description, String registerUrl) {
-        return challengeServices.updateChallenge(challengeDTO, title, description, registerUrl);
+    public Response<Void> updateChallenge(@RequestBody ChallengeDTO challengeDTO) {
+        return challengeServices.updateChallenge(challengeDTO);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+@RestController
 @RequestMapping("/comment")
 public class CommentController {
     @Autowired
@@ -27,8 +28,8 @@ public class CommentController {
         return commentService.getAllCommentsOfAQuestion(questionId);
     }
     @PutMapping
-    public Response<Void> updateComment(@RequestBody CommentDTO commentDTO ,@RequestAttribute String content, @RequestAttribute(required = false) String userEmail) {
-        return commentService.updateContent(commentDTO, content, userEmail);
+    public Response<Void> updateComment(@RequestBody CommentDTO commentDTO, @RequestAttribute(required = false) String userEmail) {
+        return commentService.updateContent(commentDTO, userEmail);
     }
 
     @DeleteMapping("/{commentId}")
@@ -37,7 +38,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/author")
-    public Response<Void> deleteCommentByAuthor(@RequestAttribute String userEmail) {
-        return commentService.deleteAllCommentByAuthorEmail(userEmail);
+    public Response<Void> deleteCommentByAuthor(@RequestParam String authorEmail) {
+        return commentService.deleteAllCommentByAuthorEmail(authorEmail);
     }
 }

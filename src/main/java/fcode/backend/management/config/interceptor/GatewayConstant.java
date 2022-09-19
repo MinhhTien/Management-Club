@@ -25,6 +25,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Challenge Put api", "/challenge/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Challenge Delete api", "/challenge/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Event Get api", "/event/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Event Post api", "/event/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Put api", "/event/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Event Delete api", "/event/**", DELETE_METHOD, Role.MANAGER));
+
         apiEntities.add(new ApiEntity("Get All Subjects", "/subject/all", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Subjects By Semester", "/subject/semester/{semester:\\d+}", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get One Subject", "/subject/{subjectId:\\d+}", GET_METHOD, null));
@@ -43,17 +48,28 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update Resource", "/resource",PUT_METHOD,Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Resource", "/resource/{resourceId:\\d+}",DELETE_METHOD,Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Question Get api", "/question/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get all questions api", "/question/questions", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get questions by id api", "/question/{questionId:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get questions by author api", "/question/author", GET_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Question Get processing questions", "/question/processing", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question Get inactive questions", "/question/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Post api", "/question/**", POST_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Question Put api", "/question/", PUT_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Question Put api", "/question/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question approve api", "/question/approve/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question disapprove api", "/question/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Question Delete api", "/question/**", DELETE_METHOD, Role.STUDENT));
 
         apiEntities.add(new ApiEntity("Comment Get api", "/comment/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Comment Post api", "/comment/**", POST_METHOD, Role.STUDENT));
         apiEntities.add(new ApiEntity("Comment Put api", "/comment/**", PUT_METHOD, Role.STUDENT));
-        apiEntities.add(new ApiEntity("Comment Delete api", "/comment/**", DELETE_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Comment Delete api", "/comment/{commentId:\\d+}", DELETE_METHOD, Role.STUDENT));
+        apiEntities.add(new ApiEntity("Comment Delete api", "/comment/author/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Attendance Get by member api", "/attendance/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Attendance Post api", "/attendance/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Put api", "/attendance/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Attendance Delete api", "/attendance/**", DELETE_METHOD, Role.MANAGER));
+        
         apiEntities.add(new ApiEntity("Get All Announcements", "/announcement/all", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/{announcementId:\\d+}", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Search Announcements By Title", "/announcement/search", GET_METHOD, Role.MEMBER));
@@ -61,10 +77,20 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update One Announcement", "/announcement", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Article Get api", "/article/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get all article api", "/article/all", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get article by id api", "/article/{id:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Question Get article by author api", "/article/author", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Question Get processing articles", "/article/processing", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Question Get inactive articles", "/article/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Post api", "/article/**", POST_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Article Put api", "/article", PUT_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Article Approve api", "/article/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Approve api", "/article/approve/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Disapprove api", "/article/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Delete api", "/article/**", DELETE_METHOD, Role.MEMBER));
+
+        apiEntities.add(new ApiEntity("Plus point Get api", "/pluspoint/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Plus point Post api", "/pluspoint/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Plus point Put api", "/pluspoint", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Plus point Delete api", "/pluspoint/**", DELETE_METHOD, Role.MANAGER));
     }
 }

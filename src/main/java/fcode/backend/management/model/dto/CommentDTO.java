@@ -10,7 +10,6 @@ public class CommentDTO {
     private Integer id;
     private String content;
     private String authorEmail;
-    private String status;
     private Integer questionId;
 
 

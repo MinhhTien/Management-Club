@@ -7,8 +7,20 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
+
+    @Query(nativeQuery = true, value = "SELECT * from  member WHERE status = ?1")
+    List<Member> findALlMember(String status);
+
+    @Query(nativeQuery = true, value = "SELECT * from member WHERE student_id = ?1 AND status = ?2")
+    Member findMemberByStudentId(String studentId, String status);
+
+    @Query(nativeQuery = true, value = "SELECT * from member WHERE last_name = ?1 AND status = ?2")
+    List<Member> findMemberByLastname(String lastname, String status);
+
     Member findMemberById(Integer id);
     @Query(nativeQuery = true, value = "SELECT * FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
     Member findMemberByEmail(String email);
