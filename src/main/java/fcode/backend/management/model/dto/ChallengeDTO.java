@@ -19,17 +19,4 @@ public class ChallengeDTO {
     private Date startTime;
     private Date endTime;
     private Status status;
-
-    public ChallengeDTO(Integer id) {
-        this.id = id;
-    }
-
-    public ChallengeDTO(Integer id, String title, String description, Date startTime, Date endTime, Status status) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.status = status;
-    }
 }
