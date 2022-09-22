@@ -9,9 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

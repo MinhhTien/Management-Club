@@ -5,6 +5,7 @@ import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.AnnouncementRepository;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Announcement;
+import fcode.backend.management.model.dto.EmailDetail;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +29,9 @@ public class AnnouncementService {
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    EmailService emailService;
 
     private static final Logger logger = LogManager.getLogger(AnnouncementService.class);
     private static final String CREATE_ANNOUNCEMENT = "Create announcement: ";
@@ -92,6 +96,7 @@ public class AnnouncementService {
         announcement.setSendEmailWhenUpdate(false);
         announcementRepository.save(announcement);
         logger.info("Create announcement success");
+        emailService.sendHtmlEmail(new EmailDetail(new String[]{"minhtienn1209@gmail.com", "tienvmse170130@fpt.edu.vn"},announcementDto.getMail(),announcementDto.getMailTitle()));
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 

@@ -3,8 +3,10 @@ package fcode.backend.management.controller;
 import fcode.backend.management.model.dto.AnnouncementDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AnnouncementService;
+import fcode.backend.management.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.validator.UrlValidator;
 
