@@ -19,6 +19,8 @@ public class GatewayConstant {
 
     public static void addApiEntities() {
         apiEntities.add(new ApiEntity("Auth api", "/auth/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Login api", "/login/**", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Register api", "/register", GET_METHOD, null));
 
         apiEntities.add(new ApiEntity("Challenge Get api", "/challenge/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Challenge Post api", "/challenge/**", POST_METHOD, Role.MANAGER));
