@@ -27,4 +27,6 @@ public class Crew {
     private String driveUrl;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "crew")
     private Set<Member> members;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "crew")
+    private Set<CrewAnnouncement> crewAnnouncements;
 }
