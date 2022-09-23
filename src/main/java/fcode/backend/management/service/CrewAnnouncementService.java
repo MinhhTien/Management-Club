@@ -4,6 +4,7 @@ import fcode.backend.management.model.dto.CrewAnnouncementDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.CrewAnnouncementRepository;
 import fcode.backend.management.repository.CrewRepository;
+import fcode.backend.management.repository.entity.Crew;
 import fcode.backend.management.repository.entity.CrewAnnouncement;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
@@ -140,7 +141,21 @@ public class CrewAnnouncementService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewAnnouncementDTOSet);
     }
 
+    public Response<Set<CrewAnnouncementDTO>> getAnnouncementsOfACrew(Integer crewId) {
+        logger.info("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, crewId);
 
+        Crew crew = crewRepository.findCrewById(crewId);
+
+        if (crew == null) {
+            logger.warn("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+
+        var crewAnnouncements = crew.getCrewAnnouncements().stream().filter(crewAnnouncement -> crewAnnouncement.getStatus().equals(Status.ACTIVE)).collect(Collectors.toSet());
+        var crewAnnouncementDTOSet = crewAnnouncements.stream().map(crewAnnouncement-> modelMapper.map(crewAnnouncement, CrewAnnouncementDTO.class)).collect(Collectors.toSet());
+        logger.info("Get all announcement of a crew successfully.");
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewAnnouncementDTOSet);
+    }
     public Response<Void> updateCrewAnnouncement(CrewAnnouncementDTO crewAnnouncementDTO) {
         logger.info("{}{}", UPDATE_CREW_ANNOUNCEMENT_MESSAGE, crewAnnouncementDTO);
         if (crewAnnouncementDTO == null) {
@@ -180,4 +195,6 @@ public class CrewAnnouncementService {
         logger.info("Delete crew announcement successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
+
+
 }

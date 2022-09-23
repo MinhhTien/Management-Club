@@ -22,7 +22,10 @@ public class CrewAnnouncementController {
     public Response<CrewAnnouncementDTO> getCrewAnnouncementById(@PathVariable Integer crewAnnouncementId) {
         return crewAnnouncementService.getCrewAnnouncementById(crewAnnouncementId);
     }
-
+    @GetMapping("/crew/{crewId}")
+    public Response<Set<CrewAnnouncementDTO>> getAnnouncementOfACrew(@PathVariable Integer crewId) {
+        return crewAnnouncementService.getAnnouncementsOfACrew(crewId);
+    }
     @GetMapping("/all")
     public Response<Set<CrewAnnouncementDTO>> getAllCrewAnnouncement() {
         return crewAnnouncementService.getAllCrewAnnouncements();
