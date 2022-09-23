@@ -92,11 +92,12 @@ public class CrewService {
             logger.warn("{}{}", DELETE_CREW_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (memberRepository.existsByCrewId(id)) {
+        
+        if (memberRepository.existsByCrew(new Crew(id))) {
             logger.warn("{}{}", DELETE_CREW_MESSAGE, "There are some members in this crew.");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "There are some members in this crew.");
         }
-        if (crewAnnouncementRepository.existsByCrewId(id)) {
+        if (crewAnnouncementRepository.existsByCrew(new Crew(id))) {
             logger.warn("{}{}", DELETE_CREW_MESSAGE, "There are some announcements for this crew.");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "There are some announcements in this crew.");
         }
