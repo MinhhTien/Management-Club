@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -33,4 +34,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
             "FROM ((fcode_management.attendance inner join fcode_management.member on attendance.member_id = member.id)\n" +
             "inner join fcode_management.event on attendance.event_id = event.id) where member_id = ?1 order by attendance.id asc")
     List<Attendance> getAttendancesByMemberId(Integer memberId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM fcode_management.attendance WHERE attendance.member_id = ?1 AND attendance.date BETWEEN ?2 AND ?3")
+    List<Attendance> getByMemberIdBetweenTime(Integer memberId, Date startDate, Date endDate);
 }

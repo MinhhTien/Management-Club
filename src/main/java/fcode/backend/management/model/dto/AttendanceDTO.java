@@ -23,19 +23,4 @@ public class AttendanceDTO {
     private Date date;
     private State state;
 
-    public AttendanceDTO(Integer id, Integer memberId, Integer eventId, Date date, State state) {
-        this.id = id;
-        this.memberId = memberId;
-        this.eventId = eventId;
-        this.date = date;
-        this.state = state;
-    }
-
-    public AttendanceDTO(Integer memberId, Integer eventId, Date date, State state) {
-        this.memberId = memberId;
-        this.eventId = eventId;
-        this.date = date;
-        this.state = state;
-    }
-
 }

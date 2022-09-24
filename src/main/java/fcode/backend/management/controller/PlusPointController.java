@@ -4,6 +4,7 @@ import fcode.backend.management.model.dto.PlusPointDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.PlusPointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -31,8 +32,12 @@ public class PlusPointController {
     }
 
     @GetMapping(value = "/period")
-    public Response<List<PlusPointDTO>> getByPeriodTime(@RequestBody Integer id, Date date1, Date date2) {
-        return plusPointService.getByMemberIdBetweenTime(id, date1, date2);
+    public Response<List<PlusPointDTO>> getByPeriodTime(@RequestParam Integer memberId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        return plusPointService.getByMemberIdBetweenTime(memberId, startDate, endDate);
+    }
+    @GetMapping(value = "/totalpoint")
+    public Response<PlusPointDTO> getTotalPointInPeriodTime(@RequestParam Integer memberId, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        return plusPointService.getTotalPointInPeriodTime(memberId, startDate, endDate);
     }
 
     @PostMapping(value = "/new")

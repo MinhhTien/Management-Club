@@ -21,23 +21,4 @@ public class EventDTO {
     private String location;
     private String status;
 
-    public EventDTO(Integer id) {
-        this.id = id;
-    }
-
-    public EventDTO(String name, Integer point, String description, Date startTime, Date endTime, String location) {
-        this.name = name;
-        this.point = point;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.location = location;
-    }
-
-    public EventDTO(String name, Integer point, String description, String location) {
-        this.name = name;
-        this.point = point;
-        this.description = description;
-        this.location = location;
-    }
 }

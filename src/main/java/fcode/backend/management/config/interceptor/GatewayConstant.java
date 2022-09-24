@@ -90,7 +90,7 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Article Disapprove api", "/article/disapprove/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Delete api", "/article/**", DELETE_METHOD, Role.MEMBER));
 
-        apiEntities.add(new ApiEntity("Plus point Get api", "/pluspoint/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Plus point Get api", "/pluspoint/**", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Post api", "/pluspoint/**", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Put api", "/pluspoint", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Delete api", "/pluspoint/**", DELETE_METHOD, Role.MANAGER));

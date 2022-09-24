@@ -25,8 +25,8 @@ public class PlusPoint {
     @Column
     private String reason;
 
-    @Column(insertable = false, updatable = false)
-    private Date time;
+    @Column
+    private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

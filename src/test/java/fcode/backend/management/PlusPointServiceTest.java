@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -36,10 +38,29 @@ class PlusPointServiceTest {
 //        plusPointDTOList.forEach(System.out::println);
 //    }
 //
+    String sDate1="01/09/2022";
+    String sDate2="30/09/2022";
+    Date date1;
+    Date date2;
+
+    {
+        try {
+            date1 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+            date2 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate2);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 //    @Test
 //    void getBetweenTime() {
-//        List<PlusPointDTO> plusPointDTOList = plusPointService.getByMemberIdBetweenTime(1, new Date(), new Date()).getData();
+//        List<PlusPointDTO> plusPointDTOList = plusPointService.getByMemberIdBetweenTime(2, date1, date2).getData();
 //        plusPointDTOList.forEach(System.out::println);
+//    }
+//    @Test
+//    void getTotalPoint() {
+//        PlusPointDTO plusPointDTO = plusPointService.getTotalPointInPeriodTime(3, date1, date2).getData();
+//        System.out.println(plusPointDTO);
 //    }
 //
 //    @Test
