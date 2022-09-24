@@ -33,4 +33,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
             "FROM ((fcode_management.attendance inner join fcode_management.member on attendance.member_id = member.id)\n" +
             "inner join fcode_management.event on attendance.event_id = event.id) where member_id = ?1 order by attendance.id asc")
     List<Attendance> getAttendancesByMemberId(Integer memberId);
+
+    @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) FROM member INNER JOIN attendance ON member.id = attendance.member_id WHERE event_id = ?1 ")
+    List<String> getEmailsByEventId(Integer eventId);
 }

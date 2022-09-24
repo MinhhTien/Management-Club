@@ -3,10 +3,8 @@ package fcode.backend.management.controller;
 import fcode.backend.management.model.dto.AnnouncementDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AnnouncementService;
-import fcode.backend.management.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.validator.UrlValidator;
 
@@ -19,6 +17,9 @@ public class AnnouncementController {
 
     @Autowired
     AnnouncementService announcementService;
+
+    @Autowired
+    UrlValidator urlValidator;
 
     @GetMapping("/all")
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
@@ -37,8 +38,8 @@ public class AnnouncementController {
 
     @PostMapping
     public Response<Void> createAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(announcementDTO.getImageUrl())) {
+        //UrlValidator URLValidator = new UrlValidator();
+        if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return  announcementService.createAnnouncement(announcementDTO, userId);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
@@ -47,8 +48,8 @@ public class AnnouncementController {
 
     @PutMapping
     public Response<Void> updateAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(announcementDTO.getImageUrl())) {
+        //UrlValidator URLValidator = new UrlValidator();
+        if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return announcementService.updateAnnouncement(announcementDTO, userId);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);

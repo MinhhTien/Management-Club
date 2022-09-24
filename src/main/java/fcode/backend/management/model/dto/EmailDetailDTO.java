@@ -1,14 +1,13 @@
 package fcode.backend.management.model.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailDetail {
-    private String[] recipient;
+public class EmailDetailDTO {
+    private String recipient;
     private String msgBody;
     private String subject;
 }

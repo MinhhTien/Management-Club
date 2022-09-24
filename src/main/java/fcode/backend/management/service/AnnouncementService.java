@@ -1,11 +1,12 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.AnnouncementDTO;
+import fcode.backend.management.model.dto.EmailReceiverDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.AnnouncementRepository;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Announcement;
-import fcode.backend.management.model.dto.EmailDetail;
+import fcode.backend.management.model.dto.EmailDetailDTO;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +39,8 @@ public class AnnouncementService {
     private static final String CREATE_ANNOUNCEMENT = "Create announcement: ";
     private static final String UPDATE_ANNOUNCEMENT = "Update announcement: ";
     private static final String DELETE_ANNOUNCEMENT = "Delete announcement: ";
+    private static final String INVALID_EMAIL_RECEIVER_LIST = "Invalid email receiver list";
+    private static final String INVALID_EMAIL_GROUP_RECEIVER_LIST = "Invalid email group receiver list";
 
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
         logger.info("getAnnoucements()");
@@ -89,6 +93,31 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Empty title");
         }
 
+        List<Integer> userIdList = emailService.parseValidInfoText(announcementDto.getInfoUserId(), "&");
+        if(userIdList == null) {
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+
+        List<String> emailList = emailService.parseInfoUserIdToEmail(userIdList);
+        if(emailList == null) {
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, INVALID_EMAIL_RECEIVER_LIST);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_EMAIL_RECEIVER_LIST);
+        }
+
+        Map<String, List<Integer>> groupConditionMap = emailService.parseValidInfoGroup(announcementDto.getInfoGroup());
+        if(groupConditionMap==null) {
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+
+        List<String> emailGroupList = emailService.parseInfoGroupToEmail(groupConditionMap);
+        if(emailGroupList == null) {
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, INVALID_EMAIL_GROUP_RECEIVER_LIST);
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_EMAIL_GROUP_RECEIVER_LIST);
+        }
+        emailList.addAll(emailGroupList);
+
         Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
         announcement.setId(null);
         announcement.setStatus(Status.ACTIVE);
@@ -97,8 +126,11 @@ public class AnnouncementService {
         announcementRepository.save(announcement);
         logger.info("Create announcement success");
 
-        emailService.sendHtmlEmail(new EmailDetail(new String[]{"minhtienn1209@gmail.com", "tienvmse170130@fpt.edu.vn"},announcementDto.getMail(),announcementDto.getMailTitle()));
-
+        emailList.forEach(email -> {
+            EmailReceiverDTO emailReceiverDTO = memberRepository.getReceiverByEmail(email, Status.ACTIVE.toString());
+            emailService.sendHtmlEmail(new EmailDetailDTO(email, announcementDto.getMail(),
+                    emailService.inputInfoToHtml(announcementDto.getMailTitle(), emailReceiverDTO.getStudentId(), emailReceiverDTO.getFirstName() + emailReceiverDTO.getLastName())));
+        });
 
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }

@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.apache.commons.validator.UrlValidator;
+import org.apache.commons.validator.GenericValidator;
+import org.apache.commons.validator.GenericTypeValidator;
 
 import java.util.Properties;
 
@@ -27,6 +30,18 @@ public class EmailConfiguration {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String mailServerStartTls;
 
+    @Bean
+    public UrlValidator urlValidator() {
+        return new UrlValidator();
+    }
+    @Bean
+    public GenericValidator genericValidator() {
+        return new GenericValidator();
+    }
+    @Bean
+    public GenericTypeValidator genericTypeValidator() {
+        return new GenericTypeValidator();
+    }
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
