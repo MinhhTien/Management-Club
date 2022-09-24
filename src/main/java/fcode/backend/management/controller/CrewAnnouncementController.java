@@ -30,36 +30,6 @@ public class CrewAnnouncementController {
     public Response<Set<CrewAnnouncementDTO>> getAllCrewAnnouncement() {
         return crewAnnouncementService.getAllCrewAnnouncements();
     }
-
-    @GetMapping("/processing")
-    public Response<Set<CrewAnnouncementDTO>> getProcessingCrewAnnouncement() {
-        return crewAnnouncementService.getProcessingCrewAnnouncements();
-    }
-    @GetMapping("/inactive")
-    public Response<Set<CrewAnnouncementDTO>> getInactiveCrewAnnouncement() {
-        return crewAnnouncementService.getInactiveCrewAnnouncements();
-    }
-
-    @PutMapping("/approve/{crewAnnouncementId}")
-    public Response<Void> approveAnnouncement(@PathVariable Integer crewAnnouncementId) {
-        return crewAnnouncementService.approveCrewAnnouncement(crewAnnouncementId);
-    }
-
-    @PutMapping("/disapprove/{crewAnnouncementId}")
-    public Response<Void> disapproveAnnouncement(@PathVariable Integer crewAnnouncementId) {
-        return crewAnnouncementService.disapproveCrewAnnouncement(crewAnnouncementId);
-    }
-
-    @PutMapping("/approve/all")
-    public Response<Void> approveAll() {
-        return crewAnnouncementService.approveAll();
-    }
-
-    @PutMapping("/disapprove/all")
-    public Response<Void> disapproveAll() {
-        return crewAnnouncementService.disapproveAll();
-    }
-
     @PutMapping
     public Response<Void> updateCrewAnnouncement(@RequestBody CrewAnnouncementDTO crewAnnouncementDTO) {
         return crewAnnouncementService.updateCrewAnnouncement(crewAnnouncementDTO);

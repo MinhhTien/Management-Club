@@ -31,8 +31,6 @@ public class CrewAnnouncementService {
     public static final String GET_CREW_ANNOUNCEMENT_MESSAGE = "Get crew announcement: ";
     public static final String UPDATE_CREW_ANNOUNCEMENT_MESSAGE = "Update crew announcement: ";
     public static final String DELETE_CREW_ANNOUNCEMENT_MESSAGE = "Delete crew announcement: ";
-    public static final String APPROVE_CREW_ANNOUNCEMENT_MESSAGE = "Approve crew announcement: ";
-    public static final String DISAPPROVE_CREW_ANNOUNCEMENT_MESSAGE = "Disapprove crew announcement: ";
     public Response<Void> createCrewAnnouncement(CrewAnnouncementDTO crewAnnouncementDTO) {
         logger.info("{}{}", CREATE_CREW_ANNOUNCEMENT_MESSAGE, crewAnnouncementDTO);
         if (crewAnnouncementDTO == null) {
@@ -45,61 +43,16 @@ public class CrewAnnouncementService {
         }
         CrewAnnouncement crewAnnouncement = modelMapper.map(crewAnnouncementDTO, CrewAnnouncement.class);
         crewAnnouncementDTO.setId(null);
-        crewAnnouncement.setStatus(Status.PROCESSING);
+        crewAnnouncement.setStatus(Status.ACTIVE);
         crewAnnouncementRepository.save(crewAnnouncement);
         logger.info("{}{}", CREATE_CREW_ANNOUNCEMENT_MESSAGE, ServiceMessage.SUCCESS_MESSAGE);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> approveCrewAnnouncement(Integer id) {
-        logger.info("{}{}", APPROVE_CREW_ANNOUNCEMENT_MESSAGE, id);
-        CrewAnnouncement crewAnnouncement = crewAnnouncementRepository.findCrewAnnouncementByIdAndStatus(id, Status.PROCESSING);
-        if (crewAnnouncement == null) {
-            logger.warn("{}{}", APPROVE_CREW_ANNOUNCEMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
-            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-        }
-        crewAnnouncement.setStatus(Status.ACTIVE);
-        crewAnnouncementRepository.save(crewAnnouncement);
-        logger.info("Approve crew announcement successfully");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
-    }
 
-    @Transactional
-    public Response<Void> approveAll() {
-        logger.info("Approve all crew announcements");
-        Set<CrewAnnouncement> crewAnnouncementSet = crewAnnouncementRepository.findCrewAnnouncementByStatus(Status.PROCESSING);
-        crewAnnouncementSet.forEach(article -> {
-            article.setStatus(Status.ACTIVE);
-            crewAnnouncementRepository.save(article);
-        });
-        logger.info("Approve all crew announcements successfully.");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
-    }
 
-    @Transactional
-    public Response<Void> disapproveAll() {
-        logger.info("Disapprove all crew announcements");
-        Set<CrewAnnouncement> crewAnnouncementSet = crewAnnouncementRepository.findCrewAnnouncementByStatus(Status.PROCESSING);
-        crewAnnouncementSet.forEach(article -> {
-            article.setStatus(Status.INACTIVE);
-            crewAnnouncementRepository.save(article);
-        });
-        logger.info("Disapprove crew announcements successfully.");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
-    }
 
-    public Response<Void> disapproveCrewAnnouncement(Integer id) {
-        logger.info("{}{}", DISAPPROVE_CREW_ANNOUNCEMENT_MESSAGE, id);
-        CrewAnnouncement crewAnnouncement = crewAnnouncementRepository.findCrewAnnouncementByIdAndStatus(id, Status.PROCESSING);
-        if (crewAnnouncement == null) {
-            logger.warn("{}{}", DISAPPROVE_CREW_ANNOUNCEMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
-            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-        }
-        crewAnnouncement.setStatus(Status.INACTIVE);
-        crewAnnouncementRepository.save(crewAnnouncement);
-        logger.info("Disapprove crew announcement successfully");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
-    }
+
 
     @Transactional
     public Response<Set<CrewAnnouncementDTO>> getAllCrewAnnouncements() {
@@ -125,21 +78,6 @@ public class CrewAnnouncementService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewAnnouncementDTO);
     }
 
-    @Transactional
-    public Response<Set<CrewAnnouncementDTO>> getProcessingCrewAnnouncements() {
-        logger.info("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, "All processing crew announcements");
-        Set<CrewAnnouncementDTO> crewAnnouncementDTOSet = crewAnnouncementRepository.findCrewAnnouncementByStatus(Status.PROCESSING).stream().map(map -> modelMapper.map(map, CrewAnnouncementDTO.class)).collect(Collectors.toSet());
-        logger.info("Get all processing crew announcements successfully");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewAnnouncementDTOSet);
-    }
-
-    @Transactional
-    public Response<Set<CrewAnnouncementDTO>> getInactiveCrewAnnouncements() {
-        logger.info("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, "All processing crew announcements");
-        Set<CrewAnnouncementDTO> crewAnnouncementDTOSet = crewAnnouncementRepository.findCrewAnnouncementByStatus(Status.INACTIVE).stream().map(map -> modelMapper.map(map, CrewAnnouncementDTO.class)).collect(Collectors.toSet());
-        logger.info("Get all processing crew announcements successfully");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewAnnouncementDTOSet);
-    }
 
     public Response<Set<CrewAnnouncementDTO>> getAnnouncementsOfACrew(Integer crewId) {
         logger.info("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, crewId);

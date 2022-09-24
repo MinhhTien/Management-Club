@@ -101,10 +101,8 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Crew Delete api", "/crew/**", DELETE_METHOD, Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Crew Announcement Get api", "/crewAnnouncement/**", GET_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Crew Announcement Post api", "/crewAnnouncement/**", POST_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Crew Announcement Put api", "/crewAnnouncement", PUT_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Crew Announcement Approve api", "/crewAnnouncement/approve/**", PUT_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Crew Announcement Disapprove api", "/crewAnnouncement/disapprove/**", PUT_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/crewAnnouncement/**", DELETE_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Crew Announcement Post api", "/crewAnnouncement/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Announcement Put api", "/crewAnnouncement/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/crewAnnouncement/**", DELETE_METHOD, Role.MANAGER));
     }
 }
