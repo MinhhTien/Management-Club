@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/subject")
-public class SubjectControlller {
+public class SubjectController {
     @Autowired
     SubjectService subjectService;
 

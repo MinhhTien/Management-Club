@@ -18,6 +18,9 @@ public class AnnouncementController {
     @Autowired
     AnnouncementService announcementService;
 
+    @Autowired
+    UrlValidator urlValidator;
+
     @GetMapping("/all")
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
         return announcementService.getAllAnnouncements();
@@ -35,8 +38,7 @@ public class AnnouncementController {
 
     @PostMapping
     public Response<Void> createAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(announcementDTO.getImageUrl())) {
+        if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return  announcementService.createAnnouncement(announcementDTO, userId);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
@@ -45,8 +47,7 @@ public class AnnouncementController {
 
     @PutMapping
     public Response<Void> updateAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(announcementDTO.getImageUrl())) {
+        if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return announcementService.updateAnnouncement(announcementDTO, userId);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);

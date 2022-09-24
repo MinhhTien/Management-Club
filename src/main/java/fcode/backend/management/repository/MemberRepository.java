@@ -1,8 +1,10 @@
 package fcode.backend.management.repository;
 
+import fcode.backend.management.model.dto.EmailReceiverDTO;
 import fcode.backend.management.model.dto.LoginUserDTO;
 import fcode.backend.management.repository.entity.Crew;
 import fcode.backend.management.repository.entity.Member;
+import fcode.backend.management.service.constant.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +34,16 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Modifying
     @Query(nativeQuery = true,value = "UPDATE member set ip = ?1 where school_mail = ?2 or personal_mail = ?2")
     int updateIpByEmail(String ip,String email);
+
+    @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE id = ?1 AND status = ?2")
+    String getEmailById(Integer id, String status);
+    @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE crew_id = ?1 AND status = ?2")
+    List<String> getEmailsByCrewId(Integer crewId, String status);
+    @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE member.student_id LIKE(?1) AND status = ?2")
+    List<String> getEmailsByK(String K, String status);
+
+    @Query("select new fcode.backend.management.model.dto.EmailReceiverDTO(m.studentId,m.firstName, m.lastName) from Member m where m.schoolMail = ?1 or m.personalMail = ?1 and m.status = ?2")
+    EmailReceiverDTO getReceiverByEmail(String email, Status status);
+
     boolean existsByCrew(Crew crew);
-}
+
