@@ -31,6 +31,9 @@ public class EmailService {
     GenericTypeValidator genericTypeValidator;
 
     @Value("${spring.mail.username}") private String sender;
+    private static final String CREWID = "crewId";
+    private static final String EVENTID = "eventId";
+    private static final String K = "K";
 
     @Transactional
     public String sendHtmlEmail(EmailDetailDTO detail) {
@@ -71,7 +74,7 @@ public class EmailService {
         for(String condition: infoGroup.split("&")) {
             String[] conditionArr = condition.split("=");
             if(conditionArr.length != 2) return null;
-            if(conditionArr[0].equals("eventId") || conditionArr[0].equals("crewId") || conditionArr[0].equals("K")) {
+            if(conditionArr[0].equals(EVENTID) || conditionArr[0].equals(CREWID) || conditionArr[0].equals(K)) {
                 List<Integer> numList = parseValidInfoText(conditionArr[1], "/");
                 if(numList == null) return null;
                 else conditionMap.put(conditionArr[0],numList);
@@ -92,22 +95,22 @@ public class EmailService {
 
     public Set<String> parseInfoGroupToEmail(Map<String, List<Integer>> groupConditionMap) {
         Set<String> emailList = new HashSet<>();
-        if(groupConditionMap.containsKey("eventId")) {
-            for(Integer eventId: groupConditionMap.get("eventId")) {
+        if(groupConditionMap.containsKey(EVENTID)) {
+            for(Integer eventId: groupConditionMap.get(EVENTID)) {
                 List<String> email = attendanceRepository.getEmailsByEventId(eventId);
                 if(email == null) return null;
                 emailList.addAll(email);
             }
         }
-        if(groupConditionMap.containsKey("crewId")) {
-            for(Integer crewId: groupConditionMap.get("crewId")) {
+        if(groupConditionMap.containsKey(CREWID)) {
+            for(Integer crewId: groupConditionMap.get(CREWID)) {
                 List<String> email = memberRepository.getEmailsByCrewId(crewId, Status.ACTIVE.toString());
                 if(email == null) return null;
                 emailList.addAll(email);
             }
         }
-        if(groupConditionMap.containsKey("K")) {
-            for(Integer Kxx: groupConditionMap.get("K")) {
+        if(groupConditionMap.containsKey(K)) {
+            for(Integer Kxx: groupConditionMap.get(K)) {
                 List<String> email = memberRepository.getEmailsByK("__ %".replace(" ", Kxx.toString()), Status.ACTIVE.toString());
                 if(email == null) return null;
                 emailList.addAll(email);

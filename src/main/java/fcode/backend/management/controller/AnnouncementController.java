@@ -38,7 +38,6 @@ public class AnnouncementController {
 
     @PostMapping
     public Response<Void> createAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        //UrlValidator URLValidator = new UrlValidator();
         if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return  announcementService.createAnnouncement(announcementDTO, userId);
         } else {
@@ -48,7 +47,6 @@ public class AnnouncementController {
 
     @PutMapping
     public Response<Void> updateAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        //UrlValidator URLValidator = new UrlValidator();
         if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return announcementService.updateAnnouncement(announcementDTO, userId);
         } else {
