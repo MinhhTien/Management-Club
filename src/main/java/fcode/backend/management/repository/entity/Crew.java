@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class Crew {
     @Column
     @Id
@@ -27,4 +28,17 @@ public class Crew {
     private String driveUrl;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "crew")
     private Set<Member> members;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "crew")
+    private Set<CrewAnnouncement> crewAnnouncements;
+
+    public Crew(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        Crew otherCrew = (Crew) obj;
+        return id.equals(otherCrew.getId());
+    }
 }

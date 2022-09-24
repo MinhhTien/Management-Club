@@ -1,6 +1,7 @@
 package fcode.backend.management.repository;
 
 import fcode.backend.management.model.dto.LoginUserDTO;
+import fcode.backend.management.repository.entity.Crew;
 import fcode.backend.management.repository.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Modifying
     @Query(nativeQuery = true,value = "UPDATE member set ip = ?1 where school_mail = ?2 or personal_mail = ?2")
     int updateIpByEmail(String ip,String email);
+    boolean existsByCrew(Crew crew);
 }
