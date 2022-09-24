@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Date;
 @Entity
+@Table(name = "crew_announcement")
 @Getter
 @Setter
 @NoArgsConstructor
