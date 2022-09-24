@@ -46,12 +46,12 @@ public class AnnouncementService {
     private static final String INVALID_EMAIL_GROUP_RECEIVER_LIST = "Invalid email group receiver list";
 
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
-        logger.info("getAnnoucements()");
+        logger.info("getAnnouncements()");
 
                List<AnnouncementDTO> announcementDTOList = announcementRepository.getAllAnnouncements(Status.ACTIVE.toString()).stream()
                 .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
 
-        logger.info("Get all annoucements success");
+        logger.info("Get all announcements success");
        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), announcementDTOList);
     }
 
