@@ -96,7 +96,10 @@ public class AnnouncementService {
         announcement.setSendEmailWhenUpdate(false);
         announcementRepository.save(announcement);
         logger.info("Create announcement success");
+
         emailService.sendHtmlEmail(new EmailDetail(new String[]{"minhtienn1209@gmail.com", "tienvmse170130@fpt.edu.vn"},announcementDto.getMail(),announcementDto.getMailTitle()));
+
+
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
