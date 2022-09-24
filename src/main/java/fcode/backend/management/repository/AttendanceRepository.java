@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -36,4 +37,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
 
     @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) FROM member INNER JOIN attendance ON member.id = attendance.member_id WHERE event_id = ?1 ")
     List<String> getEmailsByEventId(Integer eventId);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM fcode_management.attendance WHERE attendance.member_id = ?1 AND attendance.date BETWEEN ?2 AND ?3")
+    List<Attendance> getByMemberIdBetweenTime(Integer memberId, Date startDate, Date endDate);
 }
