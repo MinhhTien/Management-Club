@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.validator.GenericTypeValidator;
 
 import javax.mail.MessagingException;
@@ -27,9 +26,6 @@ public class EmailService {
 
     @Autowired
     AttendanceRepository attendanceRepository;
-
-    @Autowired
-    GenericValidator genericValidator;
 
     @Autowired
     GenericTypeValidator genericTypeValidator;
@@ -60,7 +56,6 @@ public class EmailService {
 
     //valid infoUserId 123&124&345&987
     public List<Integer> parseValidInfoText(String infoUserId, String separator) {
-        if(genericValidator.isBlankOrNull(infoUserId)) return null;
         List<Integer> listUserId = new ArrayList<>();
         for(String id: infoUserId.split(separator)) {
             Integer userId = genericTypeValidator.formatInt(id);
@@ -72,7 +67,6 @@ public class EmailService {
 
     //valid infoGroup eventId=123&crewId=234/453&K=15/16
     public Map<String, List<Integer>> parseValidInfoGroup(String infoGroup) {
-        if(genericValidator.isBlankOrNull(infoGroup)) return null;
         Map<String, List<Integer>> conditionMap = new HashMap<>();
         for(String condition: infoGroup.split("&")) {
             String[] conditionArr = condition.split("=");
@@ -86,8 +80,8 @@ public class EmailService {
         return conditionMap;
     }
 
-    public List<String> parseInfoUserIdToEmail(List<Integer> userIdList) {
-        List<String> emailList = new ArrayList<>();
+    public Set<String> parseInfoUserIdToEmail(List<Integer> userIdList) {
+        Set<String> emailList = new HashSet<>();
         for(Integer userId : userIdList) {
             String email = memberRepository.getEmailById(userId, Status.ACTIVE.toString());
             if(email == null) return null;
@@ -96,8 +90,8 @@ public class EmailService {
         return emailList;
     }
 
-    public List<String> parseInfoGroupToEmail(Map<String, List<Integer>> groupConditionMap) {
-        List<String> emailList = new ArrayList<>();
+    public Set<String> parseInfoGroupToEmail(Map<String, List<Integer>> groupConditionMap) {
+        Set<String> emailList = new HashSet<>();
         if(groupConditionMap.containsKey("eventId")) {
             for(Integer eventId: groupConditionMap.get("eventId")) {
                 List<String> email = attendanceRepository.getEmailsByEventId(eventId);

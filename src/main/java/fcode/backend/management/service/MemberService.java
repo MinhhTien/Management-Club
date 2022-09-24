@@ -1,7 +1,7 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.config.Role;
-import fcode.backend.management.config.interceptor.Status;
+import fcode.backend.management.service.constant.Status;
 import fcode.backend.management.model.dto.MemberDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.MemberRepository;

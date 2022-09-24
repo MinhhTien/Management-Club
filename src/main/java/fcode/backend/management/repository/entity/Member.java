@@ -1,7 +1,7 @@
 package fcode.backend.management.repository.entity;
 
 import fcode.backend.management.config.Role;
-import fcode.backend.management.config.interceptor.Status;
+import fcode.backend.management.service.constant.Status;
 import fcode.backend.management.model.response.GoogleInfoResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

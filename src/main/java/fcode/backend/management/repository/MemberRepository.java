@@ -3,12 +3,14 @@ package fcode.backend.management.repository;
 import fcode.backend.management.model.dto.EmailReceiverDTO;
 import fcode.backend.management.model.dto.LoginUserDTO;
 import fcode.backend.management.repository.entity.Member;
+import fcode.backend.management.service.constant.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Stack;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
@@ -41,5 +43,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     List<String> getEmailsByK(String K, String status);
 
     @Query("select new fcode.backend.management.model.dto.EmailReceiverDTO(m.studentId,m.firstName, m.lastName) from Member m where m.schoolMail = ?1 or m.personalMail = ?1 and m.status = ?2")
-    EmailReceiverDTO getReceiverByEmail(String email, String status);
+    EmailReceiverDTO getReceiverByEmail(String email, Status status);
 }
