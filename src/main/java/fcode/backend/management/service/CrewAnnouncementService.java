@@ -123,7 +123,6 @@ public class CrewAnnouncementService {
     public Response<Void> deleteCrewAnnouncementById(Integer id) {
         logger.info("{}{}", DELETE_CREW_ANNOUNCEMENT_MESSAGE, id);
         CrewAnnouncement crewAnnouncement = crewAnnouncementRepository.findCrewAnnouncementByIdAndStatusIsNot(id, Status.INACTIVE);
-
         if (crewAnnouncement == null) {
             logger.warn("{}{}", DELETE_CREW_ANNOUNCEMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
@@ -133,6 +132,4 @@ public class CrewAnnouncementService {
         logger.info("Delete crew announcement successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
-
-
 }

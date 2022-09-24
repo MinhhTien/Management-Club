@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/crewAnnouncement")
+@RequestMapping("/announcement/crew")
 public class CrewAnnouncementController {
     @Autowired
     CrewAnnouncementService crewAnnouncementService;
@@ -22,8 +22,8 @@ public class CrewAnnouncementController {
     public Response<CrewAnnouncementDTO> getCrewAnnouncementById(@PathVariable Integer crewAnnouncementId) {
         return crewAnnouncementService.getCrewAnnouncementById(crewAnnouncementId);
     }
-    @GetMapping("/crew/{crewId}")
-    public Response<Set<CrewAnnouncementDTO>> getAnnouncementOfACrew(@PathVariable Integer crewId) {
+    @GetMapping
+    public Response<Set<CrewAnnouncementDTO>> getAnnouncementOfACrew(@RequestParam Integer crewId) {
         return crewAnnouncementService.getAnnouncementsOfACrew(crewId);
     }
     @GetMapping("/all")
