@@ -79,11 +79,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Update One Announcement", "/announcement", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Question Get all article api", "/article/all", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Question Get article by id api", "/article/{id:\\d+}", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Question Get article by author api", "/article/author", GET_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Question Get processing articles", "/article/processing", GET_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Question Get inactive articles", "/article/inactive", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Get all article api", "/article/all", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Article Get article by id api", "/article/{id:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Article Get article by author api", "/article/author", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Article Get processing articles", "/article/processing", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Article Get inactive articles", "/article/inactive", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Article Post api", "/article/**", POST_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Article Put api", "/article", PUT_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Article Approve api", "/article/approve/**", PUT_METHOD, Role.MANAGER));
@@ -94,5 +94,15 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Plus point Post api", "/pluspoint/**", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Put api", "/pluspoint", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Delete api", "/pluspoint/**", DELETE_METHOD, Role.MANAGER));
+
+        apiEntities.add(new ApiEntity("Crew Get api", "/crew/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Crew Post api", "/crew/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Put api", "/crew/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Delete api", "/crew/**", DELETE_METHOD, Role.MANAGER));
+
+        apiEntities.add(new ApiEntity("Crew Announcement Get api", "/announcement/crew/**", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Crew Announcement Post api", "/announcement/crew/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Announcement Put api", "/announcement/crew/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/announcement/crew/**", DELETE_METHOD, Role.MANAGER));
     }
 }

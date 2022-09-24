@@ -100,13 +100,13 @@ public class ArticleService {
 
     @Transactional
     public Response<Void> disapproveAll() {
-        logger.info("Approve all Article");
+        logger.info("Disapprove all Article");
         Set<Article> articleSet = articleRepository.findArticleByStatus(Status.PROCESSING);
         articleSet.forEach(article -> {
             article.setStatus(Status.INACTIVE);
             articleRepository.save(article);
         });
-        logger.info("Approve all articles successfully.");
+        logger.info("Disapprove all articles successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
@@ -114,7 +114,7 @@ public class ArticleService {
         logger.info("{}{}", DISAPPROVE_ARTICLE, id);
         Article articleEntity = articleRepository.findArticleByIdAndStatus(id, Status.PROCESSING);
         if (articleEntity == null) {
-            logger.warn("{}{}", APPROVE_ARTICLE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", DISAPPROVE_ARTICLE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         articleEntity.setStatus(Status.INACTIVE);
@@ -179,7 +179,7 @@ public class ArticleService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), articleDTOSet);
     }
     public Response<Void> updateArticle(ArticleDTO articleDTO, Integer userId) {
-        logger.info("{}{}{}", UPDATE_ARTICLE_MESSAGE, articleDTO, userId);
+        logger.info("{}{} by user id: {}", UPDATE_ARTICLE_MESSAGE, articleDTO, userId);
         if (articleDTO == null) {
             logger.warn("{}{}", UPDATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
