@@ -104,5 +104,10 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Crew Announcement Post api", "/announcement/crew/**", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Crew Announcement Put api", "/announcement/crew/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/announcement/crew/**", DELETE_METHOD, Role.MANAGER));
+
+        apiEntities.add(new ApiEntity("Fee Get api", "/fee/**", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Post api", "/fee/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Put api", "/fee/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Delete api", "/fee/**", DELETE_METHOD, Role.MANAGER));
     }
 }
