@@ -25,26 +25,20 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     List<Member> findMemberByLastname(String lastname, String status);
 
     Member findMemberById(Integer id);
-
     @Query(nativeQuery = true, value = "SELECT * FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
     Member findMemberByEmail(String email);
-
-    @Query(nativeQuery = true, value = "SELECT IF(school_mail = ?1,school_mail,personal_mail) FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
+    @Query(nativeQuery = true,value = "SELECT IF(school_mail = ?1,school_mail,personal_mail) FROM member WHERE school_mail = ?1 OR personal_mail = ?1")
     String existsByEmail(String email);
-
     @Query("select new fcode.backend.management.model.dto.LoginUserDTO(m.id,m.role,m.ip) from Member m where m.schoolMail = ?1 or m.personalMail = ?1")
     LoginUserDTO getLoginUserByEmail(String email);
-
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE member set ip = ?1 where school_mail = ?2 or personal_mail = ?2")
     int updateIpByEmail(String ip, String email);
 
     @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE id = ?1 AND status = ?2")
     String getEmailById(Integer id, String status);
-
     @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE crew_id = ?1 AND status = ?2")
     List<String> getEmailsByCrewId(Integer crewId, String status);
-
     @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE member.student_id LIKE(?1) AND status = ?2")
     List<String> getEmailsByK(String K, String status);
 
