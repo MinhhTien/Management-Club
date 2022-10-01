@@ -1,6 +1,7 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.NotificationDTO;
+import fcode.backend.management.model.dto.ResponseMessage;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.NotificationRepository;
 import fcode.backend.management.service.constant.ServiceMessage;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +28,24 @@ public class NotificationService {
     private static final String CREATE_NOTIFICATION = "Create notification: ";
     private static final String UPDATE_NOTIFICATION = "Update notification: ";
     private static final String DELETE_NOTIFICATION = "Delete notification: ";
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    public NotificationService(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
+    public void sendGlobalNotification() {
+        ResponseMessage message = new ResponseMessage("Global Notification");
+        messagingTemplate.convertAndSend("/topic/global-notifications", message);
+    }
+
+    public void sendPrivateNotification(final String userId) {
+        ResponseMessage message = new ResponseMessage("Private Notification");
+        messagingTemplate.convertAndSendToUser(userId,"/topic/private-notifications", message);
+    }
+
 
     public Response<List<NotificationDTO>> getAllNotifications() {
         logger.info("getAnnoucements()");
