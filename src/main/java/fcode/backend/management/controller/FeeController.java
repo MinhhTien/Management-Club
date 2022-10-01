@@ -30,7 +30,7 @@ public class FeeController{
     public Response<Set<FeeDTO>> getAllFee() {
         return feeService.getAllFee();
     }
-    @GetMapping("/member/debt")
+    @GetMapping("/debt")
     public Response<Set<MemberDTO>> getMemberNotPayFee(@RequestParam String feeName) {
         return feeService.getMemberNotPayFee(feeName);
     }
