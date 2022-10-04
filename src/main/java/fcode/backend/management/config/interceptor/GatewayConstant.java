@@ -27,10 +27,12 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Challenge Put api", "/challenge/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Challenge Delete api", "/challenge/**", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Member Post api", "/member/**", POST_METHOD, null));
-        apiEntities.add(new ApiEntity("Member Get api", "/member/**", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Member Put api", "/member/**", PUT_METHOD, null));
-        apiEntities.add(new ApiEntity("Member Delete api", "/member/**", DELETE_METHOD, null));
+        apiEntities.add(new ApiEntity("Member Get api for manager", "/member/**", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Member Get api for member", "/member/verifyPMail/", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Member Get api for member", "/member/verifySMail/", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Member Put api for member", "/member/us", PUT_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Member Put api for admin", "/member/ad", PUT_METHOD, Role.ADMIN));
+        apiEntities.add(new ApiEntity("Member Delete api", "/member/**", DELETE_METHOD, Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Event Get api", "/event/**", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Event Post api", "/event/**", POST_METHOD, Role.MANAGER));

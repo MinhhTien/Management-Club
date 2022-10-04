@@ -69,7 +69,7 @@ public class MemberController {
         return memberService.verifySchoolMail(code, newSchoolMail);
     }
 
-    @PutMapping(value = "us")
+    @PutMapping(value = "/us")
     public Response<Void> updateForMember(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
         try {
             Member member = memberRepository.findMemberByIdAndStatus(memberDTO.getId(), Status.ACTIVE);
@@ -98,7 +98,7 @@ public class MemberController {
         }
     }
 
-    @PutMapping(value = "ad")
+    @PutMapping(value = "/ad")
     public Response<Void> updateForAdmin(@RequestBody MemberDTO memberDTO) {
         return memberService.updateForAdmin(memberDTO);
     }
