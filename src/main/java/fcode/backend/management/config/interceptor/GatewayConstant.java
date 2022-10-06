@@ -72,12 +72,13 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Attendance Put api", "/attendance/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Attendance Delete api", "/attendance/**", DELETE_METHOD, Role.MANAGER));
         
-        apiEntities.add(new ApiEntity("Get All Announcements", "/announcement/all", GET_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/{announcementId:\\d+}", GET_METHOD, Role.MEMBER));
-        apiEntities.add(new ApiEntity("Search Announcements By Title", "/announcement/search", GET_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Get All Announcements", "/announcement/all", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/{announcementId:\\d+}", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Search Announcements By Title", "/announcement/search", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Create New Announcement", "/announcement", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Update One Announcement", "/announcement", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Get All Notifications By Member", "/announcement/notifications", GET_METHOD, Role.MEMBER));
 
         apiEntities.add(new ApiEntity("Article Get all article api", "/article/all", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Article Get article by id api", "/article/{id:\\d+}", GET_METHOD, null));
@@ -106,7 +107,9 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/announcement/crew/**", DELETE_METHOD, Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Notification Get api", "/template", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Notification Post api", "/send-message", POST_METHOD, null));
-        apiEntities.add(new ApiEntity("Notification Post private api", "/send-private-message/**", POST_METHOD, null));
+        apiEntities.add(new ApiEntity("Notification Post api", "/notification/**", POST_METHOD, null));
+        apiEntities.add(new ApiEntity("Notification Post api", "/message", POST_METHOD, null));
+        apiEntities.add(new ApiEntity("Notification Post private api", "/notification/send-private-message/**", POST_METHOD, null));
+
     }
 }

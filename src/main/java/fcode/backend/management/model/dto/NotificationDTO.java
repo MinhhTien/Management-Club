@@ -1,25 +1,15 @@
 package fcode.backend.management.model.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@ToString
+@AllArgsConstructor
 public class NotificationDTO {
     private Integer id;
     private String title;
     private String description;
-    private Integer announcementId;
-
-    public NotificationDTO(Integer id) {
-        this.id = id;
-    }
-
-    public NotificationDTO(String title, String description, Integer announcementId) {
-        this.title = title;
-        this.description = description;
-        this.announcementId = announcementId;
-    }
+    private String location;
+    private String imageUrl;
 }

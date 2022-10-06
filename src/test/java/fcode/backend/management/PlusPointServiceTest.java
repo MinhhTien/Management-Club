@@ -1,16 +1,13 @@
 package fcode.backend.management;
 
-import fcode.backend.management.model.dto.PlusPointDTO;
 import fcode.backend.management.repository.PlusPointRepository;
 import fcode.backend.management.service.PlusPointService;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @SpringBootTest
 class PlusPointServiceTest {

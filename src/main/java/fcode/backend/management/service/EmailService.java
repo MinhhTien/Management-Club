@@ -4,6 +4,9 @@ import fcode.backend.management.model.dto.EmailDetailDTO;
 import fcode.backend.management.repository.AttendanceRepository;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.service.constant.Status;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,15 +25,17 @@ public class EmailService {
     private JavaMailSender javaMailSender;
 
     @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
     MemberRepository memberRepository;
 
     @Autowired
     AttendanceRepository attendanceRepository;
 
-    @Autowired
-    GenericTypeValidator genericTypeValidator;
-
     @Value("${spring.mail.username}") private String sender;
+
+    private static final Logger logger = LogManager.getLogger(AnnouncementService.class);
     private static final String CREWID = "crewId";
     private static final String EVENTID = "eventId";
     private static final String K = "K";
@@ -61,7 +66,7 @@ public class EmailService {
     public List<Integer> parseValidInfoText(String infoUserId, String separator) {
         List<Integer> listUserId = new ArrayList<>();
         for(String id: infoUserId.split(separator)) {
-            Integer userId = genericTypeValidator.formatInt(id);
+            Integer userId = GenericTypeValidator.formatInt(id);
             if(userId == null) return null;
             listUserId.add(userId);
         }
@@ -83,7 +88,7 @@ public class EmailService {
         return conditionMap;
     }
 
-    public Set<String> parseInfoUserIdToEmail(List<Integer> userIdList) {
+    public Set<String> getEmailSetFromInfoUserId(List<Integer> userIdList) {
         Set<String> emailList = new HashSet<>();
         for(Integer userId : userIdList) {
             String email = memberRepository.getEmailById(userId, Status.ACTIVE.toString());
@@ -93,7 +98,7 @@ public class EmailService {
         return emailList;
     }
 
-    public Set<String> parseInfoGroupToEmail(Map<String, List<Integer>> groupConditionMap) {
+    public Set<String> getEmailSetFromInfoGroup(Map<String, List<Integer>> groupConditionMap) {
         Set<String> emailList = new HashSet<>();
         if(groupConditionMap.containsKey(EVENTID)) {
             for(Integer eventId: groupConditionMap.get(EVENTID)) {

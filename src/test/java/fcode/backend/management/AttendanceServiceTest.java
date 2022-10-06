@@ -1,11 +1,7 @@
 package fcode.backend.management;
 
-import fcode.backend.management.config.interceptor.State;
-import fcode.backend.management.model.dto.AttendanceDTO;
 import fcode.backend.management.repository.AttendanceRepository;
 import fcode.backend.management.repository.entity.Attendance;
-import fcode.backend.management.repository.entity.Event;
-import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.service.AttendanceService;
 
 import org.junit.jupiter.api.Test;
