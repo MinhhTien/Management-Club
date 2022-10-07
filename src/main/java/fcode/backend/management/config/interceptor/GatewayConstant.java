@@ -108,8 +108,6 @@ public class GatewayConstant {
 
         apiEntities.add(new ApiEntity("Notification Get api", "/template", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Notification Post api", "/notification/**", POST_METHOD, null));
-        apiEntities.add(new ApiEntity("Notification Post api", "/message", POST_METHOD, null));
-        apiEntities.add(new ApiEntity("Notification Post private api", "/notification/send-private-message/**", POST_METHOD, null));
 
     }
 }
