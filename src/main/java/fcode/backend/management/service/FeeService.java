@@ -88,7 +88,13 @@ public class FeeService {
             logger.warn("{}{}", UPDATE_FEE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        if (feeDTO.getName() != null) fee.setName(feeDTO.getName());
+        if (feeDTO.getName() != null) {
+            if (feeRepository.existsByName(feeDTO.getName())) {
+                logger.warn("{}{}", UPDATE_FEE, "This fee already exists.");
+                return new Response<>(HttpStatus.BAD_REQUEST.value(), "This fee already exists.");
+            }
+            fee.setName(feeDTO.getName());
+        }
         feeRepository.save(fee);
         logger.info("Update free successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -100,10 +106,16 @@ public class FeeService {
             logger.warn("{}{}", DELETE_FEE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if (feeRepository.existsById(id)) {
+        if (!feeRepository.existsById(id)) {
             logger.warn("{}{}", DELETE_FEE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
+        Fee fee =  feeRepository.findFeeById(id);
+        if (!fee.getMembers().isEmpty()) {
+            logger.warn("{}{}", DELETE_FEE, "There are some members pay for this fee.");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "There are some members pay for this fee.");
+        }
+
         feeRepository.deleteById(id);
         logger.info("Delete fee successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
