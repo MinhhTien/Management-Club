@@ -5,6 +5,9 @@ import fcode.backend.management.model.request.CreateAnnouncementRequest;
 import fcode.backend.management.model.dto.NotificationDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AnnouncementService;
+import fcode.backend.management.service.EmailService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.util.Set;
 @RequestMapping("/announcement")
 public class AnnouncementController {
     private static final String INVALID_IMAGE_URL = "Invalid image url.";
+    private static final Logger logger = LogManager.getLogger(AnnouncementController.class);
 
     @Autowired
     AnnouncementService announcementService;
@@ -49,6 +53,7 @@ public class AnnouncementController {
         if (urlValidator.isValid(createAnnouncementRequest.getImageUrl())) {
             return  announcementService.createAnnouncement(createAnnouncementRequest, userId);
         } else {
+            logger.warn("INVALID_IMAGE_URL");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
         }
     }
@@ -58,6 +63,7 @@ public class AnnouncementController {
         if (urlValidator.isValid(announcementDTO.getImageUrl())) {
             return announcementService.updateAnnouncement(announcementDTO, userId);
         } else {
+            logger.warn("INVALID_IMAGE_URL");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
         }
     }

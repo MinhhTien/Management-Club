@@ -48,11 +48,17 @@ public class AnnouncementService {
     private static final String CREATE_ANNOUNCEMENT = "Create announcement: ";
     private static final String UPDATE_ANNOUNCEMENT = "Update announcement: ";
     private static final String DELETE_ANNOUNCEMENT = "Delete announcement: ";
+    private static final String GET_EMAIL_SET_OF_RECEIVERS = "Get email set of receivers: ";
+    private static final String ADD_NOTIFICATION_TO_MEMBER = "Add notification to member: ";
+    private static final String SEND_NOTIFICATION_TO_MEMBER = "Send notification to member: ";
+    private static final String SEND_EMAIL_TO_MEMBER = "Send email to member: ";
+    private static final String GET_NOTIFICATION_DTO = "Get NotificationDTO: ";
     private static final String INVALID_NOTIFICATION_RECEIVER_LIST = "Invalid notification receiver list";
+    private static final String SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY = "Sent notification and email to members successfully";
+    private static final String WEBSOCKET_CLIENT_DESTINATION = "/queue/private-messages";
 
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
-        logger.info("getAnnouncements()");
-
+        logger.info("getAllAnnouncements()");
         List<AnnouncementDTO> announcementDTOList = announcementRepository.getAllAnnouncements(Status.ACTIVE.toString()).stream()
                 .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
 
@@ -62,10 +68,10 @@ public class AnnouncementService {
 
     public Response<AnnouncementDTO> getAnnouncementById(Integer id) {
         logger.info("getAnnouncementById(announcementId: {})", id);
-
         Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE.toString());
+
         if (announcement == null) {
-            logger.warn("{}{}", "Get announcement by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            logger.warn("{}{}", "Get announcement by Id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         AnnouncementDTO announcementDTO = modelMapper.map(announcement, AnnouncementDTO.class);
@@ -78,6 +84,10 @@ public class AnnouncementService {
         logger.info("getNotificationsByMember(userId: {})", userId);
 
         Member member = memberRepository.findMemberById(userId);
+        if (member == null) {
+            logger.warn("{}{}", "Get announcement by Id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
         Set<NotificationDTO> notificationResponseSet = member.getNotificationSet().stream()
                 .map(announcement -> modelMapper.map(announcement, NotificationDTO.class)).collect(Collectors.toSet());
 
@@ -112,35 +122,40 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Empty title");
         }
 
-        //Get email set of receivers
         Set<String> emailSet = notificationService
                 .getEmailListOfNotificationReceivers(createAnnouncementRequest.getInfoUserId(), createAnnouncementRequest.getInfoGroup());
         if (emailSet == null) {
             logger.warn("{}{}", CREATE_ANNOUNCEMENT, INVALID_NOTIFICATION_RECEIVER_LIST);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_NOTIFICATION_RECEIVER_LIST);
         }
+        logger.info("{}{}",GET_EMAIL_SET_OF_RECEIVERS, emailSet);
 
-        //Save announcement
         Announcement announcement = modelMapper.map(createAnnouncementRequest, Announcement.class);
         announcement.setId(null);
         announcement.setStatus(Status.ACTIVE);
         announcement.setMember(memberRepository.getReferenceById(userId));
         announcement.setSendEmailWhenUpdate(false);
         Announcement announcementEntity = announcementRepository.save(announcement);
-        logger.info("Create announcement success");
+        logger.info("{}{}", CREATE_ANNOUNCEMENT, "Create new announcement success");
 
         NotificationDTO notificationDTO = new NotificationDTO(
                 announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
                 announcementEntity.getLocation(), announcementEntity.getImageUrl());
-        //Add notification to members and send email.
+        logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
+
         emailSet.forEach(email -> {
+            logger.info("{}{}", ADD_NOTIFICATION_TO_MEMBER, email);
             notificationService.addNotificationToMember(announcementEntity, email);
-            messagingTemplate.convertAndSendToUser(email, "/queue/private-messages", notificationDTO);
+
+            logger.info("{}{}", SEND_NOTIFICATION_TO_MEMBER, email);
+            messagingTemplate.convertAndSendToUser(email, WEBSOCKET_CLIENT_DESTINATION, notificationDTO);
+
+            logger.info("{}{}", SEND_EMAIL_TO_MEMBER, email);
             EmailReceiverDTO emailReceiverDTO = memberRepository.getReceiverByEmail(email, Status.ACTIVE);
             emailService.sendHtmlEmail(new EmailDetailDTO(email, createAnnouncementRequest.getMailTitle(),
                     emailService.inputInfoToHtml(createAnnouncementRequest.getMail(), emailReceiverDTO.getStudentId(), emailReceiverDTO.getFirstName() + emailReceiverDTO.getLastName())));
         });
-        //messagingTemplate.convertAndSend("/topic/messages", notificationDTO);
+        logger.info("{}{}", CREATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
@@ -158,38 +173,38 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
-
-        //Send email with mail, mailTile, infoGroupId, infoUserId
         Set<String> emailSet = notificationService
                 .getEmailListOfNotificationReceivers(announcementDto.getInfoUserId(), announcementDto.getInfoGroup());
         if (emailSet == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, INVALID_NOTIFICATION_RECEIVER_LIST);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_NOTIFICATION_RECEIVER_LIST);
         }
-        if (announcementDto.getSendEmailWhenUpdate() != null && announcementDto.getSendEmailWhenUpdate().booleanValue()) {
-            announcement.setSendEmailWhenUpdate(true);
-        } else announcement.setSendEmailWhenUpdate(false);
+        logger.info("{}{}",GET_EMAIL_SET_OF_RECEIVERS, emailSet);
 
+        Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
+        if (announcementDto.getSendEmailWhenUpdate() != null && announcementDto.getSendEmailWhenUpdate().booleanValue())
+            announcement.setSendEmailWhenUpdate(true);
         announcement.setStatus(Status.ACTIVE);
         announcement.setMember(memberRepository.getReferenceById(userId));
 
         Announcement announcementEntity = announcementRepository.save(announcement);
-        logger.info("Update announcement success");
+        logger.info("{}{}", UPDATE_ANNOUNCEMENT, "Update announcement success");
 
-        NotificationDTO notificationDTO = new NotificationDTO(
-                announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
-                announcementEntity.getLocation(), announcementEntity.getImageUrl());
-        emailSet.forEach(email -> {
-            messagingTemplate.convertAndSendToUser(email, "/queue/private-messages", notificationDTO);
-        });
-
-        if(announcement.getSendEmailWhenUpdate()) {
+        if (announcement.getSendEmailWhenUpdate().booleanValue()) {
+            NotificationDTO notificationDTO = new NotificationDTO(
+                    announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
+                    announcementEntity.getLocation(), announcementEntity.getImageUrl());
+            logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
             emailSet.forEach(email -> {
+                logger.info("{}{}", SEND_NOTIFICATION_TO_MEMBER, email);
+                messagingTemplate.convertAndSendToUser(email, WEBSOCKET_CLIENT_DESTINATION, notificationDTO);
+
+                logger.info("{}{}", SEND_EMAIL_TO_MEMBER, email);
                 EmailReceiverDTO emailReceiverDTO = memberRepository.getReceiverByEmail(email, Status.ACTIVE);
                 emailService.sendHtmlEmail(new EmailDetailDTO(email, announcementDto.getMailTitle(),
                         emailService.inputInfoToHtml(announcementDto.getMail(), emailReceiverDTO.getStudentId(), emailReceiverDTO.getFirstName() + emailReceiverDTO.getLastName())));
             });
+            logger.info("{}{}", UPDATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
         }
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
@@ -209,9 +224,11 @@ public class AnnouncementService {
 
         Set<String> emailSet = notificationService
                 .getEmailListOfNotificationReceivers(announcement.getInfoUserId(), announcement.getInfoGroup());
+        logger.info("{}{}", GET_EMAIL_SET_OF_RECEIVERS, emailSet);
 
         if (emailSet != null) {
             notificationService.deleteNotificationFromMember(announcementEntity, emailSet);
+            logger.info("{}{}", DELETE_ANNOUNCEMENT, "Removed notification from member");
         }
 
         logger.info("Delete announcement success");

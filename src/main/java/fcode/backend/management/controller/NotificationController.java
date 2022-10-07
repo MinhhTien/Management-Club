@@ -21,18 +21,20 @@ public class NotificationController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping(value = "/template")
-    public ModelAndView  index() {
+    public ModelAndView index() {
         return new ModelAndView("index");
     }
 
     @MessageMapping("/message")
     @SendTo("/queue/messages")
-    public NotificationDTO getMessage(final NotificationDTO notificationDTO) throws InterruptedException {
+    public NotificationDTO getMessage(final NotificationDTO notificationDTO) {
         return notificationDTO;
     }
 
     @MessageMapping("/private-message")
-    public void getPrivateMessage(SimpMessageHeaderAccessor smha, @Payload String userEmail) throws InterruptedException {
+    public void getPrivateMessage(SimpMessageHeaderAccessor smha, @Payload String userEmail) {
+        if (smha.getUser() == null || smha.getUser().getName() == null) return;
         String message = "Hello from " + smha.getUser().getName();
-        simpMessagingTemplate.convertAndSendToUser(userEmail, "/queue/private-messages", message); }
+        simpMessagingTemplate.convertAndSendToUser(userEmail, "/queue/private-messages", message);
+    }
 }
