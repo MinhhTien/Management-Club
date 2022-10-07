@@ -1,13 +1,9 @@
 package fcode.backend.management.service;
 
-import fcode.backend.management.model.dto.CrewDTO;
-import fcode.backend.management.model.dto.MemberDTO;
-import fcode.backend.management.model.dto.PlusPointDTO;
 import fcode.backend.management.model.dto.PositionDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.PositionRepository;
-import fcode.backend.management.repository.entity.Crew;
 import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.repository.entity.Position;
 import fcode.backend.management.service.constant.ServiceMessage;

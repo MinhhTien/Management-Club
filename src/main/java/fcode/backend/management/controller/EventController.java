@@ -5,8 +5,6 @@ import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 
 @RestController

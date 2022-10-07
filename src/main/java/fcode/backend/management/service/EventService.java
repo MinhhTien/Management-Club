@@ -100,22 +100,22 @@ public class EventService {
         }
         if(eventDTO.getName() != null) {
             eventEntity.setName(eventDTO.getName());
-        } else eventEntity.setName(eventEntity.getName());
+        }
         if(eventDTO.getPoint() != null) {
             eventEntity.setPoint(eventDTO.getPoint());
-        } else eventEntity.setPoint(eventEntity.getPoint());
+        }
         if(eventDTO.getDescription() != null) {
             eventEntity.setDescription(eventDTO.getDescription());
-        } else eventEntity.setDescription(eventEntity.getDescription());
+        }
         if(eventDTO.getStartTime() != null) {
             eventEntity.setStartTime(eventDTO.getStartTime());
-        } else eventEntity.setStartTime(eventEntity.getStartTime());
+        }
         if(eventDTO.getEndTime() != null) {
             eventEntity.setEndTime(eventDTO.getEndTime());
-        } else eventEntity.setEndTime(eventEntity.getEndTime());
+        }
         if(eventDTO.getLocation() != null) {
             eventEntity.setLocation(eventDTO.getLocation());
-        } else eventEntity.setLocation(eventEntity.getLocation());
+        }
 
         eventRepository.save(eventEntity);
         logger.info("Update event successfully");
