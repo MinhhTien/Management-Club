@@ -59,16 +59,6 @@ public class MemberController {
         return memberService.getMemberByPosition(positionId);
     }
 
-    @GetMapping(value = "/verifyPMail/{code}")
-    public Response<Void> verifyPersonalMail(@PathVariable("code") String code) {
-        return memberService.verifyPersonalMail(code, newPersonalMail);
-    }
-
-    @GetMapping(value = "/verifySMail/{code}")
-    public Response<Void> verifySchoolMail(@PathVariable("code") String code) {
-        return memberService.verifySchoolMail(code, newSchoolMail);
-    }
-
     @PutMapping(value = "/us")
     public Response<Void> updateForMember(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
         try {
@@ -96,6 +86,16 @@ public class MemberController {
         } catch (Exception e) {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
+    }
+
+    @GetMapping(value = "/verifyPMail/{code}")
+    public Response<Void> verifyPersonalMail(@PathVariable("code") String code) {
+        return memberService.verifyPersonalMail(code, newPersonalMail);
+    }
+
+    @GetMapping(value = "/verifySMail/{code}")
+    public Response<Void> verifySchoolMail(@PathVariable("code") String code) {
+        return memberService.verifySchoolMail(code, newSchoolMail);
     }
 
     @PutMapping(value = "/ad")

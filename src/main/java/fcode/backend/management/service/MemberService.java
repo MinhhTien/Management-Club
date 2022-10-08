@@ -55,15 +55,15 @@ public class MemberService {
     private String sender;
 
     private static final Logger logger = LogManager.getLogger(MemberService.class);
+    private static final String GET_MEMBER = "Get member: ";
     private static final String UPDATE_MEMBER = "Update member: ";
     private static final String DELETE_MEMBER = "Delete member: ";
-    private static final String GET_MEMBER_ID = "Get member id: ";
 
     Pattern studentIdPattern = Pattern.compile(Regex.STUDENT_ID_PATTERN);
     Pattern mailPattern = Pattern.compile(Regex.MAIL_PATTERN);
 
     public Response<List<MemberDTO>> getAllMembers() {
-        logger.info("Get all members");
+        logger.info("{}", GET_MEMBER);
         List<MemberDTO> memberDTOList = memberRepository.findALlMember(fcode.backend.management.service.constant.Status.ACTIVE.toString()).stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
         logger.info("Get all members successfully");
@@ -71,59 +71,61 @@ public class MemberService {
     }
 
     public Response<MemberDTO> getMemberById(Integer id) {
-        logger.info("Get member by ID: {}", id);
+        logger.info("{}{}", GET_MEMBER, id);
         if (id == null) {
-            logger.warn("{}{}", GET_MEMBER_ID, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(memberRepository.findMemberById(id) == null) {
-            logger.warn("{}{}", GET_MEMBER_ID, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Member member = memberRepository.findMemberById(id);
         MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
-        logger.info("{}{}", GET_MEMBER_ID, ServiceMessage.SUCCESS_MESSAGE);
+        logger.info("Get member by id successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTO);
     }
 
     public Response<MemberDTO> getMemberByStudentId(String studentId) {
-        logger.info("Get member by student id: {}", studentId);
+        logger.info("{}{}", GET_MEMBER, studentId);
         if(studentId == null) {
-            logger.warn("{}{}", "Get member by student id: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(memberRepository.findMemberByStudentId(studentId, fcode.backend.management.service.constant.Status.ACTIVE.toString()) == null) {
-            logger.warn("{}{}", "Get member by student id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Member member = memberRepository.findMemberByStudentId(studentId, Status.ACTIVE.toString());
         MemberDTO memberDTO = modelMapper.map(member, MemberDTO.class);
+        logger.info("Get member by student Id successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTO);
     }
 
     public Response<List<MemberDTO>> getMemberByLastname(String lastname) {
-        logger.info("Get member by student lastname: {}", lastname);
+        logger.info("{}{}", GET_MEMBER, lastname);
         if(lastname == null) {
-            logger.warn("{}{}", "Get member by student lastname: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(!memberRepository.existsByLastNameAndStatus(lastname, Status.ACTIVE) ) {
-            logger.warn("{}{}", "Get member by student lastname: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         List<MemberDTO> memberDTOList = memberRepository.findMemberByLastname(lastname, Status.ACTIVE.toString()).stream()
                 .map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+        logger.info("Get member by lastname successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), memberDTOList);
     }
 
     public Response<List<MemberDTO>> getMemberByPosition(Integer id) {
-        logger.info("Get member by position Id: {}", id);
+        logger.info("{}{}", GET_MEMBER, id);
         if(id == null) {
-            logger.warn("{}{}", "Get member by position Id: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         if(!positionRepository.existsById(id)) {
-            logger.warn("{}{}", "Get member by position Id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            logger.warn("{}{}", GET_MEMBER, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         List<MemberDTO> memberDTOList = memberRepository.getMembersByPositionIdAndStatus(id, Status.ACTIVE.toString())

@@ -61,7 +61,7 @@ public class EventService {
         }
         if(eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).isEmpty()) {
             logger.warn("{}{}", "Get events by name: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         List<EventDTO> eventDTOList = eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
