@@ -1,7 +1,6 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.AnnouncementDTO;
-import fcode.backend.management.model.dto.EmailReceiverDTO;
 import fcode.backend.management.model.request.CreateAnnouncementRequest;
 import fcode.backend.management.model.dto.NotificationDTO;
 import fcode.backend.management.repository.entity.Member;
@@ -9,15 +8,14 @@ import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.AnnouncementRepository;
 import fcode.backend.management.repository.MemberRepository;
 import fcode.backend.management.repository.entity.Announcement;
-import fcode.backend.management.model.dto.EmailDetailDTO;
 import fcode.backend.management.service.constant.ServiceMessage;
 import fcode.backend.management.service.constant.Status;
+import fcode.backend.management.service.event.EventPublisher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,32 +28,28 @@ public class AnnouncementService {
     AnnouncementRepository announcementRepository;
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-
-    @Autowired
     MemberRepository memberRepository;
 
     @Autowired
     ModelMapper modelMapper;
 
     @Autowired
-    EmailService emailService;
+    NotificationService notificationService;
 
     @Autowired
-    NotificationService notificationService;
+    EventPublisher eventPublisher;
 
     private static final Logger logger = LogManager.getLogger(AnnouncementService.class);
     private static final String CREATE_ANNOUNCEMENT = "Create announcement: ";
     private static final String UPDATE_ANNOUNCEMENT = "Update announcement: ";
     private static final String DELETE_ANNOUNCEMENT = "Delete announcement: ";
     private static final String GET_EMAIL_SET_OF_RECEIVERS = "Get email set of receivers: ";
-    private static final String ADD_NOTIFICATION_TO_MEMBER = "Add notification to member: ";
-    private static final String SEND_NOTIFICATION_TO_MEMBER = "Send notification to member: ";
-    private static final String SEND_EMAIL_TO_MEMBER = "Send email to member: ";
     private static final String GET_NOTIFICATION_DTO = "Get NotificationDTO: ";
     private static final String INVALID_NOTIFICATION_RECEIVER_LIST = "Invalid notification receiver list";
     private static final String SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY = "Sent notification and email to members successfully";
-    private static final String WEBSOCKET_CLIENT_DESTINATION = "/queue/private-messages";
+    private static final String START_ADDING_NOTIFICATION_TO_MEMBER_ENTITY = "Start adding notification to member entity";
+    private static final String START_SENDING_NOTIFICATION_TO_RECEIVERS_VIA_WEBSOCKET = "Start sending notification to receivers via WebSocket";
+    private static final String START_SENDING_NOTIFICATION_EMAIL_TO_RECEIVERS = "Start sending notification email to receivers";
 
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
         logger.info("getAllAnnouncements()");
@@ -143,18 +137,15 @@ public class AnnouncementService {
                 announcementEntity.getLocation(), announcementEntity.getImageUrl());
         logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
 
-        emailSet.forEach(email -> {
-            logger.info("{}{}", ADD_NOTIFICATION_TO_MEMBER, email);
-            notificationService.addNotificationToMember(announcementEntity, email);
+        logger.info("{}{}", CREATE_ANNOUNCEMENT, START_ADDING_NOTIFICATION_TO_MEMBER_ENTITY);
+        notificationService.addNotificationToMember(announcementEntity, emailSet);
 
-            logger.info("{}{}", SEND_NOTIFICATION_TO_MEMBER, email);
-            messagingTemplate.convertAndSendToUser(email, WEBSOCKET_CLIENT_DESTINATION, notificationDTO);
+        logger.info("{}{}", CREATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_TO_RECEIVERS_VIA_WEBSOCKET);
+        eventPublisher.sendNotificationTo(emailSet, notificationDTO);
 
-            logger.info("{}{}", SEND_EMAIL_TO_MEMBER, email);
-            EmailReceiverDTO emailReceiverDTO = memberRepository.getReceiverByEmail(email, Status.ACTIVE);
-            emailService.sendHtmlEmail(new EmailDetailDTO(email, createAnnouncementRequest.getMailTitle(),
-                    emailService.inputInfoToHtml(createAnnouncementRequest.getMail(), emailReceiverDTO.getStudentId(), emailReceiverDTO.getFirstName() + emailReceiverDTO.getLastName())));
-        });
+        logger.info("{}{}", CREATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_EMAIL_TO_RECEIVERS);
+        eventPublisher.sendEmailTo(emailSet, createAnnouncementRequest.getMailTitle(), createAnnouncementRequest.getMail());
+
         logger.info("{}{}", CREATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
@@ -195,17 +186,14 @@ public class AnnouncementService {
                     announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
                     announcementEntity.getLocation(), announcementEntity.getImageUrl());
             logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
-            emailSet.forEach(email -> {
-                logger.info("{}{}", SEND_NOTIFICATION_TO_MEMBER, email);
-                messagingTemplate.convertAndSendToUser(email, WEBSOCKET_CLIENT_DESTINATION, notificationDTO);
 
-                logger.info("{}{}", SEND_EMAIL_TO_MEMBER, email);
-                EmailReceiverDTO emailReceiverDTO = memberRepository.getReceiverByEmail(email, Status.ACTIVE);
-                emailService.sendHtmlEmail(new EmailDetailDTO(email, announcementDto.getMailTitle(),
-                        emailService.inputInfoToHtml(announcementDto.getMail(), emailReceiverDTO.getStudentId(), emailReceiverDTO.getFirstName() + emailReceiverDTO.getLastName())));
-            });
-            logger.info("{}{}", UPDATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
+            logger.info("{}{}", UPDATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_TO_RECEIVERS_VIA_WEBSOCKET);
+            eventPublisher.sendNotificationTo(emailSet, notificationDTO);
+
+            logger.info("{}{}", UPDATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_EMAIL_TO_RECEIVERS);
+            eventPublisher.sendEmailTo(emailSet, announcementDto.getMailTitle(), announcementDto.getMail());
         }
+        logger.info("{}{}", UPDATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
