@@ -32,8 +32,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query("select new fcode.backend.management.model.dto.LoginUserDTO(m.id,m.role,m.ip) from Member m where m.schoolMail = ?1 or m.personalMail = ?1")
     LoginUserDTO getLoginUserByEmail(String email);
     @Modifying
-    @Query(nativeQuery = true,value = "UPDATE member set ip = ?1 where school_mail = ?2 or personal_mail = ?2")
-    int updateIpByEmail(String ip,String email);
+    @Query(nativeQuery = true, value = "UPDATE member set ip = ?1 where school_mail = ?2 or personal_mail = ?2")
+    int updateIpByEmail(String ip, String email);
 
     @Query(nativeQuery = true, value = "SELECT IFNULL(school_mail, personal_mail) from member WHERE id = ?1 AND status = ?2")
     String getEmailById(Integer id, String status);
@@ -46,5 +46,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     EmailReceiverDTO getReceiverByEmail(String email, Status status);
 
     boolean existsByCrew(Crew crew);
+    boolean existsByStudentId(String studentId);
 }
-

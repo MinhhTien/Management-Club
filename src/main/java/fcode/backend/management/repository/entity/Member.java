@@ -72,6 +72,13 @@ public class Member {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<PlusPoint> plusPointList;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "member_fee",
+            joinColumns =
+                    { @JoinColumn(name = "member_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "fee_id", referencedColumnName = "id") } )
+    private Set<Fee> fees;
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @JoinTable(
 //            name = "member_notification",
