@@ -66,4 +66,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM fcode_management.member where verification_code = ?1")
     Member findByVerificationCode(String verificationCode);
 
-}
+    
+    boolean existsByStudentId(String studentId);
+} 
+

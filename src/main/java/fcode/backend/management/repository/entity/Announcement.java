@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Table(name = "announcement")
@@ -46,6 +46,6 @@ public class Announcement {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "announcement")
-//    private List<Notification> notifications;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "notificationSet")
+    private Set<Member> memberList = new HashSet<>();
 }

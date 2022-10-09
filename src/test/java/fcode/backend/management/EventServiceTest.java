@@ -1,15 +1,8 @@
 package fcode.backend.management;
 
-import fcode.backend.management.model.dto.EventDTO;
-import fcode.backend.management.repository.entity.Event;
 import fcode.backend.management.service.EventService;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootTest
 public class EventServiceTest {

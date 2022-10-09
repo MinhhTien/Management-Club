@@ -18,8 +18,8 @@ public class TestAnnouncement {
 
     @Test
     public void addAnnouncements() {
-        announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 121","safafdf","sadsad","asdasd","sdfsdf","https://github.com/F-Code-BE/fcode-management/tree/dev","sdfdsf","sdfdsf"), 1);
-        announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 2",null,"safdsfsad","adsfasd","dsfsdsdf","sdfsdg","werwedsf","swerwedsf"), 1);
+        //announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 121","safafdf","sadsad","asdasd","sdfsdf","https://github.com/F-Code-BE/fcode-management/tree/dev","sdfdsf","sdfdsf"), 1);
+        //announcementService.createAnnouncement(new AnnouncementDTO("Hop CLB 2",null,"safdsfsad","adsfasd","dsfsdsdf","sdfsdg","werwedsf","swerwedsf"), 1);
     }
 
     @Test
