@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class NotificationDTO {
     private Integer id;
     private String title;

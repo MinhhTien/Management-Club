@@ -90,7 +90,7 @@ public class AnnouncementService {
     }
 
     public Response<List<AnnouncementDTO>> searchAnnouncements(String value) {
-        logger.info("searchAnnouncements(value : {})", value);
+        logger.info("searchAnnouncements(title : {})", value);
 
         List<AnnouncementDTO> announcementDTOList = announcementRepository.searchAllByTitle("% %".replace(" ", value), Status.ACTIVE.toString()).stream()
                 .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
@@ -98,7 +98,7 @@ public class AnnouncementService {
             logger.warn("{}{}", "Search announcements by title:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        logger.info("Search announcements by title success");
+        logger.info("Search announcements by title successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), announcementDTOList);
     }
 
@@ -132,9 +132,7 @@ public class AnnouncementService {
         Announcement announcementEntity = announcementRepository.save(announcement);
         logger.info("{}{}", CREATE_ANNOUNCEMENT, "Create new announcement success");
 
-        NotificationDTO notificationDTO = new NotificationDTO(
-                announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
-                announcementEntity.getLocation(), announcementEntity.getImageUrl());
+        NotificationDTO notificationDTO = modelMapper.map(announcementEntity, NotificationDTO.class);
         logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
 
         logger.info("{}{}", CREATE_ANNOUNCEMENT, START_ADDING_NOTIFICATION_TO_MEMBER_ENTITY);
@@ -182,9 +180,7 @@ public class AnnouncementService {
         logger.info("{}{}", UPDATE_ANNOUNCEMENT, "Update announcement success");
 
         if (announcement.getSendEmailWhenUpdate().booleanValue()) {
-            NotificationDTO notificationDTO = new NotificationDTO(
-                    announcementEntity.getId(), announcementEntity.getTitle(), announcementEntity.getDescription(),
-                    announcementEntity.getLocation(), announcementEntity.getImageUrl());
+            NotificationDTO notificationDTO = modelMapper.map(announcementEntity, NotificationDTO.class);
             logger.info("{}{}", GET_NOTIFICATION_DTO, notificationDTO);
 
             logger.info("{}{}", UPDATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_TO_RECEIVERS_VIA_WEBSOCKET);

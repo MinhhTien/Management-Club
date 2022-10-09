@@ -5,7 +5,6 @@ import fcode.backend.management.model.request.CreateAnnouncementRequest;
 import fcode.backend.management.model.dto.NotificationDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AnnouncementService;
-import fcode.backend.management.service.EmailService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class AnnouncementController {
         return announcementService.getAllAnnouncements();
     }
 
-    @GetMapping("/{announcementId}")
+    @GetMapping("/one/{announcementId}")
     public Response<AnnouncementDTO> getOneAnnouncement(@PathVariable Integer announcementId) {
         return announcementService.getAnnouncementById(announcementId);
     }
@@ -68,7 +67,7 @@ public class AnnouncementController {
         }
     }
 
-    @DeleteMapping("/{announcementId}")
+    @DeleteMapping("/one/{announcementId}")
     public Response<Void> deleteAnnouncement(@PathVariable Integer announcementId) {
         return announcementService.deleteAnnouncement(announcementId);
     }

@@ -34,21 +34,21 @@ public class GatewayConstant {
 
         apiEntities.add(new ApiEntity("Get All Subjects", "/subject/all", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Subjects By Semester", "/subject/semester/{semester:\\d+}", GET_METHOD, null));
-        apiEntities.add(new ApiEntity("Get One Subject", "/subject/{subjectId:\\d+}", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Get One Subject", "/subject/one/{subjectId:\\d+}", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Subject By Name", "/subject/name/{name}", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Search Subjects", "/subject/search", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Create New Subject", "/subject", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Update Subject", "/subject", PUT_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Delete Subject", "/subject/{subjectId:\\d+}", DELETE_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Delete Subject", "/subject/one/{subjectId:\\d+}", DELETE_METHOD, Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Get All Resources", "/resource/all",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Get Resources By Semester", "/resource/semester/{semester:\\d+}",GET_METHOD, null));
         apiEntities.add(new ApiEntity("Get Resources By Subject", "/resource/subject/{subjectId:\\d+}",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Search Resources By Contributor", "/resource/contributor",GET_METHOD,null));
-        apiEntities.add(new ApiEntity("Get One Resource", "/resource/{resourceId:\\d+}",GET_METHOD,null));
+        apiEntities.add(new ApiEntity("Get One Resource", "/resource/one/{resourceId:\\d+}",GET_METHOD,null));
         apiEntities.add(new ApiEntity("Create New Resource", "/resource",POST_METHOD,Role.MANAGER));
         apiEntities.add(new ApiEntity("Update Resource", "/resource",PUT_METHOD,Role.MANAGER));
-        apiEntities.add(new ApiEntity("Delete Resource", "/resource/{resourceId:\\d+}",DELETE_METHOD,Role.MANAGER));
+        apiEntities.add(new ApiEntity("Delete Resource", "/resource/one/{resourceId:\\d+}",DELETE_METHOD,Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Question Get all questions api", "/question/questions", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Question Get questions by id api", "/question/{questionId:\\d+}", GET_METHOD, null));
@@ -73,11 +73,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Attendance Delete api", "/attendance/**", DELETE_METHOD, Role.MANAGER));
         
         apiEntities.add(new ApiEntity("Get All Announcements", "/announcement/all", GET_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/{announcementId:\\d+}", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Get One Announcement", "/announcement/one/{announcementId:\\d+}", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Search Announcements By Title", "/announcement/search", GET_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Create New Announcement", "/announcement", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Update One Announcement", "/announcement", PUT_METHOD, Role.MANAGER));
-        apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Delete Announcement ", "/announcement/one/{announcementId:\\d+}", DELETE_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Get All Notifications By Member", "/announcement/notifications", GET_METHOD, Role.MEMBER));
 
         apiEntities.add(new ApiEntity("Article Get all article api", "/article/all", GET_METHOD, null));
