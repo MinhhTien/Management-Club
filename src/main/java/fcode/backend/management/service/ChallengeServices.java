@@ -63,7 +63,7 @@ public class ChallengeServices {
         }
         if (challengeRepository.findChallengeByTitle(title, Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", GET_CHALLENGE_BY_TITLE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Challenge challenge = challengeRepository.findChallengeByTitle(title, Status.ACTIVE.toString());
         ChallengeDTO challengeDTO = modelMapper.map(challenge, ChallengeDTO.class);

@@ -61,7 +61,7 @@ public class EventService {
         }
         if(eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).isEmpty()) {
             logger.warn("{}{}", "Get events by name: ", ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         List<EventDTO> eventDTOList = eventRepository.findEventsByName("%"+name+"%", Status.ACTIVE.toString()).stream()
                 .map(event -> modelMapper.map(event, EventDTO.class)).collect(Collectors.toList());
@@ -100,22 +100,22 @@ public class EventService {
         }
         if(eventDTO.getName() != null) {
             eventEntity.setName(eventDTO.getName());
-        } else eventEntity.setName(eventEntity.getName());
+        }
         if(eventDTO.getPoint() != null) {
             eventEntity.setPoint(eventDTO.getPoint());
-        } else eventEntity.setPoint(eventEntity.getPoint());
+        }
         if(eventDTO.getDescription() != null) {
             eventEntity.setDescription(eventDTO.getDescription());
-        } else eventEntity.setDescription(eventEntity.getDescription());
+        }
         if(eventDTO.getStartTime() != null) {
             eventEntity.setStartTime(eventDTO.getStartTime());
-        } else eventEntity.setStartTime(eventEntity.getStartTime());
+        }
         if(eventDTO.getEndTime() != null) {
             eventEntity.setEndTime(eventDTO.getEndTime());
-        } else eventEntity.setEndTime(eventEntity.getEndTime());
+        }
         if(eventDTO.getLocation() != null) {
             eventEntity.setLocation(eventDTO.getLocation());
-        } else eventEntity.setLocation(eventEntity.getLocation());
+        }
 
         eventRepository.save(eventEntity);
         logger.info("Update event successfully");

@@ -27,6 +27,13 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Challenge Put api", "/challenge/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Challenge Delete api", "/challenge/**", DELETE_METHOD, Role.MANAGER));
 
+        apiEntities.add(new ApiEntity("Member Get api for member", "/member/verifySMail/*", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Member Get api for member", "/member/verifyPMail/*", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Member Get api for manager", "/member/**", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Member Put api for member", "/member/us", PUT_METHOD, Role.MEMBER));
+        apiEntities.add(new ApiEntity("Member Put api for admin", "/member/ad", PUT_METHOD, Role.ADMIN));
+        apiEntities.add(new ApiEntity("Member Delete api", "/member/**", DELETE_METHOD, Role.ADMIN));
+
         apiEntities.add(new ApiEntity("Event Get api", "/event/**", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Event Post api", "/event/**", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Event Put api", "/event/**", PUT_METHOD, Role.MANAGER));
@@ -95,6 +102,11 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Plus point Post api", "/pluspoint/**", POST_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Put api", "/pluspoint", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Plus point Delete api", "/pluspoint/**", DELETE_METHOD, Role.MANAGER));
+
+        apiEntities.add(new ApiEntity("Position Get Api", "/position/**", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Position Post Api", "/position/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Position Put Api", "/position/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Position Delete Api", "/position/**", DELETE_METHOD, Role.MANAGER));
 
         apiEntities.add(new ApiEntity("Crew Get api", "/crew/**", GET_METHOD, Role.MEMBER));
         apiEntities.add(new ApiEntity("Crew Post api", "/crew/**", POST_METHOD, Role.MANAGER));

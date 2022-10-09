@@ -62,6 +62,8 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
+    @Column(name = "verification_code")
+    private String verificationCode;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private Set<Article> articles;
 

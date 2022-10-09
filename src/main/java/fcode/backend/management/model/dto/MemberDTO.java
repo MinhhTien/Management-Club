@@ -1,13 +1,12 @@
 package fcode.backend.management.model.dto;
 
 import fcode.backend.management.config.Role;
-import fcode.backend.management.config.interceptor.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
+import java.sql.Date;
 
 
 @Getter
@@ -28,30 +27,13 @@ public class MemberDTO {
     private String personalMail;
     private String schoolMail;
     private String facebookUrl;
-
-    private String ip;
-
-    private Status status;
+    private String description;
+    private Integer positionId;
+    private Integer crewId;
 
     public MemberDTO(Integer id) {
         this.id = id;
     }
 
-    public MemberDTO(Integer id, String studentId, String firstName, String lastName, String avatarUrl, String major, Date dateOfBirth, Role role, Date clubEntryDate, String phone, String personalMail, String schoolMail, String facebookUrl, String ip) {
-        this.id = id;
-        this.studentId = studentId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avatarUrl = avatarUrl;
-        this.major = major;
-        this.dateOfBirth = dateOfBirth;
-        this.role = role;
-        this.clubEntryDate = clubEntryDate;
-        this.phone = phone;
-        this.personalMail = personalMail;
-        this.schoolMail = schoolMail;
-        this.facebookUrl = facebookUrl;
-        this.ip = ip;
-    }
 }
 
