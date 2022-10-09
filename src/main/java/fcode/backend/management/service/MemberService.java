@@ -163,13 +163,13 @@ public class MemberService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    public Response<Void> updateForMember(MemberDTO memberDTO) {
+    public Response<Void> updateForMember(MemberDTO memberDTO, Integer memberId) {
         logger.info("{}{}", UPDATE_MEMBER, memberDTO);
-        if(memberDTO == null) {
+        if(memberDTO == null || memberId == null) {
             logger.warn("{}{}", UPDATE_MEMBER, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Member member = memberRepository.findMemberByIdAndStatus(memberDTO.getId(), Status.ACTIVE);
+        Member member = memberRepository.findMemberByIdAndStatus(memberId, Status.ACTIVE);
         if(member == null) {
             logger.warn("{}{}", UPDATE_MEMBER, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());

@@ -60,13 +60,13 @@ public class MemberController {
     }
 
     @PutMapping(value = "/us")
-    public Response<Void> updateForMember(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
+    public Response<Void> updateForMember(@RequestBody MemberDTO memberDTO, @RequestAttribute(required = false) Integer userId, HttpServletRequest request) {
         try {
-            Member member = memberRepository.findMemberByIdAndStatus(memberDTO.getId(), Status.ACTIVE);
+            Member member = memberRepository.findMemberByIdAndStatus(userId, Status.ACTIVE);
             if(member == null) {
                 return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             }
-            memberService.updateForMember(memberDTO);
+            memberService.updateForMember(memberDTO, userId);
             String siteURL = Utility.getSiteURL(request);
 
             if(memberDTO.getPersonalMail() != null
