@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 
@@ -72,6 +73,15 @@ public class Member {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<PlusPoint> plusPointList;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "notification",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "announcement_id")
+    )
+    private Set<Announcement> notificationSet = new HashSet<>();
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "member_fee",
             joinColumns =
@@ -79,13 +89,6 @@ public class Member {
             inverseJoinColumns =
                     { @JoinColumn(name = "fee_id", referencedColumnName = "id") } )
     private Set<Fee> fees;
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "member_notification",
-//            joinColumns = @JoinColumn(name = "member_id"),
-//            inverseJoinColumns = @JoinColumn(name = "notification_id")
-//    )
-//    private List<Notification> notificationList = new ArrayList<>();
 
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
@@ -101,16 +104,16 @@ public class Member {
         this.id = id;
     }
 
-//    public void addNotification(Notification notification) {
-//        this.notificationList.add(notification);
-//        notification.getMemberList().add(this);
-//    }
-//
-//    public void removeNotification(Integer notificationId) {
-//        Notification notification = this.notificationList.stream().filter(noti -> noti.getId() == notificationId).findFirst().orElse(null);
-//        if(notification != null) {
-//            this.notificationList.remove(notification);
-//            notification.getMemberList().remove(this);
-//        }
-//    }
+    public void addNotification(Announcement announcement) {
+        this.notificationSet.add(announcement);
+        announcement.getMemberList().add(this);
+    }
+
+    public void removeNotification(Announcement announcement) {
+        Announcement memberAnnouncement = this.notificationSet.stream().filter(notification -> notification.getId() == announcement.getId()).findFirst().orElse(null);
+        if(announcement != null) {
+            this.notificationSet.remove(memberAnnouncement);
+            announcement.getMemberList().remove(this);
+        }
+    }
 }

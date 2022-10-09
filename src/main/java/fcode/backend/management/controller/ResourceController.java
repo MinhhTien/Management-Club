@@ -38,7 +38,7 @@ public class ResourceController {
         return resourceService.searchResourcesByContributor(contributor);
     }
 
-    @GetMapping("/{resourceId}")
+    @GetMapping("/one/{resourceId}")
     public Response<ResourceDTO> getOneResource(@PathVariable Integer resourceId) {
         return resourceService.getResourceById(resourceId);
     }
@@ -63,7 +63,7 @@ public class ResourceController {
         }
     }
 
-    @DeleteMapping(value = "/{resourceId}")
+    @DeleteMapping(value = "/one/{resourceId}")
     public Response<Void> deleteResource(@PathVariable int resourceId) {
         return resourceService.deleteResource(resourceId);
     }

@@ -46,5 +46,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     EmailReceiverDTO getReceiverByEmail(String email, Status status);
 
     boolean existsByCrew(Crew crew);
+    
     boolean existsByStudentId(String studentId);
+    } 
 }
