@@ -82,6 +82,14 @@ public class Member {
     )
     private Set<Announcement> notificationSet = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "member_fee",
+            joinColumns =
+                    { @JoinColumn(name = "member_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "fee_id", referencedColumnName = "id") } )
+    private Set<Fee> fees;
+
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
         this.lastName = response.getGivenName();

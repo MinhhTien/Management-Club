@@ -25,9 +25,9 @@ public class CrewAnnouncement {
     private String location;
     @Column(name = "image_url")
     private String imageUrl;
-    @Column(name = "created_time")
+    @Column(name = "created_time", insertable = false, updatable = false)
     private Date createdTime;
-    @Column(name = "updated_time")
+    @Column(name = "updated_time", insertable = false, updatable = false)
     private Date updatedTime;
     @Column
     private Status status;

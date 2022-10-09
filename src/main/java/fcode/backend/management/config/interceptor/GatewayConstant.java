@@ -109,5 +109,9 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Notification Get api", "/template", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Notification Post api", "/notification/**", POST_METHOD, null));
 
+        apiEntities.add(new ApiEntity("Fee Get api", "/fee/**", GET_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Post api", "/fee/**", POST_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Put api", "/fee/**", PUT_METHOD, Role.MANAGER));
+        apiEntities.add(new ApiEntity("Fee Delete api", "/fee/**", DELETE_METHOD, Role.MANAGER));
     }
 }
