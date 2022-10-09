@@ -66,7 +66,7 @@ public class AnnouncementService {
 
         if (announcement == null) {
             logger.warn("{}{}", "Get announcement by Id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         AnnouncementDTO announcementDTO = modelMapper.map(announcement, AnnouncementDTO.class);
 
@@ -79,7 +79,7 @@ public class AnnouncementService {
 
         Member member = memberRepository.findMemberById(userId);
         if (member == null) {
-            logger.warn("{}{}", "Get announcement by Id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            logger.warn("{}{}", "Get notifications by Member:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Set<NotificationDTO> notificationResponseSet = member.getNotificationSet().stream()
@@ -96,7 +96,7 @@ public class AnnouncementService {
                 .map(announcementEntity -> modelMapper.map(announcementEntity, AnnouncementDTO.class)).collect(Collectors.toList());
         if (announcementDTOList.isEmpty()) {
             logger.warn("{}{}", "Search announcements by title:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
         logger.info("Search announcements by title successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), announcementDTOList);
@@ -159,7 +159,7 @@ public class AnnouncementService {
 
         if (announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         Set<String> emailSet = notificationService
@@ -200,7 +200,7 @@ public class AnnouncementService {
         Announcement announcement = announcementRepository.getByIdAndStatus(id, Status.ACTIVE.toString());
         if (announcement == null) {
             logger.warn("{}{}", DELETE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         announcement.setStatus(Status.INACTIVE);

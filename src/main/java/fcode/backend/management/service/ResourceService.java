@@ -107,7 +107,7 @@ public class ResourceService {
 
         if(!resourceRepository.existsById(id)) {
             logger.warn("{}{}", "Get resource by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Resource resource = resourceRepository.findOneById(id);
         ResourceDTO resourceDTO = modelMapper.map(resource, ResourceDTO.class);
@@ -173,7 +173,7 @@ public class ResourceService {
 
         if(!resourceRepository.existsById(id)) {
             logger.warn("{}{}", DELETE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         Resource resource = resourceRepository.findOneById(id);
