@@ -1,6 +1,6 @@
 package fcode.backend.management.model.dto;
 
-import fcode.backend.management.config.interceptor.Status;
+import fcode.backend.management.service.constant.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

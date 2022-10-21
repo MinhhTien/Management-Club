@@ -21,5 +21,4 @@ public class AttendanceDTO {
     private String eventName;
     private Date date;
     private State state;
-
 }

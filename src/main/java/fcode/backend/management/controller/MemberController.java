@@ -39,7 +39,7 @@ public class MemberController {
         return memberService.getAllMembers();
     }
 
-    @GetMapping(value = "memberId/{memberId}")
+    @GetMapping(value = "/memberId/{memberId}")
     public Response<MemberDTO> getMemberById(@PathVariable Integer memberId) {
         return memberService.getMemberById(memberId);
     }
@@ -49,12 +49,12 @@ public class MemberController {
         return memberService.getMemberByStudentId(studentId);
     }
 
-    @GetMapping(value = "lastName/{lastName}")
+    @GetMapping(value = "/lastName/{lastName}")
     public Response<List<MemberDTO>> getMemberByLastName(@PathVariable String lastName) {
         return memberService.getMemberByLastname(lastName);
     }
 
-    @GetMapping(value = "positionId/{positionId}")
+    @GetMapping(value = "/positionId/{positionId}")
     public Response<List<MemberDTO>> getMemberByPositionId(@PathVariable Integer positionId) {
         return memberService.getMemberByPosition(positionId);
     }
@@ -103,7 +103,7 @@ public class MemberController {
         return memberService.updateForAdmin(memberDTO);
     }
 
-    @DeleteMapping(value = "id/{id}")
+    @DeleteMapping(value = "/id/{id}")
     public Response<Void> deleteMember(@PathVariable Integer id) {
         return memberService.deleteMember(id);
     }

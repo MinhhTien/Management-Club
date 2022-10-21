@@ -152,7 +152,7 @@ public class PlusPointService {
         }
         PlusPoint plusPoint = modelMapper.map(plusPointDTO, PlusPoint.class);
         plusPoint.setMember(new Member(plusPointDTO.getMemberId()));
-        plusPoint.setStatus(fcode.backend.management.config.interceptor.Status.ACTIVE);
+        plusPoint.setStatus(Status.ACTIVE);
         plusPointRepository.save(plusPoint);
         logger.info("Create plus point successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -200,7 +200,7 @@ public class PlusPointService {
             logger.warn("{}{}", DELETE_PLUS_POINT, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        plusPoint.setStatus(fcode.backend.management.config.interceptor.Status.INACTIVE);
+        plusPoint.setStatus(Status.INACTIVE);
         plusPointRepository.save(plusPoint);
         logger.info("Delete plus point successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());

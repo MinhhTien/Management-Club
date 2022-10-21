@@ -1,5 +1,6 @@
 package fcode.backend.management.model.dto;
 
+import fcode.backend.management.service.constant.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,5 @@ public class EventDTO {
     private Date startTime;
     private Date endTime;
     private String location;
-    private String status;
-
+    private Status status;
 }

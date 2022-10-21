@@ -62,7 +62,7 @@ public class AttendanceService {
             logger.warn("{}{}", "Get attendance by event id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(eventRepository.findEventById(eventId, fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) == null) {
+        if(eventRepository.findEventById(eventId, Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", "Get attendance by event id: ", ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -128,7 +128,7 @@ public class AttendanceService {
             logger.warn("{}{}", CREATE_ATTENDANCE, "Attendance is already existed");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Attendance is already existed");
         }
-        if(memberRepository.findMemberById(attendanceDTO.getMemberId()) == null || eventRepository.findEventById(attendanceDTO.getEventId(), fcode.backend.management.config.interceptor.Status.ACTIVE.toString()) == null) {
+        if(memberRepository.findMemberById(attendanceDTO.getMemberId()) == null || eventRepository.findEventById(attendanceDTO.getEventId(), Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", CREATE_ATTENDANCE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
@@ -176,7 +176,7 @@ public class AttendanceService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         attendanceRepository.delete(attendance);
-        logger.info("Delete attendance successfully");
+        logger.info("{}{}{}", DELETE_ATTENDANCE, id, "successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 }

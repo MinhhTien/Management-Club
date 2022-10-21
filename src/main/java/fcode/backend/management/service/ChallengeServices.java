@@ -1,11 +1,11 @@
 package fcode.backend.management.service;
 
-import fcode.backend.management.config.interceptor.Status;
 import fcode.backend.management.model.dto.ChallengeDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.ChallengeRepository;
 import fcode.backend.management.repository.entity.Challenge;
 import fcode.backend.management.service.constant.ServiceMessage;
+import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -71,7 +71,7 @@ public class ChallengeServices {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), challengeDTO);
     }
 
-    @Transactional
+
     public Response<Void> createChallenge(ChallengeDTO challengeDTO) {
         logger.info("{}{}", CREATE_CHALLENGE, challengeDTO);
         if (challengeDTO == null) {
@@ -92,7 +92,7 @@ public class ChallengeServices {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    @Transactional
+
     public Response<Void> updateChallenge(ChallengeDTO challengeDTO) {
         logger.info("{}{}", UPDATE_CHALLENGE, challengeDTO);
         if (challengeDTO == null) {
@@ -107,25 +107,25 @@ public class ChallengeServices {
 
         if (challengeDTO.getTitle() != null) {
             challengeEntity.setTitle(challengeDTO.getTitle());
-        } else challengeEntity.setTitle(challengeEntity.getTitle());
+        }
 
         if (challengeDTO.getDescription() != null) {
             challengeEntity.setDescription(challengeDTO.getDescription());
-        } else challengeEntity.setDescription(challengeEntity.getDescription());
+        }
 
         if (challengeDTO.getStartTime() != null) {
             challengeEntity.setStartTime(challengeDTO.getStartTime());
-        } else challengeEntity.setStartTime(challengeEntity.getStartTime());
+        }
 
         if (challengeDTO.getEndTime() != null) {
             challengeEntity.setEndTime(challengeDTO.getEndTime());
-        } else challengeEntity.setEndTime(challengeEntity.getEndTime());
+        }
         challengeRepository.save(challengeEntity);
         logger.info("Update challenge successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-    @Transactional
+
     public Response<Void> deleteChallenge(Integer id) {
         logger.info("{}{}", DELETE_CHALLENGE, id);
         if (id == null) {
