@@ -1,11 +1,11 @@
 package fcode.backend.management.service;
 
-import fcode.backend.management.config.interceptor.Status;
 import fcode.backend.management.model.dto.EventDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.EventRepository;
 import fcode.backend.management.repository.entity.Event;
 import fcode.backend.management.service.constant.ServiceMessage;
+import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -38,7 +38,7 @@ public class EventService {
     }
 
     public Response<EventDTO> getEventById(Integer id) {
-        logger.info("Get event by ID: {}", id);
+        logger.info("{}{}", GET_EVENT_BY_ID, id);
         if(id == null) {
             logger.warn("{}{}", GET_EVENT_BY_ID, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
@@ -75,7 +75,7 @@ public class EventService {
             logger.warn("{}{}", CREATE_EVENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(eventRepository.findByName(eventDTO.getName()) != null) {
+        if(eventRepository.findEventsByName(eventDTO.getName(), Status.ACTIVE.toString()) != null) {
             logger.warn("{}{}", CREATE_EVENT, "Event is already exist");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Event is already exist");
         }
@@ -135,7 +135,7 @@ public class EventService {
         }
         eventEntity.setStatus(Status.INACTIVE);
         eventRepository.save(eventEntity);
-        logger.info("Delete event successfully");
+        logger.info("{}{}{}", DELETE_EVENT, id, "successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 }

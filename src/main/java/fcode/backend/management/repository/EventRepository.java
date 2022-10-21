@@ -17,8 +17,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * from event WHERE name like ?1 AND status = ?2")
     List<Event> findEventsByName(String name, String status);
-
-    @Query
-    Event findByName(String name);
 }
 
