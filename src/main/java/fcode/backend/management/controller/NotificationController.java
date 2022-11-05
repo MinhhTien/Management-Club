@@ -20,11 +20,6 @@ public class NotificationController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @GetMapping(value = "/template")
-    public ModelAndView index() {
-        return new ModelAndView("index");
-    }
-
     @MessageMapping("/message")
     @SendTo("/queue/messages")
     public NotificationDTO getMessage(final NotificationDTO notificationDTO) {

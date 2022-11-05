@@ -13,6 +13,7 @@ public class GatewayConstant {
     private static final String POST_METHOD = "POST";
     private static final String PUT_METHOD = "PUT";
     private static final String DELETE_METHOD = "DELETE";
+    private static final String OPTIONS_METHOD = "OPTIONS";
 
     private GatewayConstant() {
     }
@@ -21,6 +22,7 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Auth api", "/auth/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Login api", "/login/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Register api", "/register", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Preflight Request api", "/**", OPTIONS_METHOD, null));
 
         apiEntities.add(new ApiEntity("Challenge Get api", "/challenge/**", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Challenge Post api", "/challenge/**", POST_METHOD, Role.MANAGER));
@@ -123,7 +125,7 @@ public class GatewayConstant {
         apiEntities.add(new ApiEntity("Crew Announcement Put api", "/announcement/crew/**", PUT_METHOD, Role.MANAGER));
         apiEntities.add(new ApiEntity("Crew Announcement Delete api", "/announcement/crew/**", DELETE_METHOD, Role.MANAGER));
 
-        apiEntities.add(new ApiEntity("Notification Get api", "/template", GET_METHOD, null));
+        apiEntities.add(new ApiEntity("Notification Get api", "/", GET_METHOD, null));
         apiEntities.add(new ApiEntity("Notification Post api", "/notification/**", POST_METHOD, null));
 
         apiEntities.add(new ApiEntity("Fee Get api", "/fee/**", GET_METHOD, Role.MANAGER));
