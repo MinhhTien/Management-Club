@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static fcode.backend.management.service.constant.ServiceMessage.SUCCESS_MESSAGE;
+
 @RestController
 @RequestMapping
 public class AuthController {
@@ -52,5 +54,10 @@ public class AuthController {
     @GetMapping("/auth/register")
     public Response<Void> register(@RequestParam String code,HttpServletRequest request){
         return authService.register(code,request.getRequestURL().toString());
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.OPTIONS)
+    public Response<Void> preflightRequest(HttpServletRequest request){
+        return new Response<>(HttpStatus.OK.value(), SUCCESS_MESSAGE.getMessage());
     }
 }
