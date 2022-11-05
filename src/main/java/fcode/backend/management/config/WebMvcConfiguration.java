@@ -5,6 +5,7 @@ import fcode.backend.management.config.interceptor.GatewayInterceptor;
 import fcode.backend.management.model.request.GoogleAuthRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+    @Value("${client.origin}")
+    private String clientUrl;
     @Autowired
     GatewayInterceptor gatewayInterceptor;
     @Bean
@@ -41,7 +44,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         WebMvcConfigurer.super.addCorsMappings(registry);
         registry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins(clientUrl)
                 .allowedHeaders("*");
     }
 }
