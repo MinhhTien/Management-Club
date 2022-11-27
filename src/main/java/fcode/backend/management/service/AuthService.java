@@ -38,63 +38,71 @@ public class AuthService {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
     private static final String VALIDATE_GG_TOKEN_MESSAGE = "Validate google token: ";
-    public Response<String> loginByStudent(String loginCode,String redirectUri){
-        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode,redirectUri);
+
+    public Response<String> loginByStudent(String loginCode, String redirectUri) {
+        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode, redirectUri);
         logger.info("Login started");
         GoogleInfoResponse response = getGoogleInfoResponse(googleTokenResponse.getAccessToken());
-        if(!response.getEmail().endsWith(studentEmailDomain))
-        {
+        if (!response.getEmail().endsWith(studentEmailDomain)) {
             logger.warn("Login user is not FPT student");
-            throw new ServiceException(HttpStatus.UNAUTHORIZED,"Please login with FPT student email");
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Please login with FPT student email");
         }
-        logger.info("{}{}","Login by student success: ", response.getEmail());
-        return new Response<>(HttpStatus.OK.value(),"Login success", jwtTokenUtil.generateToken(response.getEmail()));
+        logger.info("{}{}", "Login by student success: ", response.getEmail());
+        return new Response<>(HttpStatus.OK.value(), "Login success", jwtTokenUtil.generateToken(response.getEmail()));
     }
+
     @Transactional
-    public Response<String> loginByMember(String loginCode,String ip,String redirectUri){
-        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode,redirectUri);
+    public Response<String> loginByMember(String loginCode, String ip, String redirectUri) {
+        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode, redirectUri);
         logger.info("Login by member started");
         GoogleInfoResponse response = getGoogleInfoResponse(googleTokenResponse.getAccessToken());
         LoginUserDTO loginUserDTO = memberRepository.getLoginUserByEmail(response.getEmail());
-        if(loginUserDTO==null)
-        {
-            logger.warn("{}{}","Login member is not exist",response.getEmail());
-            throw new ServiceException(HttpStatus.UNAUTHORIZED,"Please register and contact to F-Code club to be accepted");
+        if (loginUserDTO == null) {
+            logger.warn("{}{}", "Login member is not exist", response.getEmail());
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "Please register and contact to F-Code club to be accepted");
         }
-        memberRepository.updateIpByEmail(ip,response.getEmail());
-        logger.info("{}{}","Login by member success: ", response.getEmail());
-        return new Response<>(HttpStatus.OK.value(),ServiceMessage.SUCCESS_MESSAGE.getMessage(), jwtTokenUtil.generateToken(response.getEmail()));
+        memberRepository.updateIpByEmail(ip, response.getEmail());
+        logger.info("{}{}", "Login by member success: ", response.getEmail());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), jwtTokenUtil.generateToken(response.getEmail()));
     }
-    public Response<Void> register(String loginCode,String redirectUri){
-        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode,redirectUri);
+
+    public Response<Void> register(String loginCode, String redirectUri) {
+        GoogleTokenResponse googleTokenResponse = getGoogleToken(loginCode, redirectUri);
         logger.info("Member register started");
         GoogleInfoResponse response = getGoogleInfoResponse(googleTokenResponse.getAccessToken());
-        if(memberRepository.existsByEmail(response.getEmail())!=null)
-        {
-            logger.warn("Member {} has already registered",response.getEmail());
-            throw new ServiceException(HttpStatus.UNAUTHORIZED,"You have already registered, please contact to F-Code club to be accepted");
+        if (memberRepository.existsByEmail(response.getEmail()) != null) {
+            logger.warn("Member {} has already registered", response.getEmail());
+            throw new ServiceException(HttpStatus.UNAUTHORIZED, "You have already registered, please contact to F-Code club to be accepted");
         }
-        memberRepository.save(new Member(response,studentEmailDomain));
+        memberRepository.save(new Member(response, studentEmailDomain));
         logger.info("Member register success: {}", response.getEmail());
-        return new Response<>(HttpStatus.OK.value(),ServiceMessage.SUCCESS_MESSAGE.getMessage());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
+
     public GoogleTokenResponse getGoogleToken(String code, String redirectUri) {
         if (code == null) {
             logger.warn("{}{}", VALIDATE_GG_TOKEN_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
-            throw new ServiceException(HttpStatus.BAD_REQUEST,ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            throw new ServiceException(HttpStatus.BAD_REQUEST, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        GoogleTokenResponse response = WebMvcConfiguration.getWebClientBuilder().build().post().uri(getTokenUrl).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(new GoogleAuthRequest(googleAuthRequest,code,redirectUri))).retrieve().bodyToMono(GoogleTokenResponse.class).block();
+        GoogleTokenResponse response = WebMvcConfiguration.getWebClientBuilder().build().post().uri(getTokenUrl).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromFormData("client_id",
+                                googleAuthRequest.getClientId())
+                        .with("client_secret", googleAuthRequest.getClientSecret())
+                        .with("grant_type", googleAuthRequest.getGrantType())
+                        .with("code", code)
+                        .with("redirect_uri", redirectUri))
+                .retrieve().bodyToMono(GoogleTokenResponse.class)
+                .onErrorMap(exception -> new ServiceException(HttpStatus.BAD_REQUEST, exception.getMessage() + exception.getCause())).block();
         logger.info("Get google token success");
         return response;
     }
 
     private GoogleInfoResponse getGoogleInfoResponse(String token) {
-        return WebMvcConfiguration.getWebClientBuilder().build().get().uri(infoTokenUrl).header("Authorization","Bearer " + token)
+        return WebMvcConfiguration.getWebClientBuilder().build().get().uri(infoTokenUrl).header("Authorization", "Bearer " + token)
                 .retrieve().bodyToMono(GoogleInfoResponse.class).block();
     }
 
-    public LoginUserDTO getLoginUserByEmail(String userEmail){
+    public LoginUserDTO getLoginUserByEmail(String userEmail) {
         return memberRepository.getLoginUserByEmail(userEmail);
     }
 
