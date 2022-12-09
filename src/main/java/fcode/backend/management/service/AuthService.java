@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
 
 @Service
 public class AuthService {
@@ -56,6 +57,7 @@ public class AuthService {
         logger.info("Login by member started");
         GoogleInfoResponse response = getGoogleInfoResponse(googleTokenResponse.getAccessToken());
         LoginUserDTO loginUserDTO = memberRepository.getLoginUserByEmail(response.getEmail());
+        logger.info("Get Login User by email ended");
         if(loginUserDTO==null)
         {
             logger.warn("{}{}","Login member is not exist",response.getEmail());
@@ -83,8 +85,17 @@ public class AuthService {
             logger.warn("{}{}", VALIDATE_GG_TOKEN_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             throw new ServiceException(HttpStatus.BAD_REQUEST,ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
+        logger.info("Starting - Get google token success");
         GoogleTokenResponse response = WebMvcConfiguration.getWebClientBuilder().build().post().uri(getTokenUrl).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(new GoogleAuthRequest(googleAuthRequest,code,redirectUri))).retrieve().bodyToMono(GoogleTokenResponse.class).block();
+                .accept(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(new GoogleAuthRequest(googleAuthRequest,code,redirectUri))).retrieve()
+                .onStatus(HttpStatus::is4xxClientError, responses -> {
+                    System.out.println("4xx error");
+                    return Mono.error(new RuntimeException("4xx"));
+                })
+                .onStatus(HttpStatus::is5xxServerError, responses -> {
+                    System.out.println("5xx error");
+                    return Mono.error(new RuntimeException("5xx"));
+                }).bodyToMono(GoogleTokenResponse.class).block();
         logger.info("Get google token success");
         return response;
     }
