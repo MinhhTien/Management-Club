@@ -6,6 +6,7 @@ import fcode.backend.management.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -28,7 +29,7 @@ public class CommentController {
         return commentService.getAllCommentsOfAQuestion(questionId);
     }
     @GetMapping("question/latest/{questionId}")
-    public Response<Set<CommentDTO>> getLatestCommentsOfAQuestion(@PathVariable Integer questionId) {
+    public Response<List<CommentDTO>> getLatestCommentsOfAQuestion(@PathVariable Integer questionId) {
         return commentService.getLatestComments(questionId);
     }
     @PutMapping
