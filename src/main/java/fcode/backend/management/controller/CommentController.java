@@ -27,6 +27,10 @@ public class CommentController {
     public Response <Set<CommentDTO>> getAllCommentsOfAQuestion(@PathVariable Integer questionId) {
         return commentService.getAllCommentsOfAQuestion(questionId);
     }
+    @GetMapping("question/latest/{questionId}")
+    public Response<Set<CommentDTO>> getLatestCommentsOfAQuestion(@PathVariable Integer questionId) {
+        return commentService.getLatestComments(questionId);
+    }
     @PutMapping
     public Response<Void> updateComment(@RequestBody CommentDTO commentDTO, @RequestAttribute(required = false) String userEmail) {
         return commentService.updateContent(commentDTO, userEmail);
