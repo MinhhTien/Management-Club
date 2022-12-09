@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/subject")
-public class SubjectControlller {
+public class SubjectController {
     @Autowired
     SubjectService subjectService;
 
@@ -24,7 +24,7 @@ public class SubjectControlller {
         return subjectService.getSubjectsBySemester(semester);
     }
 
-    @GetMapping("/{subjectId}")
+    @GetMapping("/one/{subjectId}")
     public Response<SubjectDTO> getOneSubject(@PathVariable Integer subjectId) {
         return subjectService.getSubjectById(subjectId);
     }
@@ -49,7 +49,7 @@ public class SubjectControlller {
         return subjectService.updateSubject(subjectDTO);
     }
 
-    @DeleteMapping("/{subjectId}")
+    @DeleteMapping("/one/{subjectId}")
     public Response<Void> deleteSubject(@PathVariable Integer subjectId) {
         return subjectService.deleteSubject(subjectId);
     }

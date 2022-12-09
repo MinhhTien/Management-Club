@@ -17,7 +17,4 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Inte
 
     @Query(nativeQuery = true, value = "SELECT * FROM announcement WHERE LOWER(title) LIKE LOWER(?1) AND status = ?2")
     List<Announcement> searchAllByTitle(String value, String status);
-
-    @Query(nativeQuery = true, value = "SELECT * FROM announcement WHERE title = ?1 AND status = ?2 ")
-    Announcement getByTitleAndStatus(String title, String status);
 }

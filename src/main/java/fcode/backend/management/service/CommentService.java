@@ -73,7 +73,21 @@ public class CommentService {
         logger.info("Get all comment successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
     }
+    @Transactional
+    public Response<Set<CommentDTO>> getLatestComments(Integer questionId) {
+        logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
 
+        Question questionEntity = questionRepository.findQuestionByIdAndStatus(questionId, Status.ACTIVE);
+
+        if (questionEntity == null) {
+            logger.warn("{}{}", GET_COMMENT_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+        }
+        var comments = commentRepository.findTop10ByQuestionAndStatusOrderByCreatedTimeDesc(questionEntity, Status.ACTIVE);
+        var commentDTOSet = comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
+        logger.info("Get all comment successfully.");
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
+    }
     public Response<CommentDTO> getCommentById(Integer id) {
         logger.info("{}{}", GET_COMMENT_MESSAGE, id);
         if (id == null) {
