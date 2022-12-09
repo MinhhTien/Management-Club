@@ -7,9 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 @Entity
 @Table(name = "question")
 @Getter
@@ -34,7 +33,7 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Status status;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question")
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

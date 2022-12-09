@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 @Service
 public class CommentService {
@@ -58,7 +58,7 @@ public class CommentService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
     @Transactional
-    public Response<Set<CommentDTO>> getAllCommentsOfAQuestion(Integer questionId) {
+    public Response<List<CommentDTO>> getAllCommentsOfAQuestion(Integer questionId) {
         logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
 
         Question questionEntity = questionRepository.findQuestionByIdAndStatus(questionId, Status.ACTIVE);
@@ -68,13 +68,13 @@ public class CommentService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equals(Status.ACTIVE)).collect(Collectors.toSet());
-        var commentDTOSet = commentSet.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
+        var commentSet = questionEntity.getComments().stream().filter(comment -> comment.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList());
+        var commentDTOSet = commentSet.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
         logger.info("Get all comment successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
     }
     @Transactional
-    public Response<Set<CommentDTO>> getLatestComments(Integer questionId) {
+    public Response<List<CommentDTO>> getLatestComments(Integer questionId) {
         logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
 
         Question questionEntity = questionRepository.findQuestionByIdAndStatus(questionId, Status.ACTIVE);
@@ -84,7 +84,7 @@ public class CommentService {
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         var comments = commentRepository.findTop10ByQuestionAndStatusOrderByCreatedTimeDesc(questionEntity, Status.ACTIVE);
-        var commentDTOSet = comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toSet());
+        var commentDTOSet = comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
         logger.info("Get all comment successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
     }
