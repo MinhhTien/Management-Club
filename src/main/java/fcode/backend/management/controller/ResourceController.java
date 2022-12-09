@@ -1,5 +1,6 @@
 package fcode.backend.management.controller;
 
+import org.apache.commons.validator.UrlValidator;
 import fcode.backend.management.model.dto.ResourceDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.ResourceService;
@@ -37,7 +38,7 @@ public class ResourceController {
         return resourceService.searchResourcesByContributor(contributor);
     }
 
-    @GetMapping("/{resourceId}")
+    @GetMapping("/one/{resourceId}")
     public Response<ResourceDTO> getOneResource(@PathVariable Integer resourceId) {
         return resourceService.getResourceById(resourceId);
     }
@@ -62,7 +63,7 @@ public class ResourceController {
         }
     }
 
-    @DeleteMapping(value = "/{resourceId}")
+    @DeleteMapping(value = "/one/{resourceId}")
     public Response<Void> deleteResource(@PathVariable int resourceId) {
         return resourceService.deleteResource(resourceId);
     }

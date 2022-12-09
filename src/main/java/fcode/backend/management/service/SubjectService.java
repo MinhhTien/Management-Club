@@ -59,7 +59,7 @@ public class SubjectService {
 
         if(!subjectRepository.existsById(id)) {
             logger.warn("{}{}", "Get subject by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         SubjectDTO subjectDTO = modelMapper.map(subjectRepository.findSubjectById(id), SubjectDTO.class);
 
@@ -70,11 +70,12 @@ public class SubjectService {
     public Response<SubjectDTO> getSubjectByName(String subjectName) {
         logger.info("getSubjectByName(subjectName: {})", subjectName);
 
-        SubjectDTO subjectDTO = modelMapper.map(subjectRepository.findByName(subjectName), SubjectDTO.class);
-        if(subjectDTO == null) {
+        Subject subject = subjectRepository.findByName(subjectName);
+        if(subject == null) {
             logger.warn("{}{}", "Get subject by name:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
+        SubjectDTO subjectDTO = modelMapper.map(subject, SubjectDTO.class);
 
         logger.info("{}{}", "Get subject by name: ", ServiceMessage.SUCCESS_MESSAGE.getMessage());
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), subjectDTO);
@@ -106,6 +107,8 @@ public class SubjectService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Subject already exist.");
         }
         Subject subject = modelMapper.map(subjectDto, Subject.class);
+        subject.setId(null);
+        System.out.println(subject.toString());
         subjectRepository.save(subject);
         logger.info("Create subject success");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
@@ -119,9 +122,9 @@ public class SubjectService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(!subjectRepository.existsById(subjectDto.getId())){
+        if(subjectDto.getId()==null || !subjectRepository.existsById(subjectDto.getId())){
             logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         Subject oldSubject = subjectRepository.findByName(subjectDto.getName());
@@ -140,7 +143,7 @@ public class SubjectService {
 
         if(!subjectRepository.existsById(id)) {
             logger.warn("{}{}", DELETE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         if(resourceRepository.existsBySubject(id)) {

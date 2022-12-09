@@ -1,7 +1,7 @@
 package fcode.backend.management.repository.entity;
 
 import fcode.backend.management.config.Role;
-import fcode.backend.management.config.interceptor.Status;
+import fcode.backend.management.service.constant.Status;
 import fcode.backend.management.model.response.GoogleInfoResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -63,18 +62,35 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
+    @Column(name = "verification_code")
+    private String verificationCode;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private Set<Article> articles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<Announcement> announcements;
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "member_notification",
-//            joinColumns = @JoinColumn(name = "member_id"),
-//            inverseJoinColumns = @JoinColumn(name = "notification_id")
-//    )
-//    private List<Notification> notificationList = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Attendance> attendanceList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<PlusPoint> plusPointList;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+            name = "notification",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "announcement_id")
+    )
+    private Set<Announcement> notificationSet = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "member_fee",
+            joinColumns =
+                    { @JoinColumn(name = "member_id", referencedColumnName = "id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "fee_id", referencedColumnName = "id") } )
+    private Set<Fee> fees;
 
     public Member(GoogleInfoResponse response, String studentEmailDomain) {
         this.firstName = response.getFamilyName();
@@ -86,16 +102,20 @@ public class Member {
         this.avatarUrl = response.getPicture();
     }
 
-//    public void addNotification(Notification notification) {
-//        this.notificationList.add(notification);
-//        notification.getMemberList().add(this);
-//    }
-//
-//    public void removeNotification(Integer notificationId) {
-//        Notification notification = this.notificationList.stream().filter(noti -> noti.getId() == notificationId).findFirst().orElse(null);
-//        if(notification != null) {
-//            this.notificationList.remove(notification);
-//            notification.getMemberList().remove(this);
-//        }
-//    }
+    public Member(Integer id) {
+        this.id = id;
+    }
+
+    public void addNotification(Announcement announcement) {
+        this.notificationSet.add(announcement);
+        announcement.getMemberList().add(this);
+    }
+
+    public void removeNotification(Announcement announcement) {
+        Announcement memberAnnouncement = this.notificationSet.stream().filter(notification -> notification.getId() == announcement.getId()).findFirst().orElse(null);
+        if(announcement != null) {
+            this.notificationSet.remove(memberAnnouncement);
+            announcement.getMemberList().remove(this);
+        }
+    }
 }

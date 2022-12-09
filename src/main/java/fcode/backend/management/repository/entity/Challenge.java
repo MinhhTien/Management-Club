@@ -1,15 +1,12 @@
 package fcode.backend.management.repository.entity;
 
-
-
-import fcode.backend.management.config.interceptor.Status;
+import fcode.backend.management.service.constant.Status;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "challenge")
@@ -19,17 +16,20 @@ import java.util.Date;
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private Integer id;
 
-    @Column(name = "title")
+    @Column
     private String title;
 
-    @Column(name = "description")
+    @Column
     private String description;
 
-    @Column(name = "register_url")
-    private String registerUrl;
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "end_time")
+    private Date endTime;
 
     @Column(name = "created_time", updatable = false, insertable = false)
     private Date createdTime;
@@ -37,8 +37,7 @@ public class Challenge {
     @Column(name = "updated_time", updatable = false, insertable = false)
     private Date updatedTime;
 
-    @Column(name = "status")
+    @Column
     @Enumerated(EnumType.STRING)
     private Status status;
-
 }

@@ -52,12 +52,17 @@ public class ResourceService {
     public Response<List<ResourceDTO>> getResourcesBySubjectId(Integer subjectId) {
         logger.info("getResourcesBySubjectId(subjectId: {})", subjectId);
 
-        List<ResourceDTO> resourceDTOList = subjectRepository.findSubjectById(subjectId).getResourceList()
+        Subject subject = subjectRepository.findSubjectById(subjectId);
+        if(subject == null) {
+            logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        List<ResourceDTO> resourceDTOList = subject.getResourceList()
                 .stream().map(resourceEntity -> modelMapper.map(resourceEntity, ResourceDTO.class)).collect(Collectors.toList());
 
         if(resourceDTOList.isEmpty()) {
-            logger.warn("{}{}", "Get resources by subject id:", ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+            logger.warn("{}{}", "Get resources by subject id:", "Subject has no resource");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Subject has no resource");
         }
         logger.info("Get resources by subjectId success");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), resourceDTOList);
@@ -102,7 +107,7 @@ public class ResourceService {
 
         if(!resourceRepository.existsById(id)) {
             logger.warn("{}{}", "Get resource by id:", ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
         Resource resource = resourceRepository.findOneById(id);
         ResourceDTO resourceDTO = modelMapper.map(resource, ResourceDTO.class);
@@ -168,13 +173,13 @@ public class ResourceService {
 
         if(!resourceRepository.existsById(id)) {
             logger.warn("{}{}", DELETE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.toString());
+            return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         Resource resource = resourceRepository.findOneById(id);
         resourceRepository.delete(resource);
         logger.info("Delete resource success");
-        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.toString());
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
 }

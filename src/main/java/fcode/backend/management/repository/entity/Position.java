@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "position")
@@ -18,8 +18,14 @@ public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column
     private String position;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "position")
-    private Set<Member> members;
+    private List<Member> memberList;
+
+    public Position(Integer id) {
+        this.id = id;
+    }
 }
