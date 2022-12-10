@@ -2,6 +2,8 @@ package fcode.backend.management.controller;
 
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AuthService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -55,7 +57,6 @@ public class AuthController {
     public Response<Void> register(@RequestParam String code,HttpServletRequest request){
         return authService.register(code,request.getRequestURL().toString());
     }
-
     @RequestMapping(value = "/", method = RequestMethod.OPTIONS)
     public Response<Void> preflightRequest(HttpServletRequest request){
         return new Response<>(HttpStatus.OK.value(), SUCCESS_MESSAGE.getMessage());
