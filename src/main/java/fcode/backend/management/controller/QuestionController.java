@@ -6,7 +6,7 @@ import fcode.backend.management.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 
 @RestController
@@ -51,21 +51,21 @@ public class QuestionController {
         return questionService.getQuestionById(questionId);
     }
     @GetMapping(value = "/questions")
-    public Response<Set<QuestionDTO>> getAllQuestions() {
+    public Response<List<QuestionDTO>> getAllQuestions() {
         return questionService.getAllQuestions();
     }
     @GetMapping(value = "/author")
-    public Response<Set<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute(required = false) String userEmail) {
+    public Response<List<QuestionDTO>> getQuestionsByAuthor(@RequestAttribute(required = false) String userEmail) {
         return questionService.getQuestionByAuthor(userEmail);
     }
 
     @GetMapping("/processing")
-    public Response<Set<QuestionDTO>> getProcessingQuestions() {
+    public Response<List<QuestionDTO>> getProcessingQuestions() {
         return questionService.getProcessingQuestions();
     }
 
     @GetMapping("/inactive")
-    public Response<Set<QuestionDTO>> getInactiveQuestions() {
+    public Response<List<QuestionDTO>> getInactiveQuestions() {
         return questionService.getInactiveQuestions();
     }
 

@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,25 +54,25 @@ public class QuestionService {
     }
 
     @Transactional
-    public Response<Set<QuestionDTO>> getAllQuestions() {
+    public Response<List<QuestionDTO>> getAllQuestions() {
         logger.info("Get All Questions");
-        Set<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.ACTIVE).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
+        List<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.ACTIVE).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toList());
         logger.info("Get All Questions successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
 
     @Transactional
-    public Response<Set<QuestionDTO>> getProcessingQuestions() {
+    public Response<List<QuestionDTO>> getProcessingQuestions() {
         logger.info("Get All Processing Questions");
-        Set<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.PROCESSING).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
+        List<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.PROCESSING).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toList());
         logger.info("Get All Processing Questions successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
 
     @Transactional
-    public Response<Set<QuestionDTO>> getInactiveQuestions() {
+    public Response<List<QuestionDTO>> getInactiveQuestions() {
         logger.info("Get All Processing Questions");
-        Set<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.INACTIVE).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
+        List<QuestionDTO> questionDTOSet = questionRepository.findQuestionByStatus(Status.INACTIVE).stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toList());
         logger.info("Get All Processing Questions successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
@@ -95,18 +95,18 @@ public class QuestionService {
 
 
     @Transactional
-    public Response<Set<QuestionDTO>> getQuestionByAuthor(String authorEmail) {
+    public Response<List<QuestionDTO>> getQuestionByAuthor(String authorEmail) {
         logger.info("{}{}", GET_QUESTION_BY_AUTHOR_MESSAGE, authorEmail);
         if (authorEmail == null) {
             logger.warn("{}{}", GET_QUESTION_BY_AUTHOR_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        Set<Question> questions = questionRepository.findQuestionByAuthorEmailAndStatus(authorEmail, Status.ACTIVE);
+        List<Question> questions = questionRepository.findQuestionByAuthorEmailAndStatus(authorEmail, Status.ACTIVE);
         if (questions.isEmpty()) {
             logger.warn("{}{}", GET_QUESTION_BY_AUTHOR_MESSAGE, ServiceMessage.ID_NOT_EXIST_MESSAGE);
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
-        Set<QuestionDTO> questionDTOSet = questions.stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toSet());
+        List<QuestionDTO> questionDTOSet = questions.stream().map(question -> modelMapper.map(question, QuestionDTO.class)).collect(Collectors.toList());
         logger.info("Get question by author successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), questionDTOSet);
     }
@@ -130,7 +130,7 @@ public class QuestionService {
     @Transactional
     public Response<Void> approveAll() {
         logger.info("Approve all Article");
-        Set<Question> questionSet = questionRepository.findQuestionByStatus(Status.PROCESSING);
+        List<Question> questionSet = questionRepository.findQuestionByStatus(Status.PROCESSING);
         questionSet.forEach(question -> {
             question.setStatus(Status.ACTIVE);
             questionRepository.save(question);
@@ -157,7 +157,7 @@ public class QuestionService {
     @Transactional
     public Response<Void> disapproveAll() {
         logger.info("Disapprove all Article");
-        Set<Question> questionSet = questionRepository.findQuestionByStatus(Status.PROCESSING);
+        List<Question> questionSet = questionRepository.findQuestionByStatus(Status.PROCESSING);
         questionSet.forEach(question -> {
             question.setStatus(Status.INACTIVE);
             questionRepository.save(question);
