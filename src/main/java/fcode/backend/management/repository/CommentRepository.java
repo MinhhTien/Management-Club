@@ -13,4 +13,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     Comment findCommentByIdAndStatusIsNot(Integer id, Status status);
     List<Comment> findCommentByAuthorEmailAndStatusIsNot(String authorEmail, Status status);
     List<Comment> findTop10ByQuestionAndStatusOrderByCreatedTimeDesc(Question question, Status status);
+    List<Comment> findTop10ByStatusOrderByCreatedTimeDesc(Status status);
 }
