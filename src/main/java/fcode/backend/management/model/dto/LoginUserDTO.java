@@ -13,7 +13,6 @@ public class LoginUserDTO {
     private String ip;
     private String email;
 
-
     public LoginUserDTO(Integer id, Role role, String ip) {
         this.id = id;
         this.role = role;

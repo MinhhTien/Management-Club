@@ -7,9 +7,11 @@ import fcode.backend.management.config.interceptor.exception.*;
 import fcode.backend.management.model.dto.LoginUserDTO;
 import fcode.backend.management.repository.MemberRepository;
 
+import fcode.backend.management.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,7 +33,8 @@ public class GatewayInterceptor implements HandlerInterceptor {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Max-Age", "3600");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, HEAD, OPTIONS");
-        response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization, X-Forwarded-For");
         response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials");
         response.addHeader("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
         try {
@@ -76,6 +79,14 @@ public class GatewayInterceptor implements HandlerInterceptor {
         if (apiEntity.getRole().equals(Role.STUDENT))
             return new LoginUserDTO(userEmail);
         LoginUserDTO loginUserDTO = memberRepository.getLoginUserByEmail(userEmail);
+        logger.info("Ending-GetLoginUserByEmail");
+        logger.info("Request Remote Address:{}",request.getRemoteAddr());
+        logger.info("User IP Address:{}",loginUserDTO.getIp());
+        if(loginUserDTO == null)
+        {
+            logger.warn("{}{}","Login member is not exist",userEmail);
+            throw new ServiceException(HttpStatus.UNAUTHORIZED,"Please register and contact to F-Code club to be accepted");
+        }
         if (!request.getRemoteAddr().equals(loginUserDTO.getIp()))
             throw new AccountLoggedInException();
         logger.info("Path:{} VerifyDTO:{}", servletPath, loginUserDTO);
