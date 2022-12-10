@@ -74,8 +74,8 @@ public class CommentService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
     }
     @Transactional
-    public Response<List<CommentDTO>> getLatestComments(Integer questionId) {
-        logger.info("{}{}", GET_COMMENT_MESSAGE, questionId);
+    public Response<List<CommentDTO>> getLatestCommentsOfAQuestion(Integer questionId) {
+        logger.info("Get 10 latest comments of question: {}", questionId);
 
         Question questionEntity = questionRepository.findQuestionByIdAndStatus(questionId, Status.ACTIVE);
 
@@ -85,7 +85,15 @@ public class CommentService {
         }
         var comments = commentRepository.findTop10ByQuestionAndStatusOrderByCreatedTimeDesc(questionEntity, Status.ACTIVE);
         var commentDTOSet = comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
-        logger.info("Get all comment successfully.");
+        logger.info("Get 10 latest comments of question {} successfully.", questionId);
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
+    }
+    @Transactional
+    public Response<List<CommentDTO>> getLatestComments() {
+        logger.info("Get 10 latest comments");
+        var comments = commentRepository.findTop10ByStatusOrderByCreatedTimeDesc(Status.ACTIVE);
+        var commentDTOSet = comments.stream().map(comment -> modelMapper.map(comment, CommentDTO.class)).collect(Collectors.toList());
+        logger.info("Get 10 latest comments successfully.");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), commentDTOSet);
     }
     public Response<CommentDTO> getCommentById(Integer id) {

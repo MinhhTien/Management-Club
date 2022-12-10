@@ -4,7 +4,6 @@ import fcode.backend.management.repository.entity.Comment;
 import fcode.backend.management.repository.entity.Question;
 import fcode.backend.management.service.constant.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +13,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     Comment findCommentByIdAndStatusIsNot(Integer id, Status status);
     List<Comment> findCommentByAuthorEmailAndStatusIsNot(String authorEmail, Status status);
     List<Comment> findTop10ByQuestionAndStatusOrderByCreatedTimeDesc(Question question, Status status);
+    List<Comment> findTop10ByStatusOrderByCreatedTimeDesc(Status status);
 }

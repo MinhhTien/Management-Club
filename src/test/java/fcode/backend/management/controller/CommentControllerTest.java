@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class CommentControllerTest {
     @Autowired
@@ -17,7 +15,7 @@ class CommentControllerTest {
 
     @Test
     void getCommentById() {
-        List<CommentDTO> commentDTOList = commentService.getLatestComments(3).getData();
+        List<CommentDTO> commentDTOList = commentService.getLatestCommentsOfAQuestion(3).getData();
         commentDTOList.forEach(System.out::println);
 
     }
