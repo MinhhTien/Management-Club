@@ -150,12 +150,12 @@ public class ResourceService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(!resourceRepository.existsById(resourceDto.getId())){
+        if(resourceDto.getId() == null || !resourceRepository.existsById(resourceDto.getId())){
             logger.warn("{}{}", UPDATE_RESOURCE, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
-        if(!resourceRepository.existsBySubject(resourceDto.getSubjectId())) {
+        if(resourceDto.getSubjectId() == null || !resourceRepository.existsBySubject(resourceDto.getSubjectId())) {
             logger.warn("{}{}", UPDATE_RESOURCE, SUBJECT_NOT_EXIST);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), SUBJECT_NOT_EXIST);
         }

@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Response<String> handleUnwantedException(Exception e) {
         logger.error("{}: {}",e.getMessage(),e.getClass());
+        e.printStackTrace();
         return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Unknown error");
     }
 

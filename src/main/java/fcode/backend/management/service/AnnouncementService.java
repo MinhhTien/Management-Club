@@ -116,6 +116,10 @@ public class AnnouncementService {
             logger.warn("{}{}", CREATE_ANNOUNCEMENT, "Empty title");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Empty title");
         }
+        if (createAnnouncementRequest.getMail() == null || createAnnouncementRequest.getMailTitle() == null) {
+            logger.warn("{}{}", CREATE_ANNOUNCEMENT, "Empty Mail Subject or Content");
+            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Empty Mail Subject or Content");
+        }
 
         Set<String> emailSet = notificationService
                 .getEmailListOfNotificationReceivers(createAnnouncementRequest.getInfoUserId(), createAnnouncementRequest.getInfoGroup());
@@ -124,11 +128,11 @@ public class AnnouncementService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_NOTIFICATION_RECEIVER_LIST);
         }
         logger.info("{}{}",GET_EMAIL_SET_OF_RECEIVERS, emailSet);
-
+        createAnnouncementRequest.setId(null);
         Announcement announcement = modelMapper.map(createAnnouncementRequest, Announcement.class);
         announcement.setId(null);
         announcement.setStatus(Status.ACTIVE);
-        announcement.setMember(memberRepository.getReferenceById(userId));
+        announcement.setMember(memberRepository.findMemberById(userId));
         announcement.setSendEmailWhenUpdate(false);
         Announcement announcementEntity = announcementRepository.save(announcement);
         logger.info("{}{}", CREATE_ANNOUNCEMENT, "Create new announcement success");

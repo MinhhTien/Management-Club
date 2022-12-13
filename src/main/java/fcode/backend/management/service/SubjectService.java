@@ -122,7 +122,7 @@ public class SubjectService {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if(subjectDto.getId()==null || !subjectRepository.existsById(subjectDto.getId())){
+        if(subjectDto.getId() == null || !subjectRepository.existsById(subjectDto.getId())){
             logger.warn("{}{}", UPDATE_SUBJECT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
