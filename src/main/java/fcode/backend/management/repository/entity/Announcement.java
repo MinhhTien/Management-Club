@@ -30,16 +30,16 @@ public class Announcement {
     private String location;
     @Column(name = "image_url")
     private String imageUrl;
+    @Column
+    private String mail;
+    @Column(name = "mail_title")
+    private String mailTitle;
     @Column(name = "created_time", updatable = false, insertable = false)
     private Date createdTime;
     @Column(name = "updated_time", updatable = false, insertable = false)
     private Date updatedTime;
     @Column(name = "send_email_when_update", columnDefinition = "boolean default false")
     private Boolean sendEmailWhenUpdate;
-    @Column
-    private String mail;
-    @Column(name = "mail_title")
-    private String mailTitle;
     @Column
     @Enumerated(EnumType.STRING)
     private Status status;

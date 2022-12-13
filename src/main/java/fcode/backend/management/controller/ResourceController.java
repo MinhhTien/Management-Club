@@ -1,13 +1,11 @@
 package fcode.backend.management.controller;
 
-import org.apache.commons.validator.UrlValidator;
 import fcode.backend.management.model.dto.ResourceDTO;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.validator.UrlValidator;
 
 import java.util.List;
 
@@ -15,6 +13,8 @@ import java.util.List;
 @RequestMapping("/resource")
 public class ResourceController {
     private static final String INVALID_RESOURCE_URL = "Invalid resource url.";
+    private static final String URL_PREFIX = "https://";
+
     @Autowired
     ResourceService resourceService;
 
@@ -45,8 +45,7 @@ public class ResourceController {
 
     @PostMapping
     public Response<Void> createResource(@RequestBody ResourceDTO resourceDTO) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(resourceDTO.getUrl())) {
+        if (resourceDTO.getUrl().startsWith(URL_PREFIX)) {
             return resourceService.createResource(resourceDTO);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_RESOURCE_URL);
@@ -55,8 +54,7 @@ public class ResourceController {
 
     @PutMapping
     public Response<Void> updateResource(@RequestBody ResourceDTO resourceDTO) {
-        UrlValidator URLValidator = new UrlValidator();
-        if (URLValidator.isValid(resourceDTO.getUrl())) {
+        if (resourceDTO.getUrl().startsWith(URL_PREFIX)) {
             return resourceService.updateResource(resourceDTO);
         } else {
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_RESOURCE_URL);

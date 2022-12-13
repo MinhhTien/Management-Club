@@ -48,17 +48,20 @@ public class NotificationService {
 
     //valid infoUserId 123&124&345&987
     private List<Integer> parseValidInfoText(String infoUserId, String separator) {
+        logger.info("infoUserId: {}", infoUserId);
         List<Integer> listUserId = new ArrayList<>();
         for (String id : infoUserId.split(separator)) {
             Integer userId = GenericTypeValidator.formatInt(id);
             if (userId == null) return new ArrayList<>();
             listUserId.add(userId);
         }
+        logger.info("listUserId: {}", listUserId);
         return listUserId;
     }
 
     //valid infoGroup eventId=123&crewId=234/453&K=15/16
     private Map<String, List<Integer>> parseValidInfoGroup(String infoGroup) {
+        logger.info("infoGroup: {}", infoGroup);
         Map<String, List<Integer>> conditionMap = new HashMap<>();
         for (String condition : infoGroup.split("&")) {
             String[] conditionArr = condition.split("=");
@@ -69,6 +72,7 @@ public class NotificationService {
                 else conditionMap.put(conditionArr[0], numList);
             } else return new HashMap<>();
         }
+        logger.info("conditionMap: {}", conditionMap);
         return conditionMap;
     }
 

@@ -8,8 +8,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 public class CreateAnnouncementRequest {
+    private Integer id;
     private String title;
     private String description;
     private String infoGroup;
@@ -18,4 +18,15 @@ public class CreateAnnouncementRequest {
     private String imageUrl;
     private String mail;
     private String mailTitle;
+
+    public CreateAnnouncementRequest(String title, String description, String infoGroup, String infoUserId, String location, String imageUrl, String mail, String mailTitle) {
+        this.title = title;
+        this.description = description;
+        this.infoGroup = infoGroup;
+        this.infoUserId = infoUserId;
+        this.location = location;
+        this.imageUrl = imageUrl;
+        this.mail = mail;
+        this.mailTitle = mailTitle;
+    }
 }

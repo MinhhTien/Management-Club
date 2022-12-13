@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.apache.commons.validator.UrlValidator;
 
 import java.util.List;
 import java.util.Set;
@@ -21,12 +20,10 @@ import java.util.Set;
 public class AnnouncementController {
     private static final String INVALID_IMAGE_URL = "Invalid image url.";
     private static final Logger logger = LogManager.getLogger(AnnouncementController.class);
+    private static final String URL_PREFIX = "https://";
 
     @Autowired
     AnnouncementService announcementService;
-
-    @Autowired
-    UrlValidator urlValidator;
 
     @GetMapping("/all")
     public Response<List<AnnouncementDTO>> getAllAnnouncements() {
@@ -50,21 +47,33 @@ public class AnnouncementController {
 
     @PostMapping
     public Response<Void> createAnnouncement(@RequestBody CreateAnnouncementRequest createAnnouncementRequest, @RequestAttribute(required = false) Integer userId) {
-        if (urlValidator.isValid(createAnnouncementRequest.getImageUrl())) {
+        if(createAnnouncementRequest.getImageUrl() != null && createAnnouncementRequest.getImageUrl() != "") {
+            String[] imageUrlArr = createAnnouncementRequest.getImageUrl().split(";");
+            for(String imageUrl : imageUrlArr) {
+                if(!imageUrl.startsWith(URL_PREFIX)) {
+                    logger.warn("INVALID_IMAGE_URL");
+                    return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
+                }
+            }
             return  announcementService.createAnnouncement(createAnnouncementRequest, userId);
         } else {
-            logger.warn("INVALID_IMAGE_URL");
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
+            return  announcementService.createAnnouncement(createAnnouncementRequest, userId);
         }
     }
 
     @PutMapping
     public Response<Void> updateAnnouncement(@RequestBody UpdateAnnouncementRequest updateAnnouncementRequest, @RequestAttribute(required = false) Integer userId) {
-        if (urlValidator.isValid(updateAnnouncementRequest.getImageUrl())) {
+        if(updateAnnouncementRequest.getImageUrl() != null) {
+            String[] imageUrlArr = updateAnnouncementRequest.getImageUrl().split(";");
+            for(String imageUrl : imageUrlArr) {
+                if(!imageUrl.startsWith(URL_PREFIX)) {
+                    logger.warn("INVALID_IMAGE_URL");
+                    return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
+                }
+            }
             return announcementService.updateAnnouncement(updateAnnouncementRequest, userId);
         } else {
-            logger.warn("INVALID_IMAGE_URL");
-            return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);
+            return announcementService.updateAnnouncement(updateAnnouncementRequest, userId);
         }
     }
 
