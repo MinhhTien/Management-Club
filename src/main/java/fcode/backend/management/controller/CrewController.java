@@ -6,6 +6,8 @@ import fcode.backend.management.service.CrewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/crew")
 public class CrewController {
@@ -18,6 +20,10 @@ public class CrewController {
     @GetMapping(value = "/{crewId}")
     public Response<CrewDTO> getCrewById(@PathVariable Integer crewId) {
         return crewService.getCrew(crewId);
+    }
+    @GetMapping(value = "/all")
+    public Response<List<CrewDTO>> getAllCrew() {
+        return crewService.getAllCrew();
     }
     @PutMapping
     public Response<Void> updateCrew(@RequestBody CrewDTO crewDTO) {
