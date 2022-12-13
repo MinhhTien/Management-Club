@@ -15,8 +15,8 @@ public class ArticleController {
     ArticleService articleService;
 
     @PostMapping
-    Response<Void> createArticle(@RequestBody ArticleDTO articleDTO) {
-        return articleService.createArticle(articleDTO);
+    Response<Void> createArticle(@RequestBody ArticleDTO articleDTO, @RequestAttribute(required = false) String userEmail) {
+        return articleService.createArticle(articleDTO, userEmail);
     }
 
     @GetMapping("/{id}")

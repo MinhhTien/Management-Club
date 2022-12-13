@@ -16,8 +16,8 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
     @PostMapping
-    public Response<Void> createQuestion(@RequestBody QuestionDTO questionDTO) {
-        return questionService.createQuestion(questionDTO);
+    public Response<Void> createQuestion(@RequestBody QuestionDTO questionDTO, @RequestAttribute(required = false) String userEmail) {
+        return questionService.createQuestion(questionDTO, userEmail);
     }
     @PutMapping
     public Response<Void> updateQuestion(@RequestBody QuestionDTO questionDTO, @RequestAttribute(required = false) String userEmail) {

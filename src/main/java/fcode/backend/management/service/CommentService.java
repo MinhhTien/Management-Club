@@ -39,11 +39,15 @@ public class CommentService {
     private static final String UPDATE_COMMENT_MESSAGE = "Update comment: ";
     private static final String DELETE_COMMENT_MESSAGE = "Delete comment: ";
 
-    public Response<Void> createComment(CommentDTO commentDTO) {
+    public Response<Void> createComment(CommentDTO commentDTO, String userEmail) {
         logger.info("{}{}", CREATE_COMMENT_MESSAGE, commentDTO);
         if (commentDTO == null) {
             logger.warn("{}{}", CREATE_COMMENT_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        if (userEmail == null) {
+            logger.warn("{}{}", CREATE_COMMENT_MESSAGE, HttpStatus.UNAUTHORIZED.name());
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         Question questionEntity = questionRepository.findQuestionByIdAndStatus(commentDTO.getQuestionId(), Status.ACTIVE);
         if (questionEntity == null) {
@@ -53,6 +57,7 @@ public class CommentService {
         Comment comment = modelMapper.map(commentDTO, Comment.class);
         comment.setId(null);
         comment.setStatus(Status.ACTIVE);
+        comment.setAuthorEmail(userEmail);
         commentRepository.save(comment);
         logger.info("Create question successfully");
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
