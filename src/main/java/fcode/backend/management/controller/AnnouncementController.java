@@ -3,6 +3,7 @@ package fcode.backend.management.controller;
 import fcode.backend.management.model.dto.AnnouncementDTO;
 import fcode.backend.management.model.request.CreateAnnouncementRequest;
 import fcode.backend.management.model.dto.NotificationDTO;
+import fcode.backend.management.model.request.UpdateAnnouncementRequest;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.service.AnnouncementService;
 import org.apache.logging.log4j.LogManager;
@@ -58,9 +59,9 @@ public class AnnouncementController {
     }
 
     @PutMapping
-    public Response<Void> updateAnnouncement(@RequestBody AnnouncementDTO announcementDTO, @RequestAttribute(required = false) Integer userId) {
-        if (urlValidator.isValid(announcementDTO.getImageUrl())) {
-            return announcementService.updateAnnouncement(announcementDTO, userId);
+    public Response<Void> updateAnnouncement(@RequestBody UpdateAnnouncementRequest updateAnnouncementRequest, @RequestAttribute(required = false) Integer userId) {
+        if (urlValidator.isValid(updateAnnouncementRequest.getImageUrl())) {
+            return announcementService.updateAnnouncement(updateAnnouncementRequest, userId);
         } else {
             logger.warn("INVALID_IMAGE_URL");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_IMAGE_URL);

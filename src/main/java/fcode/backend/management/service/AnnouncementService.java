@@ -3,6 +3,7 @@ package fcode.backend.management.service;
 import fcode.backend.management.model.dto.AnnouncementDTO;
 import fcode.backend.management.model.request.CreateAnnouncementRequest;
 import fcode.backend.management.model.dto.NotificationDTO;
+import fcode.backend.management.model.request.UpdateAnnouncementRequest;
 import fcode.backend.management.repository.entity.Member;
 import fcode.backend.management.model.response.Response;
 import fcode.backend.management.repository.AnnouncementRepository;
@@ -149,29 +150,29 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public Response<Void> updateAnnouncement(AnnouncementDTO announcementDto, Integer userId) {
-        logger.info("updateAnnouncement(announcementDto:{})", announcementDto);
+    public Response<Void> updateAnnouncement(UpdateAnnouncementRequest updateAnnouncementRequest, Integer userId) {
+        logger.info("updateAnnouncement(updateAnnouncementRequest:{})", updateAnnouncementRequest);
 
-        if (announcementDto == null || announcementDto.getTitle() == null) {
+        if (updateAnnouncementRequest == null || updateAnnouncementRequest.getTitle() == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
 
-        if (announcementRepository.getByIdAndStatus(announcementDto.getId(), Status.ACTIVE.toString()) == null) {
+        if (announcementRepository.getByIdAndStatus(updateAnnouncementRequest.getId(), Status.ACTIVE.toString()) == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
             return new Response<>(HttpStatus.NOT_FOUND.value(), ServiceMessage.ID_NOT_EXIST_MESSAGE.getMessage());
         }
 
         Set<String> emailSet = notificationService
-                .getEmailListOfNotificationReceivers(announcementDto.getInfoUserId(), announcementDto.getInfoGroup());
+                .getEmailListOfNotificationReceivers(updateAnnouncementRequest.getInfoUserId(), updateAnnouncementRequest.getInfoGroup());
         if (emailSet == null) {
             logger.warn("{}{}", UPDATE_ANNOUNCEMENT, INVALID_NOTIFICATION_RECEIVER_LIST);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), INVALID_NOTIFICATION_RECEIVER_LIST);
         }
         logger.info("{}{}",GET_EMAIL_SET_OF_RECEIVERS, emailSet);
 
-        Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
-        if (announcementDto.getSendEmailWhenUpdate() != null && announcementDto.getSendEmailWhenUpdate().booleanValue())
+        Announcement announcement = modelMapper.map(updateAnnouncementRequest, Announcement.class);
+        if (updateAnnouncementRequest.getSendEmailWhenUpdate() != null && updateAnnouncementRequest.getSendEmailWhenUpdate().booleanValue())
             announcement.setSendEmailWhenUpdate(true);
         announcement.setStatus(Status.ACTIVE);
         announcement.setMember(memberRepository.getReferenceById(userId));
@@ -187,7 +188,7 @@ public class AnnouncementService {
             eventPublisher.sendNotificationTo(emailSet, notificationDTO);
 
             logger.info("{}{}", UPDATE_ANNOUNCEMENT, START_SENDING_NOTIFICATION_EMAIL_TO_RECEIVERS);
-            eventPublisher.sendEmailTo(emailSet, announcementDto.getMailTitle(), announcementDto.getMail());
+            eventPublisher.sendEmailTo(emailSet, updateAnnouncementRequest.getMailTitle(), updateAnnouncementRequest.getMail());
         }
         logger.info("{}{}", UPDATE_ANNOUNCEMENT, SEND_NOTIFICATION_AND_EMAIL_TO_MEMBERS_SUCCESSFULLY);
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());

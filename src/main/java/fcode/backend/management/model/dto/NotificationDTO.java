@@ -2,6 +2,8 @@ package fcode.backend.management.model.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
@@ -13,4 +15,7 @@ public class NotificationDTO {
     private String description;
     private String location;
     private String imageUrl;
+    private Date createdTime;
+    private Date updatedTime;
+    private Integer memberId;
 }
