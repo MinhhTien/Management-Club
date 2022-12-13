@@ -50,11 +50,6 @@ public class CrewAnnouncementService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage());
     }
 
-
-
-
-
-
     @Transactional
     public Response<Set<CrewAnnouncementDTO>> getAllCrewAnnouncements() {
         logger.info("{}{}", GET_CREW_ANNOUNCEMENT_MESSAGE, "All crew announcements.");

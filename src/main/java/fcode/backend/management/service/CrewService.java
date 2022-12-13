@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CrewService {
     @Autowired
@@ -62,6 +66,13 @@ public class CrewService {
         return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewDTO);
     }
 
+    @Transactional
+    public Response<List<CrewDTO>> getAllCrew() {
+        logger.info("{}all",GET_CREW_MESSAGE);
+        List<CrewDTO> crewDTOS = crewRepository.findAll().stream().map(crew -> modelMapper.map(crew, CrewDTO.class)).collect(Collectors.toList());
+        logger.info("Get all crew successfully");
+        return new Response<>(HttpStatus.OK.value(), ServiceMessage.SUCCESS_MESSAGE.getMessage(), crewDTOS);
+    }
     public Response<Void> updateCrew(CrewDTO crewDTO) {
         logger.info("{}{}", UPDATE_CREW_MESSAGE, crewDTO);
         if (crewDTO == null) {
