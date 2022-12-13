@@ -15,8 +15,8 @@ public class CommentController {
     CommentService commentService;
 
     @PostMapping
-    public Response<Void> createComment(@RequestBody CommentDTO commentDTO) {
-        return commentService.createComment(commentDTO);
+    public Response<Void> createComment(@RequestBody CommentDTO commentDTO, @RequestAttribute(required = false) String userEmail) {
+        return commentService.createComment(commentDTO, userEmail);
     }
 
     @GetMapping("/{commentId}")

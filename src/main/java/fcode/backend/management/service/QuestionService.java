@@ -38,14 +38,19 @@ public class QuestionService {
     private static final String UPDATE_QUESTION = "Update question: ";
     private static final String DELETE_QUESTION = "Delete question: ";
 
-    public Response<Void> createQuestion(QuestionDTO questionDTO) {
+    public Response<Void> createQuestion(QuestionDTO questionDTO, String authorEmail) {
         logger.info("{}{}", CREATE_QUESTION_MESSAGE, questionDTO);
         if (questionDTO == null) {
             logger.warn("{}{}", CREATE_QUESTION_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
+        if (authorEmail == null) {
+            logger.warn("{}{}", CREATE_QUESTION_MESSAGE, HttpStatus.UNAUTHORIZED.name());
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
+        }
         Question question = modelMapper.map(questionDTO, Question.class);
         question.setId(null);
+        question.setAuthorEmail(authorEmail);
         question.setStatus(Status.PROCESSING);
         logger.info("{}{}", CREATE_QUESTION_MESSAGE, question);
         questionRepository.save(question);

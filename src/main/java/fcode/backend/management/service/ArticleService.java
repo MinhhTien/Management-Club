@@ -44,11 +44,15 @@ public class ArticleService {
     private static final String APPROVE_ARTICLE = "Approve article: ";
     private static final String DISAPPROVE_ARTICLE = "Disapprove article: ";
 
-    public Response<Void> createArticle(ArticleDTO articleDTO) {
+    public Response<Void> createArticle(ArticleDTO articleDTO, String authorEmail) {
         logger.info("{}{}", CREATE_ARTICLE_MESSAGE, articleDTO);
         if (articleDTO == null) {
             logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
+        }
+        if (authorEmail == null) {
+            logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, HttpStatus.UNAUTHORIZED.name());
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name());
         }
         if (articleDTO.getMemberId() == null || articleDTO.getGenreId() == null || articleDTO.getTitle() == null) {
             logger.warn("{}{}", CREATE_ARTICLE_MESSAGE, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
@@ -66,6 +70,7 @@ public class ArticleService {
         }
         Article article = modelMapper.map(articleDTO, Article.class);
         article.setId(null);
+        article.setAuthor(authorEmail);
         article.setStatus(Status.PROCESSING);
         logger.info("{}{}", CREATE_ARTICLE_MESSAGE, article);
         articleRepository.save(article);
