@@ -27,6 +27,8 @@ public class AuthController {
     private String loginByStudentUrl;
     @Value("${auth.register}")
     private String registerUrl;
+    private static final Logger logger = LogManager.getLogger(AuthController.class);
+
     @GetMapping("/login/student")
     public RedirectView loginByStudentRedirect() throws IOException {
         RedirectView redirectView = new RedirectView();
@@ -51,7 +53,7 @@ public class AuthController {
     }
     @GetMapping("/auth/member")
     public Response<String> loginByMember(@RequestParam String code, HttpServletRequest request) {
-        return authService.loginByMember(code,request.getRemoteAddr(), request.getRequestURL().toString());
+        return authService.loginByMember(code, request.getRemoteAddr(), request.getRequestURL().toString());
     }
     @GetMapping("/auth/register")
     public Response<Void> register(@RequestParam String code,HttpServletRequest request){

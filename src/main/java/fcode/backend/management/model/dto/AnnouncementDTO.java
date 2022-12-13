@@ -2,6 +2,8 @@ package fcode.backend.management.model.dto;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @ToString
@@ -15,7 +17,9 @@ public class AnnouncementDTO {
     private String infoUserId;
     private String location;
     private String imageUrl;
-    private Boolean sendEmailWhenUpdate;
     private String mail;
     private String mailTitle;
+    private Date createdTime;
+    private Date updatedTime;
+    private Integer memberId;
 }
