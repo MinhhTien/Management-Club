@@ -44,6 +44,11 @@ public class MemberController {
         return memberService.getMemberById(memberId);
     }
 
+    @GetMapping(value = "/own")
+    public Response<MemberDTO> getOwnMember(@RequestAttribute(required = false) Integer userId) {
+        return memberService.getMemberById(userId);
+    }
+
     @GetMapping(value = "/studentId/{studentId}")
     public Response<MemberDTO> getMemberByStudentId(@PathVariable String studentId) {
         return memberService.getMemberByStudentId(studentId);

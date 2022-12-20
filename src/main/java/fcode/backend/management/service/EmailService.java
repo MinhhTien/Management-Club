@@ -1,9 +1,6 @@
 package fcode.backend.management.service;
 
 import fcode.backend.management.model.dto.EmailDetailDTO;
-import fcode.backend.management.repository.AttendanceRepository;
-import fcode.backend.management.repository.MemberRepository;
-import fcode.backend.management.service.constant.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
@@ -12,12 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.apache.commons.validator.GenericTypeValidator;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.util.*;
 
 @Service
 public class EmailService {
@@ -39,7 +34,8 @@ public class EmailService {
         MimeMessageHelper mimeMessageHelper;
         try{
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
-            mimeMessage.setContent(detail.getMsgBody(), "text/html");
+            mimeMessage.setContent(detail.getMsgBody(), "text/html; charset=utf-8");
+            mimeMessage.setHeader("Content-Type", "text/html; charset=UTF-8");
             mimeMessageHelper.setFrom(sender);
             mimeMessageHelper.setTo(detail.getRecipient());
             mimeMessageHelper.setSubject(detail.getSubject());

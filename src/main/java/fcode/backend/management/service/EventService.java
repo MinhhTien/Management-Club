@@ -75,7 +75,7 @@ public class EventService {
             logger.warn("{}{}", CREATE_EVENT, ServiceMessage.INVALID_ARGUMENT_MESSAGE);
             return new Response<>(HttpStatus.BAD_REQUEST.value(), ServiceMessage.INVALID_ARGUMENT_MESSAGE.getMessage());
         }
-        if(!eventRepository.findEventsByName(eventDTO.getName(), Status.ACTIVE.toString()).isEmpty()) {
+        if(eventRepository.existsByNameAndAndStatus(eventDTO.getName(), Status.ACTIVE)) {
             logger.warn("{}{}", CREATE_EVENT, "Event is already exist");
             return new Response<>(HttpStatus.BAD_REQUEST.value(), "Event is already exist");
         }

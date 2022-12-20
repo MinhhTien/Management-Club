@@ -7,6 +7,4 @@ public enum Status {
     INACTIVE,
     ACTIVE,
     PROCESSING;
-
-
 }

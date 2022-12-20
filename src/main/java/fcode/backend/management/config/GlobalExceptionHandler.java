@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public Response<String> handleExpiredJwtException(ExpiredJwtException e) {
-        logger.error("{}: {}", HttpStatus.BAD_REQUEST.value(), "Your session has expired. Please re-login");
-        return new Response<>(HttpStatus.BAD_REQUEST.value(), "Your session has expired. Please re-login");
+        logger.error("{}: {}", HttpStatus.REQUEST_TIMEOUT.value(), "Token is expired");
+        return new Response<>(HttpStatus.REQUEST_TIMEOUT.value(), "Token is expired");
     }
 }

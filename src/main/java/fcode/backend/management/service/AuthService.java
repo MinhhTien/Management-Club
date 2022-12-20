@@ -61,7 +61,7 @@ public class AuthService {
         if(loginUserDTO==null)
         {
             logger.warn("{}{}","Login member is not exist",response.getEmail());
-            throw new ServiceException(HttpStatus.UNAUTHORIZED,"Please register and contact to F-Code club to be accepted");
+            return new Response<>(HttpStatus.UNAUTHORIZED.value(),ServiceMessage.FORBIDDEN_MESSAGE.getMessage(), "Please register and contact to F-Code club to be accepted");
         }
         memberRepository.updateIpByEmail(ip,response.getEmail());
         logger.info("{}{}","Login by member success: ", response.getEmail());

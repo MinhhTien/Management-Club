@@ -23,10 +23,14 @@ public class AuthController {
     AuthService authService;
     @Value("${auth.login.member}")
     private String loginByMemberUrl;
+    @Value("${auth.login.member.dev}")
+    private String loginByMemberUrlDev;
     @Value("${auth.login.student}")
     private String loginByStudentUrl;
     @Value("${auth.register}")
     private String registerUrl;
+    @Value("${auth.redirect.url}")
+    private String authRedirectUrl;
     private static final Logger logger = LogManager.getLogger(AuthController.class);
 
     @GetMapping("/login/student")
@@ -35,10 +39,10 @@ public class AuthController {
         redirectView.setUrl(loginByStudentUrl);
         return redirectView;
     }
-    @GetMapping("/login/member")
-    public RedirectView loginByMemberRedirect(HttpServletResponse response) throws IOException {
+    @GetMapping("/login/member/dev")
+    public RedirectView loginByMemberRedirectDev(HttpServletResponse response) throws IOException {
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(loginByMemberUrl);
+        redirectView.setUrl(loginByMemberUrlDev);
         return redirectView;
     }
     @GetMapping("/register")
@@ -47,12 +51,12 @@ public class AuthController {
         redirectView.setUrl(registerUrl);
         return redirectView;
     }
-    @GetMapping("/auth/student")
+    @GetMapping("/auth/student/dev")
     public Response<String> loginByStudent(@RequestParam String code, HttpServletRequest request) {
         return authService.loginByStudent(code,request.getRequestURL().toString());
     }
-    @GetMapping("/auth/member")
-    public Response<String> loginByMember(@RequestParam String code, HttpServletRequest request) {
+    @GetMapping("/auth/member/dev")
+    public Response<String> loginByMemberDev(@RequestParam String code, HttpServletRequest request) {
         return authService.loginByMember(code, request.getRemoteAddr(), request.getRequestURL().toString());
     }
     @GetMapping("/auth/register")
@@ -62,5 +66,20 @@ public class AuthController {
     @RequestMapping(value = "/", method = RequestMethod.OPTIONS)
     public Response<Void> preflightRequest(HttpServletRequest request){
         return new Response<>(HttpStatus.OK.value(), SUCCESS_MESSAGE.getMessage());
+    }
+    @GetMapping("/login/member")
+    public RedirectView loginByMemberRedirect(HttpServletResponse response) throws IOException {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(loginByMemberUrl);
+        return redirectView;
+    }
+    @GetMapping("/auth/member")
+    public RedirectView loginByMember(@RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Response<String> result = authService.loginByMember(code, request.getRemoteAddr(), request.getRequestURL().toString());
+        RedirectView redirectView = new RedirectView();
+        if(result.getCode() == HttpStatus.OK.value())
+            redirectView.setUrl(authRedirectUrl + "?success=true&token=" + result.getData());
+        else redirectView.setUrl(authRedirectUrl + "?success=false&message=" + result.getData());
+        return redirectView;
     }
 }
